@@ -1,0 +1,43 @@
+{
+    "name": "amirrezanasiri/laravel-toman",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Amirreza Nasiri",
+            "email": "nasiri.amirreza.96@gmail.com",
+            "homepage": "https://amirreza.in"
+        }
+    ],
+    "homepage": "https://github.com/amirrezanasiri/laravel-toman",
+    "keywords": ["Laravel", "LaravelToman"],
+    "require": {
+        "illuminate/support": "~5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AmirrezaNasiri\\LaravelToman\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AmirrezaNasiri\\LaravelToman\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AmirrezaNasiri\\LaravelToman\\LaravelTomanServiceProvider"
+            ],
+            "aliases": {
+                "LaravelToman": "AmirrezaNasiri\\LaravelToman\\Facades\\LaravelToman"
+            }
+        }
+    }
+}

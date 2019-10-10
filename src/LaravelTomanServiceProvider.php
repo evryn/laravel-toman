@@ -43,7 +43,7 @@ class LaravelTomanServiceProvider extends ServiceProvider
     {
         return ['laravel-toman'];
     }
-    
+
     /**
      * Console-specific booting.
      *

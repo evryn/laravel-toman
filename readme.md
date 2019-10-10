@@ -1,4 +1,4 @@
-# LaravelToman
+# Laravel Toman
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
@@ -12,7 +12,7 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require amirrezanasiri/laraveltoman
+$ composer require amirrezanasiri/laravel-toman
 ```
 
 ## Usage
@@ -44,14 +44,14 @@ If you discover any security related issues, please email nasiri.amirreza.96@gma
 
 license. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/amirrezanasiri/laraveltoman.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/amirrezanasiri/laraveltoman.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/amirrezanasiri/laraveltoman/master.svg?style=flat-square
-[ico-styleci]: https://styleci.io/repos/12345678/shield
+[ico-version]: https://img.shields.io/packagist/v/amirrezanasiri/laravel-toman.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/amirrezanasiri/laravel-toman.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/amirrezanasiri/laravel-toman/master.svg?style=flat-square
+[ico-styleci]: https://styleci.io/repos/214276918/shield
 
-[link-packagist]: https://packagist.org/packages/amirrezanasiri/laraveltoman
-[link-downloads]: https://packagist.org/packages/amirrezanasiri/laraveltoman
-[link-travis]: https://travis-ci.org/amirrezanasiri/laraveltoman
-[link-styleci]: https://styleci.io/repos/12345678
+[link-packagist]: https://packagist.org/packages/amirrezanasiri/laravel-toman
+[link-downloads]: https://packagist.org/packages/amirrezanasiri/laravel-toman
+[link-travis]: https://travis-ci.org/amirrezanasiri/laravel-toman
+[link-styleci]: https://styleci.io/repos/214276918
 [link-author]: https://github.com/amirrezanasiri
 [link-contributors]: ../../contributors

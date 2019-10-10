@@ -55,23 +55,5 @@ class LaravelTomanServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/toman.php' => config_path('toman.php'),
         ], 'laravel-toman.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/amirrezanasiri'),
-        ], 'laraveltoman.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/amirrezanasiri'),
-        ], 'laraveltoman.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/amirrezanasiri'),
-        ], 'laraveltoman.views');*/
-
-        // Registering package commands.
-        // $this->commands([]);
     }
 }

@@ -34,7 +34,7 @@ return [
             // Merchant ID of your gateway provided by Zarinpal for your gateway
             // only. Looks like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
             'merchant_id' => env('ZARINPAL_MERCHANT_ID'),
-        ]
+        ],
 
     ],
 
@@ -50,7 +50,7 @@ return [
     |
     */
 
-    'description' => 'پرداخت :amount در ' . env('APP_NAME', 'اپلیکیشن'),
+    'description' => 'پرداخت :amount در '.env('APP_NAME', 'اپلیکیشن'),
 
     /*
     |--------------------------------------------------------------------------
@@ -65,6 +65,5 @@ return [
     */
 
     // 'callback_route' => 'payment.callback',
-
 
 ];

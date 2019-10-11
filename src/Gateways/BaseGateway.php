@@ -1,12 +1,10 @@
 <?php
 
-
 namespace AmirrezaNasiri\LaravelToman\Gateways;
 
-
-use AmirrezaNasiri\LaravelToman\Contracts\PaymentGateway;
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
+use AmirrezaNasiri\LaravelToman\Contracts\PaymentGateway;
 
 abstract class BaseGateway implements PaymentGateway
 {
@@ -31,6 +29,7 @@ abstract class BaseGateway implements PaymentGateway
     public function setConfig($config)
     {
         $this->config = $config;
+
         return $this;
     }
 
@@ -42,6 +41,7 @@ abstract class BaseGateway implements PaymentGateway
     public function data($key, $value = null)
     {
         $this->data[$key] = $value;
+
         return $this;
     }
 

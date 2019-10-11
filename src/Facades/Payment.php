@@ -3,7 +3,6 @@
 namespace AmirrezaNasiri\LaravelToman\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Illuminate\Support\Facades\Notification;
 
 class Payment extends Facade
 {

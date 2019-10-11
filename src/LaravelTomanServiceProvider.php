@@ -52,7 +52,7 @@ class LaravelTomanServiceProvider extends ServiceProvider
             'laravel-toman.guzzle-client',
         ];
     }
-    
+
     /**
      * Console-specific booting.
      *

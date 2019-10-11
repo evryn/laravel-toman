@@ -1,11 +1,9 @@
 <?php
 
-
 namespace AmirrezaNasiri\LaravelToman;
 
-
-use GuzzleHttp\Exception\ClientException;
 use Psr\Http\Message\ResponseInterface;
+use GuzzleHttp\Exception\ClientException;
 
 class Utils
 {
@@ -15,7 +13,7 @@ class Utils
      */
     public static function getResponseData($response)
     {
-        if ($response instanceof ClientException){
+        if ($response instanceof ClientException) {
             $response = $response->getResponse();
         }
 

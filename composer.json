@@ -36,7 +36,7 @@
                 "AmirrezaNasiri\\LaravelToman\\LaravelTomanServiceProvider"
             ],
             "aliases": {
-                "LaravelToman": "AmirrezaNasiri\\LaravelToman\\Facades\\LaravelToman"
+                "Payment": "AmirrezaNasiri\\LaravelToman\\Facades\\Payment"
             }
         }
     }

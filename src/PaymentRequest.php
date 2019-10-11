@@ -20,7 +20,7 @@ class PaymentRequest
      * need it to verify actual payment.
      * <ul>
      * <li>In Zarinpal, it's the <i>Authority ID</i> in the documentations</li>
-     * </ul>
+     * </ul>.
      *
      * @return mixed
      */
@@ -41,7 +41,7 @@ class PaymentRequest
     }
 
     /**
-     * Redirect user to payment gateway to complete it
+     * Redirect user to payment gateway to complete it.
      * @return RedirectResponse
      */
     public function pay(): RedirectResponse

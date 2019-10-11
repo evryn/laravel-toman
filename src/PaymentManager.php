@@ -2,12 +2,11 @@
 
 namespace AmirrezaNasiri\LaravelToman;
 
-use AmirrezaNasiri\LaravelToman\Gateways\ZarinpalGateway;
 use Illuminate\Support\Manager;
+use AmirrezaNasiri\LaravelToman\Gateways\ZarinpalGateway;
 
 class PaymentManager extends Manager
 {
-
     /**
      * Get the default payment gateway name.
      *

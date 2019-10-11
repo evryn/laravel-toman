@@ -1,6 +1,5 @@
 <?php
 
-
 namespace AmirrezaNasiri\LaravelToman\Exceptions;
 
 class InvalidConfigException extends Exception

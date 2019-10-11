@@ -3,8 +3,9 @@
 namespace AmirrezaNasiri\LaravelToman\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Notification;
 
-class LaravelToman extends Facade
+class Payment extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -13,6 +14,6 @@ class LaravelToman extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'laravel-toman';
+        return 'laravel-toman.payment';
     }
 }

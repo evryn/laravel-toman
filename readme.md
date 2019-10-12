@@ -1,20 +1,47 @@
 > ⚠️ **Warning**: This package is under development ...  
 
+<h1 align="center">
+  <br>
+  <br>
+    Laravel Toman
+  <br>
+  <a target="_blank" href="https://amirrezanasiri.github.io/laravel-toman/">
+    <img src="https://raw.githubusercontent.com/AmirrezaNasiri/laravel-toman/master/assets/logo.jpg" width="320">
+  </a>
+</h1>
 
-## Laravel Toman
+<h4 align="center">
+  📃 Read documents:
+  <a href="https://amirrezanasiri.github.io/laravel-toman/">
+     Documents
+  </a>
+</h4>
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/AmirrezaNasiri/laravel-toman/master/assets/logo.jpg" width="400">
+    <a target="_blank" href="https://packagist.org/packages/amirrezanasiri/laravel-toman">
+        <img alt="Latest Version on Packagist" src="https://img.shields.io/packagist/v/amirrezanasiri/laravel-toman.svg?style=flat-square">
+    </a>
+    <a target="_blank" href="https://packagist.org/packages/amirrezanasiri/laravel-toman">
+        <img alt="Total Downloads" src="https://img.shields.io/packagist/dt/amirrezanasiri/laravel-toman.svg?style=flat-square">
+    </a>
+</p>
+<p align="center">
+    <a target="_blank" href="https://travis-ci.org/amirrezanasiri/laravel-toman">
+        <img alt="Build Status" src="https://img.shields.io/travis/amirrezanasiri/laravel-toman/master.svg?style=flat-square">
+    </a>
+    <a target="_blank" href="https://codecov.io/gh/amirrezanasiri/laravel-toman">
+        <img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/amirrezanasiri/laravel-toman?label=🧪%20coverage&style=flat-square">
+    </a>
+    <a target="_blank" href="https://styleci.io/repos/214276918">
+        <img alt="StyleCI" src="https://styleci.io/repos/214276918/shield">
+    </a>
 </p>
 
-[![License][ico-license]][link-license]
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Total Downloads][ico-downloads]][link-downloads]
-[![Build Status][ico-travis]][link-travis]
-[![Code Coverage][ico-codecov]][link-codecov]
-[![StyleCI][ico-styleci]][link-styleci]
+## What's it?
 
 A simple Laravel package to support poppular Iranian payment gateways. Toman does a simple thing and does it very well!
+
+## Why use it?
 
 ## Installation
 
@@ -25,6 +52,8 @@ $ composer require amirrezanasiri/laravel-toman
 ```
 
 ## Usage
+
+TODO
 
 ## Change log
 
@@ -51,16 +80,14 @@ If you discover any security related issues, please email nasiri.amirreza.96@gma
 
 ## License
 
-license. Please see the [license file](license.md) for more information.
+Code is licensed under the [MIT License](LICENSE).
 
-[ico-license]: https://img.shields.io/github/license/amirrezanasiri/laravel-toman?style=flat-square
 [ico-version]: https://img.shields.io/packagist/v/amirrezanasiri/laravel-toman.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/amirrezanasiri/laravel-toman.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/amirrezanasiri/laravel-toman/master.svg?style=flat-square
 [ico-codecov]: https://img.shields.io/codecov/c/github/amirrezanasiri/laravel-toman?label=🧪%20coverage&style=flat-square
 [ico-styleci]: https://styleci.io/repos/214276918/shield
 
-[link-license]: ../../license
 [link-packagist]: https://packagist.org/packages/amirrezanasiri/laravel-toman
 [link-downloads]: https://packagist.org/packages/amirrezanasiri/laravel-toman
 [link-travis]: https://travis-ci.org/amirrezanasiri/laravel-toman

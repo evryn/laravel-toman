@@ -1,4 +1,7 @@
-# 💰 Laravel Toman
+> ⚠️ **Warning**: This package is under development ...  
+
+
+## Laravel Toman
 
 [![License][ico-license]][link-license]
 [![Latest Version on Packagist][ico-version]][link-packagist]
@@ -50,7 +53,7 @@ license. Please see the [license file](license.md) for more information.
 [ico-version]: https://img.shields.io/packagist/v/amirrezanasiri/laravel-toman.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/amirrezanasiri/laravel-toman.svg?style=flat-square
 [ico-travis]: https://img.shields.io/travis/amirrezanasiri/laravel-toman/master.svg?style=flat-square
-[ico-codecov]: https://img.shields.io/codecov/c/github/amirrezanasiri/laravel-toman?label=🧪%20overage&style=flat-square
+[ico-codecov]: https://img.shields.io/codecov/c/github/amirrezanasiri/laravel-toman?label=🧪%20coverage&style=flat-square
 [ico-styleci]: https://styleci.io/repos/214276918/shield
 
 [link-license]: ../../license

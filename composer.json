@@ -43,6 +43,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit --exclude-group external",
-        "test-coverage": "vendor/bin/phpunit --exclude-group external --coverage-clover=coverage.xml"
+        "test-coverage": "vendor/bin/phpunit --exclude-group external --coverage-clover=coverage.xml",
+        "test-dev": "vendor/bin/phpunit --configuration=phpunit.xml --coverage-html=coverage.html --coverage-text"
     }
 }

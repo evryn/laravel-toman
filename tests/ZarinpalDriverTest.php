@@ -97,7 +97,7 @@ final class ZarinpalDriverTest extends DriverTestCase
 
         $gateway = new ZarinpalGateway([
             'sandbox' => true,
-            'merchant_id' => env('ZARINPAL_MERCHANT_ID'),
+            'merchant_id' => getenv('ZARINPAL_MERCHANT_ID'),
         ]);
 
         $gateway->callback('https://example.com/verify-here')

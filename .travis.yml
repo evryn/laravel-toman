@@ -32,4 +32,4 @@ install:
   - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction --no-suggest
 
 script:
-  - vendor/bin/phpunit --exclude-group external
+  - vendor/bin/phpunit

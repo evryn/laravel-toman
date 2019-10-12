@@ -5,32 +5,32 @@
   <br>
     Laravel Toman
   <br>
-  <a target="_blank" href="https://amirrezanasiri.github.io/laravel-toman/">
-    <img src="https://raw.githubusercontent.com/AmirrezaNasiri/laravel-toman/master/assets/logo.jpg" width="320">
+  <a target="_blank" href="https://evryn.github.io/laravel-toman/">
+    <img src="https://raw.githubusercontent.com/evryn/laravel-toman/master/assets/logo.jpg" width="320">
   </a>
 </h1>
 
 <h4 align="center">
   📃 Read documents:
-  <a href="https://amirrezanasiri.github.io/laravel-toman/">
+  <a href="https://evryn.github.io/laravel-toman/">
      Documents
   </a>
 </h4>
 
 <p align="center">
-    <a target="_blank" href="https://packagist.org/packages/amirrezanasiri/laravel-toman">
-        <img alt="Latest Version on Packagist" src="https://img.shields.io/packagist/v/amirrezanasiri/laravel-toman.svg?style=flat-square">
+    <a target="_blank" href="https://packagist.org/packages/evryn/laravel-toman">
+        <img alt="Latest Version on Packagist" src="https://img.shields.io/packagist/v/evryn/laravel-toman.svg?style=flat-square">
     </a>
-    <a target="_blank" href="https://packagist.org/packages/amirrezanasiri/laravel-toman">
-        <img alt="Total Downloads" src="https://img.shields.io/packagist/dt/amirrezanasiri/laravel-toman.svg?style=flat-square">
+    <a target="_blank" href="https://packagist.org/packages/evryn/laravel-toman">
+        <img alt="Total Downloads" src="https://img.shields.io/packagist/dt/evryn/laravel-toman.svg?style=flat-square">
     </a>
 </p>
 <p align="center">
-    <a target="_blank" href="https://travis-ci.org/amirrezanasiri/laravel-toman">
-        <img alt="Build Status" src="https://img.shields.io/travis/amirrezanasiri/laravel-toman/master.svg?style=flat-square">
+    <a target="_blank" href="https://travis-ci.org/evryn/laravel-toman">
+        <img alt="Build Status" src="https://img.shields.io/travis/evryn/laravel-toman/master.svg?style=flat-square">
     </a>
-    <a target="_blank" href="https://codecov.io/gh/amirrezanasiri/laravel-toman">
-        <img alt="Code Coverage" src='https://img.shields.io/codecov/c/github/amirrezanasiri/laravel-toman?label=coverage&style=flat-square'>
+    <a target="_blank" href="https://codecov.io/gh/evryn/laravel-toman">
+        <img alt="Code Coverage" src='https://img.shields.io/codecov/c/github/evryn/laravel-toman?label=coverage&style=flat-square'>
     </a>
     <a target="_blank" href="https://styleci.io/repos/214276918">
         <img alt="StyleCI" src="https://styleci.io/repos/214276918/shield">

@@ -3,7 +3,7 @@
 namespace AmirrezaNasiri\LaravelToman\Tests;
 
 use AmirrezaNasiri\LaravelToman\Facades\Payment;
-use AmirrezaNasiri\LaravelToman\PaymentManager;
+use AmirrezaNasiri\LaravelToman\GatewayManager;
 
 final class PaymentTest extends TestCase
 {
@@ -11,6 +11,6 @@ final class PaymentTest extends TestCase
     public function resolves_to_gateway_manager()
     {
         $root = Payment::getFacadeRoot();
-        self::assertInstanceOf(PaymentManager::class, $root);
+        self::assertInstanceOf(GatewayManager::class, $root);
     }
 }

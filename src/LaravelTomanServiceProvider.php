@@ -31,7 +31,7 @@ class LaravelTomanServiceProvider extends ServiceProvider
 
         // Register the PaymentManager used to separate drivers
         $this->app->singleton('laravel-toman.payment', function ($app) {
-            return new PaymentManager($app);
+            return new GatewayManager($app);
         });
 
         // Register the Guzzle HTTP client used by drivers to send requests

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AmirrezaNasiri\LaravelToman\Tests;
+namespace AmirrezaNasiri\LaravelToman\Tests\Gateways;
 
 
 use AmirrezaNasiri\LaravelToman\Gateways\ZarinpalGateway;

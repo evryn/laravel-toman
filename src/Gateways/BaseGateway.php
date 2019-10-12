@@ -49,9 +49,4 @@ abstract class BaseGateway implements PaymentGateway
     {
         return $key ? Arr::get($this->data, $key) : $this->data;
     }
-
-    public function getTransactionId()
-    {
-        return $this->transactionId;
-    }
 }

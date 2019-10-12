@@ -43,6 +43,7 @@ class LaravelTomanServiceProvider extends ServiceProvider
     /**
      * Get the services provided by the provider.
      *
+     * @codeCoverageIgnore
      * @return array
      */
     public function provides()

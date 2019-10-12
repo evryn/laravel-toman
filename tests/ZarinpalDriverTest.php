@@ -97,7 +97,7 @@ final class ZarinpalDriverTest extends DriverTestCase
 
         $gateway = new ZarinpalGateway([
             'sandbox' => true,
-            'merchant_id' => getenv('ZARINPAL_MERCHANT_ID'),
+            'merchant_id' => env('ZARINPAL_MERCHANT_ID'),
         ]);
 
         $gateway->callback('https://example.com/verify-here')
@@ -136,9 +136,9 @@ final class ZarinpalDriverTest extends DriverTestCase
      * @test
      * @dataProvider errorStatusProvider
      */
-    public function converts_other_gateway_errors_to_exception($status, $partialMessage)
+    public function converts_other_gateway_errors_to_exception($httpCode, $status, $partialMessage)
     {
-        $this->mockClient(new Response(404, [], json_encode([
+        $this->mockClient(new Response($httpCode, [], json_encode([
             'Status' => $status,
             'Authority' => '',
         ])));
@@ -157,14 +157,15 @@ final class ZarinpalDriverTest extends DriverTestCase
     public function errorStatusProvider()
     {
         return [
-            ['-1', 'ناقص'],
-            ['-2', 'مرچنت'],
-            ['-3', 'محدوديت هاي شاپرك'],
-            ['-4', 'سطح تاييد'],
-            ['-40', "دسترسي به متد"],
-            ['-41', 'AdditionalData'],
-            ['-42', 'طول عمر'],
-            ['-99999', 'unknown'],
+            [404, '-1', 'ناقص'],
+            [404, '-2', 'مرچنت'],
+            [404, '-3', 'محدوديت هاي شاپرك'],
+            [404, '-4', 'سطح تاييد'],
+            [404, '-40', "دسترسي به متد"],
+            [404, '-41', 'AdditionalData'],
+            [404, '-42', 'طول عمر'],
+            [404, '-99999', 'unknown'],
+            [200, '-1', 'ناقص'], // In case of switching 404 on failure since it's not been documented
         ];
     }
 

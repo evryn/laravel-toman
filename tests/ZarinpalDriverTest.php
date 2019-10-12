@@ -129,7 +129,7 @@ final class ZarinpalDriverTest extends DriverTestCase
         $exception = $this->getExpectedException();
 
         self::assertEquals(-11, $exception->getCode());
-        self::assertContains('callback', $exception->getMessage());
+        self::assertStringContainsString('callback', $exception->getMessage());
     }
 
     /**
@@ -147,7 +147,7 @@ final class ZarinpalDriverTest extends DriverTestCase
             $this->getConfiguredDriver()->request();
         } catch (GatewayException $exception) {
             self::assertEquals($status, $exception->getCode());
-            self::assertContains($partialMessage, $exception->getMessage());
+            self::assertStringContainsString($partialMessage, $exception->getMessage());
             return true;
         }
 
@@ -287,7 +287,7 @@ final class ZarinpalDriverTest extends DriverTestCase
             self::assertTrue($passes);
         } catch (InvalidConfigException $exception) {
             self::assertFalse($passes);
-            self::assertContains('sandbox', $exception->getMessage());
+            self::assertStringContainsString('sandbox', $exception->getMessage());
         }
     }
 

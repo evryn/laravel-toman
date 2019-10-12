@@ -40,5 +40,9 @@
                 "Payment": "AmirrezaNasiri\\LaravelToman\\Facades\\Payment"
             }
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --exclude-group external",
+        "test-coverage": "vendor/bin/phpunit --exclude-group external --coverage-clover=coverage.xml"
     }
 }

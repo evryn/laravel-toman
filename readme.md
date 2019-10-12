@@ -1,9 +1,7 @@
 > ⚠️ **Warning**: This package is under development ...  
 
 <h1 align="center">
-  <br>
-  <br>
-    Laravel Toman
+  Laravel Toman
   <br>
   <a target="_blank" href="https://evryn.github.io/laravel-toman/">
     <img src="https://raw.githubusercontent.com/evryn/laravel-toman/master/assets/logo.jpg" width="320">

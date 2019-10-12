@@ -1,4 +1,4 @@
-# Laravel Toman
+# 💰 Laravel Toman
 
 [![License][ico-license]][link-license]
 [![Latest Version on Packagist][ico-version]][link-packagist]
@@ -7,7 +7,7 @@
 [![Code Coverage][ico-codecov]][link-codecov]
 [![StyleCI][ico-styleci]][link-styleci]
 
-A simple Laravel package to support poppular Iranian payment gateways. Toman does a simple thing and does it best!
+A simple Laravel package to support poppular Iranian payment gateways. Toman does a simple thing and does it very well!
 
 ## Installation
 

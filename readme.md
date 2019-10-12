@@ -30,7 +30,7 @@
         <img alt="Build Status" src="https://img.shields.io/travis/amirrezanasiri/laravel-toman/master.svg?style=flat-square">
     </a>
     <a target="_blank" href="https://codecov.io/gh/amirrezanasiri/laravel-toman">
-        <img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/amirrezanasiri/laravel-toman?label=🧪%20coverage&style=flat-square">
+        <img alt="Code Coverage" src='https://img.shields.io/codecov/c/github/amirrezanasiri/laravel-toman?label=coverage&style=flat-square'>
     </a>
     <a target="_blank" href="https://styleci.io/repos/214276918">
         <img alt="StyleCI" src="https://styleci.io/repos/214276918/shield">
@@ -45,11 +45,7 @@ A simple Laravel package to support poppular Iranian payment gateways. Toman doe
 
 ## Installation
 
-Via Composer
-
-``` bash
-$ composer require amirrezanasiri/laravel-toman
-```
+TODO
 
 ## Usage
 
@@ -82,16 +78,5 @@ If you discover any security related issues, please email nasiri.amirreza.96@gma
 
 Code is licensed under the [MIT License](LICENSE).
 
-[ico-version]: https://img.shields.io/packagist/v/amirrezanasiri/laravel-toman.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/amirrezanasiri/laravel-toman.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/amirrezanasiri/laravel-toman/master.svg?style=flat-square
-[ico-codecov]: https://img.shields.io/codecov/c/github/amirrezanasiri/laravel-toman?label=🧪%20coverage&style=flat-square
-[ico-styleci]: https://styleci.io/repos/214276918/shield
-
-[link-packagist]: https://packagist.org/packages/amirrezanasiri/laravel-toman
-[link-downloads]: https://packagist.org/packages/amirrezanasiri/laravel-toman
-[link-travis]: https://travis-ci.org/amirrezanasiri/laravel-toman
-[link-codecov]: https://codecov.io/gh/amirrezanasiri/laravel-toman
-[link-styleci]: https://styleci.io/repos/214276918
 [link-author]: https://github.com/amirrezanasiri
 [link-contributors]: ../../contributors

@@ -1,5 +1,9 @@
 language: php
 
+branches:
+  only:
+    - master
+
 cache:
   directories:
     - $HOME/.composer/cache
@@ -22,7 +26,7 @@ matrix:
     - php: 7.3
       env: LARAVEL='6.*' TESTBENCH='4.*' COMPOSER_FLAGS='--prefer-lowest'
     - php: 7.3
-      env: LARAVEL='6.*' TESTBENCH='4.*' COMPOSER_FLAGS='--prefer-stable'
+      env: LARAVEL='6.*' TESTBENCH='4.*' COMPOSER_FLAGS='--prefer-stable' COVERAGE=true
 
 before_install:
   - travis_retry composer self-update
@@ -32,4 +36,8 @@ install:
   - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction --no-suggest
 
 script:
+  - if [ $COVERAGE == true ]; then vendor/bin/phpunit --coverage-clover=coverage.xml --exclude-group external; else vendor/bin/phpunit --exclude-group external; fi
   - vendor/bin/phpunit --exclude-group external
+
+after_success:
+  - if [ $COVERAGE == true ]; then bash <(curl -s https://codecov.io/bash); fi

@@ -12,7 +12,8 @@
     "homepage": "https://github.com/amirrezanasiri/laravel-toman",
     "keywords": ["Laravel", "LaravelToman"],
     "require": {
-        "illuminate/support": "~5"
+        "illuminate/support": "~5",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0",

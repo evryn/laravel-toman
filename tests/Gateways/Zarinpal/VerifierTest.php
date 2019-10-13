@@ -86,8 +86,8 @@ final class VerifierTest extends DriverTestCase
         ]);
 
         $this->expectException(GatewayException::class);
-        $this->expectExceptionMessage('تراکنش ناموفق بوده یا توسط کاربر لغو شده است.');
-        $this->expectExceptionCode(-22);
+        $this->expectExceptionMessage(Status::toMessage(Status::NOT_PAID));
+        $this->expectExceptionCode(Status::NOT_PAID);
 
         Verifier::make($this->validConfig(), $client)
             ->amount(5000)
@@ -124,7 +124,7 @@ final class VerifierTest extends DriverTestCase
      * @test
      * @dataProvider errorProvider
      */
-    public function converts_validation_error_to_exception($httpCode, $status, $partialMessage)
+    public function converts_validation_error_to_exception($passes, $httpCode, $status)
     {
         $client = $this->mockedGuzzleClient(new Response($httpCode, [], json_encode([
             'Status' => $status,
@@ -140,35 +140,38 @@ final class VerifierTest extends DriverTestCase
             Verifier::make($this->validConfig(), $client)
                 ->amount(5000)
                 ->verify($request);
+            self::assertTrue($passes);
         } catch (GatewayException $exception) {
             self::assertEquals($status, $exception->getCode());
-            self::assertStringContainsString($partialMessage, $exception->getMessage());
+            self::assertEquals(Status::toMessage($status), $exception->getMessage());
             return true;
         }
 
-        self::fail("Didn't thrown expected exception.");
+        if (!$passes)
+            self::fail("Didn't thrown expected exception.");
     }
 
     public function errorProvider()
     {
         return [
-            [404, '-1', 'ناقص'],
-            [404, '-2', 'مرچنت'],
-            [404, '-3', 'محدوديت هاي شاپرك'],
-            [404, '-4', 'سطح تاييد'],
-            [404, '-11', 'يافت نشد'],
-            [404, '-12', 'ويرايش درخواست'],
-            [404, '-21', 'عمليات مالي'],
-            [404, '-22', 'ناموفق'],
-            [404, '-33', 'رقم تراكنش'],
-            [404, '-34', 'سقف تقسيم'],
-            [404, '-40', 'دسترسي به متد'],
-            [404, '-41', 'AdditionalData'],
-            [404, '-42', 'عمر شناسه'],
-            [404, '-54', 'آرشيو'],
-            [404, '101', 'قبلا'],
-            [404, '-99999', 'unknown'],
-            [200, '-1', 'ناقص'], // In case of switching 404 on failure since it's not been documented
+            [true, 200, Status::PAYMENT_SUCCEED],
+            [false, 404, Status::INCOMPLETE_DATA],
+            [false, 200, Status::INCOMPLETE_DATA], // 404 HTTP code is not guaranteed in documents
+            [false, 404, Status::WRONG_IP_OR_MERCHANT_ID],
+            [false, 404, Status::SHAPARAK_LIMITED],
+            [false, 404, Status::INSUFFICIENT_USER_LEVEL],
+            [false, 404, Status::REQUEST_NOT_FOUND],
+            [false, 404, Status::UNABLE_TO_EDIT_REQUEST],
+            [false, 404, Status::NO_FINANCIAL_OPERATION],
+            [false, 404, Status::FAILED_TRANSACTION],
+            [false, 404, Status::AMOUNTS_NOT_EQUAL],
+            [false, 404, Status::TRANSACTION_SPLITTING_LIMITED],
+            [false, 404, Status::METHOD_ACCESS_DENIED],
+            [false, 404, Status::INVALID_ADDITIONAL_DATA],
+            [false, 404, Status::INVALID_EXPIRATION_RANGE],
+            [false, 404, Status::REQUEST_ARCHIVED],
+            [false, 404, Status::PAYMENT_SUCCEED],
+            [false, 404, Status::UNEXPECTED],
         ];
     }
 

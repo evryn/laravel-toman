@@ -118,6 +118,7 @@ final class RequesterTest extends DriverTestCase
         ])));
 
         $this->expectException( GatewayException::class );
+        $this->expectExceptionMessage('The callback u r l field is required.');
 
         Requester::make($this->validConfig(), $client)->request();
 
@@ -129,9 +130,9 @@ final class RequesterTest extends DriverTestCase
 
     /**
      * @test
-     * @dataProvider errorStatusProvider
+     * @dataProvider errorProvider
      */
-    public function converts_other_gateway_errors_to_exception($httpCode, $status, $partialMessage)
+    public function converts_other_gateway_errors_to_exception($passes, $httpCode, $status)
     {
         $client = $this->mockedGuzzleClient(new Response($httpCode, [], json_encode([
             'Status' => $status,
@@ -140,27 +141,39 @@ final class RequesterTest extends DriverTestCase
 
         try {
             Requester::make($this->validConfig(), $client)->request();
+            self::assertTrue($passes);
         } catch (GatewayException $exception) {
             self::assertEquals($status, $exception->getCode());
-            self::assertStringContainsString($partialMessage, $exception->getMessage());
+            self::assertEquals(Status::toMessage($status), $exception->getMessage());
             return true;
         }
 
-        self::fail('No GatewayException is thrown!');
+        if (!$passes) {
+            self::fail('No GatewayException is thrown!');
+        }
     }
 
-    public function errorStatusProvider()
+    public function errorProvider()
     {
         return [
-            [404, '-1', 'ناقص'],
-            [404, '-2', 'مرچنت'],
-            [404, '-3', 'محدوديت هاي شاپرك'],
-            [404, '-4', 'سطح تاييد'],
-            [404, '-40', "دسترسي به متد"],
-            [404, '-41', 'AdditionalData'],
-            [404, '-42', 'طول عمر'],
-            [404, '-99999', 'unknown'],
-            [200, '-1', 'ناقص'], // In case of switching 404 on failure since it's not been documented
+            [true, 200, Status::PAYMENT_SUCCEED],
+            [false, 404, Status::INCOMPLETE_DATA],
+            [false, 200, Status::INCOMPLETE_DATA], // 404 HTTP code is not guaranteed in documents
+            [false, 404, Status::WRONG_IP_OR_MERCHANT_ID],
+            [false, 404, Status::SHAPARAK_LIMITED],
+            [false, 404, Status::INSUFFICIENT_USER_LEVEL],
+            [false, 404, Status::REQUEST_NOT_FOUND],
+            [false, 404, Status::UNABLE_TO_EDIT_REQUEST],
+            [false, 404, Status::NO_FINANCIAL_OPERATION],
+            [false, 404, Status::FAILED_TRANSACTION],
+            [false, 404, Status::AMOUNTS_NOT_EQUAL],
+            [false, 404, Status::TRANSACTION_SPLITTING_LIMITED],
+            [false, 404, Status::METHOD_ACCESS_DENIED],
+            [false, 404, Status::INVALID_ADDITIONAL_DATA],
+            [false, 404, Status::INVALID_EXPIRATION_RANGE],
+            [false, 404, Status::REQUEST_ARCHIVED],
+            [false, 404, Status::PAYMENT_SUCCEED],
+            [false, 404, Status::UNEXPECTED],
         ];
     }
 

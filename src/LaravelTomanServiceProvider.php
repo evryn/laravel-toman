@@ -9,6 +9,9 @@ use Illuminate\Support\ServiceProvider;
 
 class LaravelTomanServiceProvider extends ServiceProvider
 {
+    const CONFIG_FILE = __DIR__.'/../config/toman.php';
+    const TRANSLATION_FILES = __DIR__ . '/../resources/lang/';
+
     /**
      * Perform post-registration booting of services.
      *
@@ -20,6 +23,8 @@ class LaravelTomanServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
+
+        $this->loadTranslationsFrom(self::TRANSLATION_FILES, 'toman');
     }
 
     /**
@@ -29,7 +34,7 @@ class LaravelTomanServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/toman.php', 'toman');
+        $this->mergeConfigFrom(self::CONFIG_FILE, 'toman');
 
         // Register the PaymentManager used to separate drivers
         $this->app->singleton(PaymentRequester::class, function ($app) {
@@ -65,7 +70,11 @@ class LaravelTomanServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__.'/../config/toman.php' => config_path('toman.php'),
-        ], 'laravel-toman.config');
+            self::CONFIG_FILE => config_path('toman.php'),
+        ], 'config');
+
+        $this->publishes([
+            self::TRANSLATION_FILES => resource_path('lang/vendor/toman'),
+        ], 'lang');
     }
 }

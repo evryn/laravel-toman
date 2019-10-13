@@ -1,20 +1,18 @@
 <?php
 
-
 namespace AmirrezaNasiri\LaravelToman\Helpers;
 
-
+use Illuminate\Support\Arr;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use AmirrezaNasiri\LaravelToman\Exceptions\GatewayException;
 use AmirrezaNasiri\LaravelToman\Helpers\Client as ClientHelper;
 use AmirrezaNasiri\LaravelToman\Tests\Gateways\Zarinpal\Status;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use Illuminate\Support\Arr;
 
 class Gateway
 {
     /**
-     * Throws a Gateway exception from any possible input
+     * Throws a Gateway exception from any possible input.
      * @param array|ClientException|ServerException|\Exception $data
      * @throws GatewayException
      */

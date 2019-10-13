@@ -1,15 +1,13 @@
 <?php
 
-
 namespace AmirrezaNasiri\LaravelToman\Gateways\Zarinpal;
-
 
 use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
 
 trait CommonMethods
 {
     /**
-     * Set <i>Amount</i> data
+     * Set <i>Amount</i> data.
      * @param $amount string|integer|float
      * @return $this
      */
@@ -21,7 +19,7 @@ trait CommonMethods
     }
 
     /**
-     * Get production or sandbox schema and hostname for requests
+     * Get production or sandbox schema and hostname for requests.
      *
      * @return string
      * @throws InvalidConfigException
@@ -34,7 +32,7 @@ trait CommonMethods
     }
 
     /**
-     * Check if request should be sent in a sandbox, testing environment
+     * Check if request should be sent in a sandbox, testing environment.
      *
      * @return bool
      * @throws InvalidConfigException
@@ -53,14 +51,14 @@ trait CommonMethods
     }
 
     /**
-     * Get Zarinpal merchant ID from config or overridden one
+     * Get Zarinpal merchant ID from config or overridden one.
      *
      * @return string
      */
     private function getMerchantId()
     {
         $merchantId = $this->getData('MerchantID');
+
         return $merchantId ?? $this->getConfig('merchant_id');
     }
-
 }

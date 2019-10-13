@@ -30,7 +30,7 @@ final class ZarinpalDriverTest extends DriverTestCase
 
         $paymentRequest = $gateway->request();
 
-        self::assertEquals('https://www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json', $this->getLastRequestURL());
+        $this->assertLastRequestedUrlEquals('https://www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json');
         $this->assertLastRequestedDataEquals([
             "MerchantID" => "xxxx-xxxx-xxxx-xxxx",
             "Amount" => 1500,
@@ -65,7 +65,7 @@ final class ZarinpalDriverTest extends DriverTestCase
 
         $paymentRequest = $gateway->request();
 
-        self::assertEquals('https://sandbox.zarinpal.com/pg/rest/WebGate/PaymentRequest.json', $this->getLastRequestURL());
+        $this->assertLastRequestedUrlEquals('https://sandbox.zarinpal.com/pg/rest/WebGate/PaymentRequest.json');
         $this->assertLastRequestedDataEquals([
             "MerchantID" => "xxxx-xxxx-xxxx-xxxx",
             "Amount" => 1500,
@@ -206,8 +206,6 @@ final class ZarinpalDriverTest extends DriverTestCase
 
         ZarinpalGateway::make($this->validConfig(), $client)->data('CallbackURL', 'https://example.com/callbackB')->request();
         $this->assertDataInRequest('https://example.com/callbackB', 'CallbackURL');
-
-        config(['toman.callback_route' => null]);
     }
 
     /** @test */
@@ -224,8 +222,6 @@ final class ZarinpalDriverTest extends DriverTestCase
 
         ZarinpalGateway::make($this->validConfig(), $client)->data('Description', 'Other text')->request();
         $this->assertDataInRequest('Other text', 'Description');
-
-        config(['toman.description' => null]);
     }
 
     /** @test */

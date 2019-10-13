@@ -24,7 +24,7 @@ abstract class DriverTestCase extends TestCase
         }
         $handlerStack->push($historyMiddleware);
 
-        return new Client(['handler' => $handlerStack]);;
+        return new Client(['handler' => $handlerStack]);
     }
 
     /**
@@ -49,6 +49,11 @@ abstract class DriverTestCase extends TestCase
     protected function assertLastRequestedDataEquals($expected)
     {
         self::assertEquals($expected, $this->getLastRequestData());
+    }
+
+    protected function assertLastRequestedUrlEquals($expected)
+    {
+        self::assertEquals($expected, $this->getLastRequestURL());
     }
 
     protected function assertDataInRequest($expected, $key)

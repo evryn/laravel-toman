@@ -4,9 +4,9 @@ namespace AmirrezaNasiri\LaravelToman\Gateways;
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
-use AmirrezaNasiri\LaravelToman\Contracts\PaymentGateway;
+use AmirrezaNasiri\LaravelToman\Contracts\PaymentRequester;
 
-abstract class BaseGateway implements PaymentGateway
+abstract class BaseRequester implements PaymentRequester
 {
     /** @var array Driver config */
     protected $config;

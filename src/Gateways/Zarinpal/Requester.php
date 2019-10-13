@@ -1,18 +1,19 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Gateways;
+namespace AmirrezaNasiri\LaravelToman\Gateways\Zarinpal;
 
+use AmirrezaNasiri\LaravelToman\Gateways\BaseRequester;
+use AmirrezaNasiri\LaravelToman\RequestedPayment;
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\URL;
 use AmirrezaNasiri\LaravelToman\Utils;
 use GuzzleHttp\Exception\ClientException;
-use AmirrezaNasiri\LaravelToman\PaymentRequest;
 use AmirrezaNasiri\LaravelToman\Exceptions\GatewayException;
 use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
 
-class ZarinpalGateway extends BaseGateway
+class Requester extends BaseRequester
 {
     public function __construct($config, Client $client)
     {
@@ -60,7 +61,7 @@ class ZarinpalGateway extends BaseGateway
         return $this;
     }
 
-    public function request(): PaymentRequest
+    public function request(): RequestedPayment
     {
         $requestData = $this->makeRequestData();
         $requestURL = $this->makeRequestURL();
@@ -81,7 +82,7 @@ class ZarinpalGateway extends BaseGateway
             $this->throwGatewayException($data);
         }
 
-        return new PaymentRequest($transactionId, $this->getPaymentUrlFor($transactionId));
+        return new RequestedPayment($transactionId, $this->getPaymentUrlFor($transactionId));
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace AmirrezaNasiri\LaravelToman\Contracts;
 
-use AmirrezaNasiri\LaravelToman\PaymentRequest;
+use AmirrezaNasiri\LaravelToman\RequestedPayment;
 
-interface PaymentGateway
+interface PaymentRequester
 {
     /**
      * Set driver-specific data parameter on-the-fly.
@@ -46,5 +46,5 @@ interface PaymentGateway
      * Request new payment transaction from gateway provider.
      * @return mixed
      */
-    public function request(): PaymentRequest;
+    public function request(): RequestedPayment;
 }

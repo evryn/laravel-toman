@@ -12,7 +12,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function getPackageAliases($app)
     {
         return [
-            'Payment' => 'AmirrezaNasiri\LaravelToman\Facades\Payment'
+            'Payment' => 'AmirrezaNasiri\LaravelToman\Facades\PaymentRequest'
         ];
     }
 }

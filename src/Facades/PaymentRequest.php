@@ -2,9 +2,10 @@
 
 namespace AmirrezaNasiri\LaravelToman\Facades;
 
+use AmirrezaNasiri\LaravelToman\Contracts\PaymentRequester;
 use Illuminate\Support\Facades\Facade;
 
-class Payment extends Facade
+class PaymentRequest extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -13,6 +14,6 @@ class Payment extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'laravel-toman.payment';
+        return PaymentRequester::class;
     }
 }

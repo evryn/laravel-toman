@@ -2,17 +2,17 @@
 
 namespace AmirrezaNasiri\LaravelToman\Tests;
 
-use AmirrezaNasiri\LaravelToman\GatewayManager;
+use AmirrezaNasiri\LaravelToman\PaymentRequestGatewayManager;
 
-final class PaymentManagerTest extends TestCase
+final class PaymentRequestGatewayManagerTest extends TestCase
 {
-    /** @var GatewayManager */
+    /** @var PaymentRequestGatewayManager */
     public $manager;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->manager = new GatewayManager($this->app);
+        $this->manager = new PaymentRequestGatewayManager($this->app);
     }
 
     /** @test */

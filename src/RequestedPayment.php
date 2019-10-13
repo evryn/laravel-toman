@@ -4,7 +4,7 @@ namespace AmirrezaNasiri\LaravelToman;
 
 use Illuminate\Http\RedirectResponse;
 
-class PaymentRequest
+class RequestedPayment
 {
     private $transactionId;
     private $paymentUrl;

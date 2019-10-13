@@ -1,24 +1,25 @@
 <?php
 
 
-namespace AmirrezaNasiri\LaravelToman\Tests\Gateways;
+namespace AmirrezaNasiri\LaravelToman\Tests\Gateways\Zarinpal;
 
 
 use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
-use AmirrezaNasiri\LaravelToman\Gateways\ZarinpalGateway;
+use AmirrezaNasiri\LaravelToman\Gateways\Zarinpal\Requester;
 use AmirrezaNasiri\LaravelToman\Exceptions\GatewayException;
 use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
+use AmirrezaNasiri\LaravelToman\Tests\Gateways\DriverTestCase;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\URL;
 
 
-final class ZarinpalDriverTest extends DriverTestCase
+final class RequesterTest extends DriverTestCase
 {
     /** @test */
     public function can_request_production_payment()
     {
-        $gateway = ZarinpalGateway::make([
+        $gateway = Requester::make([
             'merchant_id' => 'xxxx-xxxx-xxxx-xxxx',
         ], $this->mockedPurchaseResponse());
 
@@ -52,7 +53,7 @@ final class ZarinpalDriverTest extends DriverTestCase
     /** @test */
     public function can_request_sandbox_payment()
     {
-        $gateway = ZarinpalGateway::make([
+        $gateway = Requester::make([
             'sandbox' => true,
             'merchant_id' => 'xxxx-xxxx-xxxx-xxxx',
         ], $this->mockedPurchaseResponse());
@@ -90,7 +91,7 @@ final class ZarinpalDriverTest extends DriverTestCase
      */
     public function can_request_a_real_sandbox_payment()
     {
-        $gateway = ZarinpalGateway::make([
+        $gateway = Requester::make([
             'sandbox' => true,
             'merchant_id' => env('ZARINPAL_MERCHANT_ID'),
         ], app(GuzzleClient::class));
@@ -118,7 +119,7 @@ final class ZarinpalDriverTest extends DriverTestCase
 
         $this->expectException( GatewayException::class );
 
-        ZarinpalGateway::make($this->validConfig(), $client)->request();
+        Requester::make($this->validConfig(), $client)->request();
 
         $exception = $this->getExpectedException();
 
@@ -138,7 +139,7 @@ final class ZarinpalDriverTest extends DriverTestCase
         ])));
 
         try {
-            ZarinpalGateway::make($this->validConfig(), $client)->request();
+            Requester::make($this->validConfig(), $client)->request();
         } catch (GatewayException $exception) {
             self::assertEquals($status, $exception->getCode());
             self::assertStringContainsString($partialMessage, $exception->getMessage());
@@ -168,11 +169,11 @@ final class ZarinpalDriverTest extends DriverTestCase
     {
         $client = $this->mockedPurchaseResponse(2);
 
-        ZarinpalGateway::make($this->validConfig(['merchant_id' => '1111-1111-1111-1111']), $client)
+        Requester::make($this->validConfig(['merchant_id' => '1111-1111-1111-1111']), $client)
             ->request();
         $this->assertDataInRequest('1111-1111-1111-1111', 'MerchantID');
 
-        ZarinpalGateway::make($this->validConfig(['merchant_id' => '1111-1111-1111-1111']), $client)
+        Requester::make($this->validConfig(['merchant_id' => '1111-1111-1111-1111']), $client)
             ->data('MerchantID', '2222-2222-2222-2222')
             ->request();
         $this->assertDataInRequest('2222-2222-2222-2222', 'MerchantID');
@@ -183,10 +184,10 @@ final class ZarinpalDriverTest extends DriverTestCase
     {
         $client = $this->mockedPurchaseResponse(2);
 
-        ZarinpalGateway::make($this->validConfig(), $client)->amount(1000)->request();
+        Requester::make($this->validConfig(), $client)->amount(1000)->request();
         $this->assertDataInRequest(1000, 'Amount');
 
-        ZarinpalGateway::make($this->validConfig(), $client)->data('Amount', 3500)->request();
+        Requester::make($this->validConfig(), $client)->data('Amount', 3500)->request();
         $this->assertDataInRequest(3500, 'Amount');
     }
 
@@ -198,13 +199,13 @@ final class ZarinpalDriverTest extends DriverTestCase
         $client = $this->mockedPurchaseResponse(3);
 
         config(['toman.callback_route' => 'payment.callback']);
-        ZarinpalGateway::make($this->validConfig(), $client)->request();
+        Requester::make($this->validConfig(), $client)->request();
         $this->assertDataInRequest(URL::route('payment.callback'), 'CallbackURL');
 
-        ZarinpalGateway::make($this->validConfig(), $client)->callback('https://example.com/callbackA')->request();
+        Requester::make($this->validConfig(), $client)->callback('https://example.com/callbackA')->request();
         $this->assertDataInRequest('https://example.com/callbackA', 'CallbackURL');
 
-        ZarinpalGateway::make($this->validConfig(), $client)->data('CallbackURL', 'https://example.com/callbackB')->request();
+        Requester::make($this->validConfig(), $client)->data('CallbackURL', 'https://example.com/callbackB')->request();
         $this->assertDataInRequest('https://example.com/callbackB', 'CallbackURL');
     }
 
@@ -214,13 +215,13 @@ final class ZarinpalDriverTest extends DriverTestCase
         $client = $this->mockedPurchaseResponse(4);
 
         config(['toman.description' => 'Paying :amount for invoice']);
-        ZarinpalGateway::make($this->validConfig(), $client)->amount(5000)->request();
+        Requester::make($this->validConfig(), $client)->amount(5000)->request();
         $this->assertDataInRequest('Paying 5000 for invoice', 'Description');
 
-        ZarinpalGateway::make($this->validConfig(), $client)->description('Some descriptions')->request();
+        Requester::make($this->validConfig(), $client)->description('Some descriptions')->request();
         $this->assertDataInRequest('Some descriptions', 'Description');
 
-        ZarinpalGateway::make($this->validConfig(), $client)->data('Description', 'Other text')->request();
+        Requester::make($this->validConfig(), $client)->data('Description', 'Other text')->request();
         $this->assertDataInRequest('Other text', 'Description');
     }
 
@@ -229,10 +230,10 @@ final class ZarinpalDriverTest extends DriverTestCase
     {
         $client = $this->mockedPurchaseResponse(2);
 
-        ZarinpalGateway::make($this->validConfig(), $client)->mobile('09350000000')->request();
+        Requester::make($this->validConfig(), $client)->mobile('09350000000')->request();
         $this->assertDataInRequest('09350000000', 'Mobile');
 
-        ZarinpalGateway::make($this->validConfig(), $client)->data('Mobile', '09351111111')->request();
+        Requester::make($this->validConfig(), $client)->data('Mobile', '09351111111')->request();
         $this->assertDataInRequest('09351111111', 'Mobile');
     }
 
@@ -241,10 +242,10 @@ final class ZarinpalDriverTest extends DriverTestCase
     {
         $client = $this->mockedPurchaseResponse(2);
 
-        ZarinpalGateway::make($this->validConfig(), $client)->email('amirreza@example.com')->request();
+        Requester::make($this->validConfig(), $client)->email('amirreza@example.com')->request();
         $this->assertDataInRequest('amirreza@example.com', 'Email');
 
-        ZarinpalGateway::make($this->validConfig(), $client)->data('Email', 'alireza@example.com')->request();
+        Requester::make($this->validConfig(), $client)->data('Email', 'alireza@example.com')->request();
         $this->assertDataInRequest('alireza@example.com', 'Email');
     }
 
@@ -256,7 +257,7 @@ final class ZarinpalDriverTest extends DriverTestCase
     {
         $client = $this->mockedPurchaseResponse();
 
-        $gateway = ZarinpalGateway::make($this->validConfig([
+        $gateway = Requester::make($this->validConfig([
             'sandbox' => $sandbox
         ]), $client);
 

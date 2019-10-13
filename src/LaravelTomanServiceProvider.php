@@ -3,6 +3,7 @@
 namespace AmirrezaNasiri\LaravelToman;
 
 use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
+use AmirrezaNasiri\LaravelToman\Contracts\PaymentRequester;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,8 +32,8 @@ class LaravelTomanServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/toman.php', 'toman');
 
         // Register the PaymentManager used to separate drivers
-        $this->app->singleton('laravel-toman.payment', function ($app) {
-            return new GatewayManager($app);
+        $this->app->singleton(PaymentRequester::class, function ($app) {
+            return new PaymentRequestGatewayManager($app);
         });
 
         // Register the Guzzle HTTP client used by drivers to send requests

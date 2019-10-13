@@ -2,6 +2,7 @@
 
 namespace AmirrezaNasiri\LaravelToman\Gateways;
 
+use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\URL;
@@ -13,6 +14,17 @@ use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
 
 class ZarinpalGateway extends BaseGateway
 {
+    public function __construct($config, Client $client)
+    {
+        $this->setConfig($config);
+        $this->client = $client;
+    }
+
+    public static function make($config, Client $client)
+    {
+        return new self($config, $client);
+    }
+
     public function callback($callbackUrl)
     {
         $this->data('CallbackURL', $callbackUrl);

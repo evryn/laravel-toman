@@ -2,6 +2,7 @@
 
 namespace AmirrezaNasiri\LaravelToman;
 
+use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
@@ -35,8 +36,8 @@ class LaravelTomanServiceProvider extends ServiceProvider
         });
 
         // Register the Guzzle HTTP client used by drivers to send requests
-        $this->app->singleton('laravel-toman.guzzle-client', function () {
-            return new Client();
+        $this->app->singleton(GuzzleClient::class, function () {
+            return new Client;
         });
     }
 
@@ -50,7 +51,7 @@ class LaravelTomanServiceProvider extends ServiceProvider
     {
         return [
             'laravel-toman.payment',
-            'laravel-toman.guzzle-client',
+            GuzzleClient::class,
         ];
     }
 

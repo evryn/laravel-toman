@@ -14,7 +14,7 @@ abstract class DriverTestCase extends TestCase
 {
     protected $history = [];
 
-    protected function mockClient($responses)
+    protected function mockedGuzzleClient($responses)
     {
         $historyMiddleware = Middleware::history($this->history);
         $handlerStack      = HandlerStack::create();
@@ -24,16 +24,7 @@ abstract class DriverTestCase extends TestCase
         }
         $handlerStack->push($historyMiddleware);
 
-        $this->app->bind('laravel-toman.guzzle-client', function () use ($handlerStack) {
-            return new Client(['handler' => $handlerStack]);
-        });
-    }
-
-    protected function realizeClient()
-    {
-        $this->app->bind('laravel-toman.guzzle-client', function () {
-            return new Client();
-        });
+        return new Client(['handler' => $handlerStack]);;
     }
 
     /**

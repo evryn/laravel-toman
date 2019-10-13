@@ -20,12 +20,6 @@ abstract class BaseGateway implements PaymentGateway
     /** @var array Payment gateway data holder */
     protected $data = [];
 
-    public function __construct($config)
-    {
-        $this->setConfig($config);
-        $this->client = app('laravel-toman.guzzle-client');
-    }
-
     public function setConfig($config)
     {
         $this->config = $config;

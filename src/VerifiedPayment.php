@@ -2,8 +2,6 @@
 
 namespace AmirrezaNasiri\LaravelToman;
 
-use Illuminate\Http\RedirectResponse;
-
 class VerifiedPayment
 {
     private $referenceId;

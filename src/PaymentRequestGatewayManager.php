@@ -2,9 +2,9 @@
 
 namespace AmirrezaNasiri\LaravelToman;
 
+use Illuminate\Support\Manager;
 use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
 use AmirrezaNasiri\LaravelToman\Gateways\Zarinpal\Requester as ZarinpalPaymentRequest;
-use Illuminate\Support\Manager;
 
 class PaymentRequestGatewayManager extends Manager
 {
@@ -19,7 +19,7 @@ class PaymentRequestGatewayManager extends Manager
     }
 
     /**
-     * Create Zarinpal gateway driver
+     * Create Zarinpal gateway driver.
      * @return ZarinpalPaymentRequest
      */
     public function createZarinpalDriver()

@@ -2,15 +2,15 @@
 
 namespace AmirrezaNasiri\LaravelToman;
 
-use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
-use AmirrezaNasiri\LaravelToman\Contracts\PaymentRequester;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
+use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
+use AmirrezaNasiri\LaravelToman\Contracts\PaymentRequester;
 
 class LaravelTomanServiceProvider extends ServiceProvider
 {
     const CONFIG_FILE = __DIR__.'/../config/toman.php';
-    const TRANSLATION_FILES = __DIR__ . '/../resources/lang/';
+    const TRANSLATION_FILES = __DIR__.'/../resources/lang/';
 
     /**
      * Perform post-registration booting of services.

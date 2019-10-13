@@ -2,9 +2,9 @@
 
 namespace AmirrezaNasiri\LaravelToman\Gateways;
 
-use AmirrezaNasiri\LaravelToman\Contracts\PaymentVerifier;
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
+use AmirrezaNasiri\LaravelToman\Contracts\PaymentVerifier;
 
 abstract class BaseVerifier implements PaymentVerifier
 {

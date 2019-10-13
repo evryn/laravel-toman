@@ -2,8 +2,8 @@
 
 namespace AmirrezaNasiri\LaravelToman\Facades;
 
-use AmirrezaNasiri\LaravelToman\Contracts\PaymentRequester;
 use Illuminate\Support\Facades\Facade;
+use AmirrezaNasiri\LaravelToman\Contracts\PaymentRequester;
 
 class PaymentRequest extends Facade
 {

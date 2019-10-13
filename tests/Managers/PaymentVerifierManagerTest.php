@@ -2,11 +2,12 @@
 
 namespace Evryn\LaravelToman\Tests\Managers;
 
-use Evryn\LaravelToman\Gateways\Zarinpal\Requester;
+use Evryn\LaravelToman\Gateways\Zarinpal\Verifier;
 use Evryn\LaravelToman\Managers\PaymentRequestManager;
+use Evryn\LaravelToman\Managers\PaymentVerificationManager;
 use Evryn\LaravelToman\Tests\TestCase;
 
-final class PaymentRequestManagerTest extends TestCase
+final class PaymentVerifierManagerTest extends TestCase
 {
     /** @var PaymentRequestManager */
     public $manager;
@@ -14,7 +15,7 @@ final class PaymentRequestManagerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->manager = new PaymentRequestManager($this->app);
+        $this->manager = new PaymentVerificationManager($this->app);
     }
 
     /** @test */
@@ -39,7 +40,7 @@ final class PaymentRequestManagerTest extends TestCase
 
         $gateway = $this->manager->driver('zarinpal');
 
-        self::assertInstanceOf(Requester::class, $gateway);
+        self::assertInstanceOf(Verifier::class, $gateway);
         self::assertEquals($config, $gateway->getConfig());
     }
 

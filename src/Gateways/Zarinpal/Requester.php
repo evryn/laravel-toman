@@ -9,9 +9,8 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\URL;
-use AmirrezaNasiri\LaravelToman\Utils;
-use GuzzleHttp\Exception\ClientException;
-use AmirrezaNasiri\LaravelToman\Exceptions\GatewayException;
+use AmirrezaNasiri\LaravelToman\Helpers\Client as ClientHelper;
+use AmirrezaNasiri\LaravelToman\Helpers\Gateway as GatewayHelper;
 use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
 
 class Requester extends BaseRequester
@@ -72,41 +71,18 @@ class Requester extends BaseRequester
                 [RequestOptions::JSON => $requestData]
             );
         } catch (\Exception $exception) {
-            $this->throwGatewayException($exception);
+            GatewayHelper::fail($exception);
         }
 
-        $data = Utils::getResponseData($response);
+        $data = ClientHelper::getResponseData($response);
 
         $transactionId = Arr::get($data, 'Authority');
 
         if (Arr::get($data, 'Status') !== Status::PAYMENT_SUCCEED || ! $transactionId) {
-            $this->throwGatewayException($data);
+            GatewayHelper::fail($data);
         }
 
         return new RequestedPayment($transactionId, $this->getPaymentUrlFor($transactionId));
-    }
-
-    /**
-     * @param array|ClientException|\Exception $data
-     * @throws GatewayException
-     */
-    private function throwGatewayException($data)
-    {
-        $previous = null;
-        if ($data instanceof ClientException) {
-            $previous = $data;
-            $data = Utils::getResponseData($data);
-        }
-
-        $status = Arr::get($data, 'Status', 0);
-
-        if ($errors = Arr::get($data, 'errors')) {
-            $message = Arr::flatten($errors)[0];
-        } else {
-            $message = Status::toMessage($status);
-        }
-
-        throw new GatewayException($message, $status, $previous);
     }
 
     public function getPaymentUrlFor($transactionId)

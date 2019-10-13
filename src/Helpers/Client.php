@@ -1,11 +1,11 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman;
+namespace AmirrezaNasiri\LaravelToman\Helpers;
 
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\ClientException;
 
-class Utils
+class Client
 {
     /**
      * @param ResponseInterface|ClientException $response

@@ -17,9 +17,9 @@ return [
         'transaction_splitting_limited' => 'Transaction splitting number or amount limit is reached.',
         'method_access_denied' => 'Unable to access this payment method.',
         'invalid_additional_data' => 'Submitted information in AdditionalData is invalid.',
-        'invalid_expiration_range' => "Valid duration range for transaction id must be between 30 minutes to 45 days.",
+        'invalid_expiration_range' => 'Valid duration range for transaction id must be between 30 minutes to 45 days.',
         'request_archived' => 'Request archived.',
         'payment_succeed' => 'Operation was successful.',
         'already_verified' => 'Operation was successful but it has already been verified before.',
-    ]
+    ],
 ];

@@ -1,9 +1,10 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Tests;
+namespace AmirrezaNasiri\LaravelToman\Tests\Facades;
 
 use AmirrezaNasiri\LaravelToman\Facades\PaymentRequest;
-use AmirrezaNasiri\LaravelToman\PaymentRequestGatewayManager;
+use AmirrezaNasiri\LaravelToman\Managers\PaymentRequestManager;
+use AmirrezaNasiri\LaravelToman\Tests\TestCase;
 
 final class PaymentRequestTest extends TestCase
 {
@@ -11,6 +12,6 @@ final class PaymentRequestTest extends TestCase
     public function resolves_to_gateway_manager()
     {
         $root = PaymentRequest::getFacadeRoot();
-        self::assertInstanceOf(PaymentRequestGatewayManager::class, $root);
+        self::assertInstanceOf(PaymentRequestManager::class, $root);
     }
 }

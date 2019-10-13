@@ -2,8 +2,8 @@
 
 namespace AmirrezaNasiri\LaravelToman\Contracts;
 
-use AmirrezaNasiri\LaravelToman\VerifiedPayment;
-use AmirrezaNasiri\LaravelToman\RequestedPayment;
+use AmirrezaNasiri\LaravelToman\Results\VerifiedPayment;
+use AmirrezaNasiri\LaravelToman\Results\RequestedPayment;
 use Illuminate\Http\Request;
 
 interface PaymentVerifier

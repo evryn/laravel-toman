@@ -2,30 +2,54 @@
 
 namespace AmirrezaNasiri\LaravelToman\Gateways\Zarinpal;
 
+use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
 use AmirrezaNasiri\LaravelToman\Gateways\BaseRequester;
-use AmirrezaNasiri\LaravelToman\RequestedPayment;
+use AmirrezaNasiri\LaravelToman\Results\RequestedPayment;
 use AmirrezaNasiri\LaravelToman\Tests\Gateways\Zarinpal\Status;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Support\Arr;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\URL;
 use AmirrezaNasiri\LaravelToman\Helpers\Client as ClientHelper;
 use AmirrezaNasiri\LaravelToman\Helpers\Gateway as GatewayHelper;
-use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
 
+/**
+ * Class Requester
+ * @package AmirrezaNasiri\LaravelToman\Gateways\Zarinpal
+ */
 class Requester extends BaseRequester
 {
+    use CommonMethods;
+
+    /**
+     * Requester constructor.
+     * @param $config
+     * @param Client $client
+     */
     public function __construct($config, Client $client)
     {
         $this->setConfig($config);
         $this->client = $client;
     }
 
+    /**
+     * Initialize a Requester object on-the-fly
+     * @param $config
+     * @param Client $client
+     * @return self
+     */
     public static function make($config, Client $client)
     {
         return new self($config, $client);
     }
 
+    /**
+     * Set <i>CallbackURL</i> data and override config
+     * @param $callbackUrl string
+     * @return $this
+     */
     public function callback($callbackUrl)
     {
         $this->data('CallbackURL', $callbackUrl);
@@ -33,13 +57,11 @@ class Requester extends BaseRequester
         return $this;
     }
 
-    public function amount($amount)
-    {
-        $this->data('Amount', $amount);
-
-        return $this;
-    }
-
+    /**
+     * Set <i>Mobile</i> data
+     * @param $mobile string
+     * @return $this
+     */
     public function mobile($mobile)
     {
         $this->data('Mobile', $mobile);
@@ -47,6 +69,11 @@ class Requester extends BaseRequester
         return $this;
     }
 
+    /**
+     * Set <i>Email</i> data
+     * @param $email string
+     * @return $this
+     */
     public function email($email)
     {
         $this->data('Email', $email);
@@ -54,6 +81,11 @@ class Requester extends BaseRequester
         return $this;
     }
 
+    /**
+     * Set <i>Description</i> data and override config
+     * @param $amount
+     * @return $this
+     */
     public function description($description)
     {
         $this->data('Description', $description);
@@ -61,16 +93,20 @@ class Requester extends BaseRequester
         return $this;
     }
 
+    /**
+     * Request a new payment from gateway
+     * @return RequestedPayment If new payment is created and is ready to pay
+     * @throws \AmirrezaNasiri\LaravelToman\Exceptions\GatewayException If new payment was not created
+     * @throws InvalidConfigException
+     */
     public function request(): RequestedPayment
     {
-        $requestData = $this->makeRequestData();
-        $requestURL = $this->makeRequestURL();
         try {
             $response = $this->client->post(
-                $requestURL,
-                [RequestOptions::JSON => $requestData]
+                $this->makeRequestURL(),
+                [RequestOptions::JSON => $this->makeRequestData()]
             );
-        } catch (\Exception $exception) {
+        } catch (ClientException | ServerException $exception) {
             GatewayHelper::fail($exception);
         }
 
@@ -85,23 +121,31 @@ class Requester extends BaseRequester
         return new RequestedPayment($transactionId, $this->getPaymentUrlFor($transactionId));
     }
 
-    public function getPaymentUrlFor($transactionId)
+    /**
+     * Get payable URL for user
+     * @param $transactionId
+     * @return string
+     * @throws \AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException
+     */
+    private function getPaymentUrlFor($transactionId)
     {
         return $this->getHost()."/pg/StartPay/{$transactionId}";
     }
 
+    /**
+     * Make environment-aware verification endpoint URL
+     * @return string
+     * @throws InvalidConfigException
+     */
     private function makeRequestURL()
     {
         return $this->getHost().'/pg/rest/WebGate/PaymentRequest.json';
     }
 
-    private function getHost()
-    {
-        $subdomain = $this->isSandbox() ? 'sandbox' : 'www';
-
-        return "https://{$subdomain}.zarinpal.com";
-    }
-
+    /**
+     * Make config-aware verification endpoint required data
+     * @return array
+     */
     private function makeRequestData()
     {
         return array_merge($this->data, [
@@ -111,6 +155,10 @@ class Requester extends BaseRequester
         ]);
     }
 
+    /**
+     * Get 'CallbackURL' from data or default one from config if available
+     * @return array|mixed|string
+     */
     private function getCallbackUrl()
     {
         if ($data = $this->getData('CallbackURL')) {
@@ -122,6 +170,10 @@ class Requester extends BaseRequester
         }
     }
 
+    /**
+     * Get 'Description' from data or default one from config if available
+     * @return array|mixed|string
+     */
     private function getDescription()
     {
         $description = $this->getData('Description');
@@ -131,29 +183,5 @@ class Requester extends BaseRequester
         }
 
         return str_replace(':amount', $this->getData('Amount'), $description);
-    }
-
-    private function isSandbox()
-    {
-        $sandbox = $this->getConfig('sandbox');
-
-        if ($sandbox === null || $sandbox === false) {
-            return false;
-        } elseif ($sandbox === true) {
-            return true;
-        }
-
-        throw new InvalidConfigException('sandbox');
-    }
-
-    private function getMerchantId()
-    {
-        $merchantId = $this->getData('MerchantID');
-
-        if (! $merchantId) {
-            $merchantId = $this->getConfig('merchant_id');
-        }
-
-        return $merchantId;
     }
 }

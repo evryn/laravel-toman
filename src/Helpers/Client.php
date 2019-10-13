@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\ClientException;
 class Client
 {
     /**
+     * Get decoded response data
      * @param ResponseInterface|ClientException $response
      * @return array|null
      */

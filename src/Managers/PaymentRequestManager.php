@@ -1,12 +1,12 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman;
+namespace AmirrezaNasiri\LaravelToman\Managers;
 
 use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
 use AmirrezaNasiri\LaravelToman\Gateways\Zarinpal\Requester as ZarinpalPaymentRequest;
 use Illuminate\Support\Manager;
 
-class PaymentRequestGatewayManager extends Manager
+class PaymentRequestManager extends Manager
 {
     /**
      * Get the default payment gateway name.

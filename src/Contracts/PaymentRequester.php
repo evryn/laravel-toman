@@ -2,7 +2,7 @@
 
 namespace AmirrezaNasiri\LaravelToman\Contracts;
 
-use AmirrezaNasiri\LaravelToman\RequestedPayment;
+use AmirrezaNasiri\LaravelToman\Results\RequestedPayment;
 
 interface PaymentRequester
 {

@@ -226,9 +226,6 @@ final class ZarinpalDriverTest extends DriverTestCase
         $this->assertDataInRequest('Other text', 'Description');
 
         config(['toman.description' => null]);
-
-        // $this->getConfiguredDriver()->request();
-        // $this->assertDataInRequest(null, 'Description');
     }
 
     /** @test */
@@ -253,15 +250,6 @@ final class ZarinpalDriverTest extends DriverTestCase
 
         ZarinpalGateway::make($this->validConfig(), $client)->data('Email', 'alireza@example.com')->request();
         $this->assertDataInRequest('alireza@example.com', 'Email');
-    }
-
-    /** @test */
-    public function can_set_config_explicitly()
-    {
-        //$gateway = new ZarinpalGateway(['keyA' => 'valueA']);
-        //self::assertEquals(['keyA' => 'valueA'], $gateway->getConfig());
-        //$gateway->setConfig(['keyB' => 'valueB']);
-        //self::assertEquals(['keyB' => 'valueB'], $gateway->getConfig());
     }
 
     /**

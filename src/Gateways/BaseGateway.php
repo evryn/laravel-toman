@@ -20,7 +20,7 @@ abstract class BaseGateway implements PaymentGateway
     /** @var array Payment gateway data holder */
     protected $data = [];
 
-    public function setConfig($config)
+    protected function setConfig($config)
     {
         $this->config = $config;
 

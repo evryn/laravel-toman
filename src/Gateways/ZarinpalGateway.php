@@ -53,13 +53,6 @@ class ZarinpalGateway extends BaseGateway
         return $this;
     }
 
-    public function merchant($merchantID)
-    {
-        $this->data('MerchantID', $merchantID);
-
-        return $this;
-    }
-
     public function description($description)
     {
         $this->data('Description', $description);

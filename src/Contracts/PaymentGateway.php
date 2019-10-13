@@ -7,20 +7,6 @@ use AmirrezaNasiri\LaravelToman\PaymentRequest;
 interface PaymentGateway
 {
     /**
-     * Set driver config on-the-fly.
-     * @param array $config
-     * @return mixed
-     */
-    public function setConfig(array $config);
-
-    /**
-     * Get all driver config or specific key.
-     * @param null $key
-     * @return mixed
-     */
-    public function getConfig($key = null);
-
-    /**
      * Set driver-specific data parameter on-the-fly.
      * @param $key
      * @param null $value
@@ -48,13 +34,6 @@ interface PaymentGateway
      * @return mixed
      */
     public function amount($amount);
-
-    /**
-     * Merchant or gateway ID which is issued by the gateway provider.
-     * @param $merchantID
-     * @return mixed
-     */
-    public function merchant($merchantID);
 
     /**
      * Payment description.

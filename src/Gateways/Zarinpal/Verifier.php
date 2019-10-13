@@ -2,22 +2,21 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
-use Evryn\LaravelToman\Results\VerifiedPayment;
-use Evryn\LaravelToman\Gateways\BaseVerifier;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\Request;
 use GuzzleHttp\RequestOptions;
-use Evryn\LaravelToman\Helpers\Client as ClientHelper;
-use Evryn\LaravelToman\Helpers\Gateway as GatewayHelper;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+use Evryn\LaravelToman\Gateways\BaseVerifier;
+use Evryn\LaravelToman\Results\VerifiedPayment;
 use Evryn\LaravelToman\Exceptions\GatewayException;
+use Evryn\LaravelToman\Helpers\Client as ClientHelper;
+use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Helpers\Gateway as GatewayHelper;
 use Evryn\LaravelToman\Exceptions\InvalidConfigException;
 
 /**
- * Class Verifier
- * @package Evryn\LaravelToman\Gateways\Zarinpal
+ * Class Verifier.
  */
 class Verifier extends BaseVerifier
 {
@@ -35,7 +34,7 @@ class Verifier extends BaseVerifier
     }
 
     /**
-     * Initialize a Requester object on-the-fly
+     * Initialize a Requester object on-the-fly.
      * @param $config
      * @param Client $client
      * @return self
@@ -46,7 +45,7 @@ class Verifier extends BaseVerifier
     }
 
     /**
-     * Verify incoming payment callback and get reference ID of transaction if possible
+     * Verify incoming payment callback and get reference ID of transaction if possible.
      * @param Request $request Current HTTP request
      * @return VerifiedPayment If payment is verified
      * @throws GatewayException If payment is not verified
@@ -54,14 +53,14 @@ class Verifier extends BaseVerifier
      */
     public function verify(Request $request): VerifiedPayment
     {
-       if ($request->input('Status') !== 'OK') {
-           throw new GatewayException(Status::toMessage(Status::NOT_PAID), Status::NOT_PAID);
-       }
+        if ($request->input('Status') !== 'OK') {
+            throw new GatewayException(Status::toMessage(Status::NOT_PAID), Status::NOT_PAID);
+        }
 
         try {
             $response = $this->client->post(
                 $this->makeVerificationURL(),
-                [ RequestOptions::JSON => $this->makeVerificationData($request) ]
+                [RequestOptions::JSON => $this->makeVerificationData($request)]
             );
         } catch (ClientException | ServerException $exception) {
             GatewayHelper::fail($exception);
@@ -78,7 +77,7 @@ class Verifier extends BaseVerifier
     }
 
     /**
-     * Make environment-aware verification endpoint URL
+     * Make environment-aware verification endpoint URL.
      * @return string
      * @throws InvalidConfigException
      */
@@ -88,7 +87,7 @@ class Verifier extends BaseVerifier
     }
 
     /**
-     * Make config-aware verification endpoint required data
+     * Make config-aware verification endpoint required data.
      * @param Request $request
      * @return array
      */

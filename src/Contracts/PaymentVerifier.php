@@ -2,9 +2,8 @@
 
 namespace Evryn\LaravelToman\Contracts;
 
-use Evryn\LaravelToman\Results\VerifiedPayment;
-use Evryn\LaravelToman\Results\RequestedPayment;
 use Illuminate\Http\Request;
+use Evryn\LaravelToman\Results\VerifiedPayment;
 
 interface PaymentVerifier
 {
@@ -24,7 +23,7 @@ interface PaymentVerifier
     public function getData($key = null);
 
     /**
-     * Verify payment
+     * Verify payment.
      * @return mixed
      */
     public function verify(Request $request): VerifiedPayment;

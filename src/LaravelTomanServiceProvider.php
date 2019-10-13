@@ -2,16 +2,16 @@
 
 namespace Evryn\LaravelToman;
 
+use GuzzleHttp\Client;
+use Illuminate\Support\ServiceProvider;
 use Evryn\LaravelToman\Clients\GuzzleClient;
 use Evryn\LaravelToman\Contracts\PaymentRequester;
 use Evryn\LaravelToman\Managers\PaymentRequestManager;
-use GuzzleHttp\Client;
-use Illuminate\Support\ServiceProvider;
 
 class LaravelTomanServiceProvider extends ServiceProvider
 {
     const CONFIG_FILE = __DIR__.'/../config/toman.php';
-    const TRANSLATION_FILES = __DIR__ . '/../resources/lang/';
+    const TRANSLATION_FILES = __DIR__.'/../resources/lang/';
 
     /**
      * Perform post-registration booting of services.

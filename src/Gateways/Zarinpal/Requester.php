@@ -2,22 +2,21 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use Evryn\LaravelToman\Exceptions\InvalidConfigException;
-use Evryn\LaravelToman\Gateways\BaseRequester;
-use Evryn\LaravelToman\Results\RequestedPayment;
-use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
 use Illuminate\Support\Arr;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\URL;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+use Evryn\LaravelToman\Gateways\BaseRequester;
+use Evryn\LaravelToman\Results\RequestedPayment;
 use Evryn\LaravelToman\Helpers\Client as ClientHelper;
+use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Helpers\Gateway as GatewayHelper;
+use Evryn\LaravelToman\Exceptions\InvalidConfigException;
 
 /**
- * Class Requester
- * @package Evryn\LaravelToman\Gateways\Zarinpal
+ * Class Requester.
  */
 class Requester extends BaseRequester
 {
@@ -35,7 +34,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Initialize a Requester object on-the-fly
+     * Initialize a Requester object on-the-fly.
      * @param $config
      * @param Client $client
      * @return self
@@ -46,7 +45,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Set <i>CallbackURL</i> data and override config
+     * Set <i>CallbackURL</i> data and override config.
      * @param $callbackUrl string
      * @return $this
      */
@@ -58,7 +57,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Set <i>Mobile</i> data
+     * Set <i>Mobile</i> data.
      * @param $mobile string
      * @return $this
      */
@@ -70,7 +69,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Set <i>Email</i> data
+     * Set <i>Email</i> data.
      * @param $email string
      * @return $this
      */
@@ -82,7 +81,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Set <i>Description</i> data and override config
+     * Set <i>Description</i> data and override config.
      * @param $amount
      * @return $this
      */
@@ -94,7 +93,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Request a new payment from gateway
+     * Request a new payment from gateway.
      * @return RequestedPayment If new payment is created and is ready to pay
      * @throws \Evryn\LaravelToman\Exceptions\GatewayException If new payment was not created
      * @throws InvalidConfigException
@@ -122,7 +121,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Get payable URL for user
+     * Get payable URL for user.
      * @param $transactionId
      * @return string
      * @throws \Evryn\LaravelToman\Exceptions\InvalidConfigException
@@ -133,7 +132,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Make environment-aware verification endpoint URL
+     * Make environment-aware verification endpoint URL.
      * @return string
      * @throws InvalidConfigException
      */
@@ -143,7 +142,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Make config-aware verification endpoint required data
+     * Make config-aware verification endpoint required data.
      * @return array
      */
     private function makeRequestData()
@@ -156,7 +155,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Get 'CallbackURL' from data or default one from config if available
+     * Get 'CallbackURL' from data or default one from config if available.
      * @return array|mixed|string
      */
     private function getCallbackUrl()
@@ -171,7 +170,7 @@ class Requester extends BaseRequester
     }
 
     /**
-     * Get 'Description' from data or default one from config if available
+     * Get 'Description' from data or default one from config if available.
      * @return array|mixed|string
      */
     private function getDescription()

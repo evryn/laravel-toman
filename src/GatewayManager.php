@@ -2,8 +2,8 @@
 
 namespace AmirrezaNasiri\LaravelToman;
 
-use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
 use Illuminate\Support\Manager;
+use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
 use AmirrezaNasiri\LaravelToman\Gateways\ZarinpalGateway;
 
 class GatewayManager extends Manager
@@ -19,7 +19,7 @@ class GatewayManager extends Manager
     }
 
     /**
-     * Create Zarinpal gateway driver
+     * Create Zarinpal gateway driver.
      * @return ZarinpalGateway
      */
     public function createZarinpalDriver()

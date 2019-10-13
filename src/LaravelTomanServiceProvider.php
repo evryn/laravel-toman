@@ -2,9 +2,9 @@
 
 namespace AmirrezaNasiri\LaravelToman;
 
-use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
+use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
 
 class LaravelTomanServiceProvider extends ServiceProvider
 {

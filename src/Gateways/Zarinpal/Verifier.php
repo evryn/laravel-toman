@@ -1,23 +1,23 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Gateways\Zarinpal;
+namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use AmirrezaNasiri\LaravelToman\Tests\Gateways\Zarinpal\Status;
-use AmirrezaNasiri\LaravelToman\Results\VerifiedPayment;
-use AmirrezaNasiri\LaravelToman\Gateways\BaseVerifier;
+use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Results\VerifiedPayment;
+use Evryn\LaravelToman\Gateways\BaseVerifier;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\Request;
 use GuzzleHttp\RequestOptions;
-use AmirrezaNasiri\LaravelToman\Helpers\Client as ClientHelper;
-use AmirrezaNasiri\LaravelToman\Helpers\Gateway as GatewayHelper;
+use Evryn\LaravelToman\Helpers\Client as ClientHelper;
+use Evryn\LaravelToman\Helpers\Gateway as GatewayHelper;
 use GuzzleHttp\Exception\ClientException;
-use AmirrezaNasiri\LaravelToman\Exceptions\GatewayException;
-use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
+use Evryn\LaravelToman\Exceptions\GatewayException;
+use Evryn\LaravelToman\Exceptions\InvalidConfigException;
 
 /**
  * Class Verifier
- * @package AmirrezaNasiri\LaravelToman\Gateways\Zarinpal
+ * @package Evryn\LaravelToman\Gateways\Zarinpal
  */
 class Verifier extends BaseVerifier
 {

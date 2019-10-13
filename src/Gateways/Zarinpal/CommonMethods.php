@@ -1,10 +1,10 @@
 <?php
 
 
-namespace AmirrezaNasiri\LaravelToman\Gateways\Zarinpal;
+namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
 
-use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
+use Evryn\LaravelToman\Exceptions\InvalidConfigException;
 
 trait CommonMethods
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Clients;
+namespace Evryn\LaravelToman\Clients;
 
 interface GuzzleClient
 {

@@ -1,6 +1,6 @@
 {
-    "name": "amirrezanasiri/laravel-toman",
-    "description": ":description",
+    "name": "evryn/laravel-toman",
+    "description": "A simple stable Laravel package to handle popular payment gateways in Iran including Zarinpal.",
     "license": "license",
     "authors": [
         {
@@ -9,8 +9,12 @@
             "homepage": "https://amirreza.in"
         }
     ],
-    "homepage": "https://github.com/amirrezanasiri/laravel-toman",
-    "keywords": ["Laravel", "LaravelToman"],
+    "homepage": "https://github.com/evryn/laravel-toman",
+    "keywords": [
+        "laravel", "laraveltoman", "laravel-toman",
+        "toman", "zarinpal", "زرین پال", "payment",
+        "gateway", "درگاه", "پرداخت"
+    ],
     "require": {
         "illuminate/support": "~5",
         "guzzlehttp/guzzle": "^6.3"
@@ -23,21 +27,21 @@
     },
     "autoload": {
         "psr-4": {
-            "AmirrezaNasiri\\LaravelToman\\": "src/"
+            "Evryn\\LaravelToman\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AmirrezaNasiri\\LaravelToman\\Tests\\": "tests"
+            "Evryn\\LaravelToman\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "AmirrezaNasiri\\LaravelToman\\LaravelTomanServiceProvider"
+                "Evryn\\LaravelToman\\LaravelTomanServiceProvider"
             ],
             "aliases": {
-                "Payment": "AmirrezaNasiri\\LaravelToman\\Facades\\Payment"
+                "Payment": "Evryn\\LaravelToman\\Facades\\Payment"
             }
         }
     },

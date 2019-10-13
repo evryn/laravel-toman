@@ -1,9 +1,9 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Tests\Managers;
+namespace Evryn\LaravelToman\Tests\Managers;
 
-use AmirrezaNasiri\LaravelToman\Managers\PaymentRequestManager;
-use AmirrezaNasiri\LaravelToman\Tests\TestCase;
+use Evryn\LaravelToman\Managers\PaymentRequestManager;
+use Evryn\LaravelToman\Tests\TestCase;
 
 final class PaymentRequestManagerTest extends TestCase
 {

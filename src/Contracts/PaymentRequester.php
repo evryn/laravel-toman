@@ -1,8 +1,8 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Contracts;
+namespace Evryn\LaravelToman\Contracts;
 
-use AmirrezaNasiri\LaravelToman\Results\RequestedPayment;
+use Evryn\LaravelToman\Results\RequestedPayment;
 
 interface PaymentRequester
 {

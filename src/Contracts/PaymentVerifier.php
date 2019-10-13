@@ -1,9 +1,9 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Contracts;
+namespace Evryn\LaravelToman\Contracts;
 
-use AmirrezaNasiri\LaravelToman\Results\VerifiedPayment;
-use AmirrezaNasiri\LaravelToman\Results\RequestedPayment;
+use Evryn\LaravelToman\Results\VerifiedPayment;
+use Evryn\LaravelToman\Results\RequestedPayment;
 use Illuminate\Http\Request;
 
 interface PaymentVerifier

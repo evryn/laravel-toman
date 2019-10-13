@@ -1,10 +1,10 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Tests\Facades;
+namespace Evryn\LaravelToman\Tests\Facades;
 
-use AmirrezaNasiri\LaravelToman\Facades\PaymentRequest;
-use AmirrezaNasiri\LaravelToman\Managers\PaymentRequestManager;
-use AmirrezaNasiri\LaravelToman\Tests\TestCase;
+use Evryn\LaravelToman\Facades\PaymentRequest;
+use Evryn\LaravelToman\Managers\PaymentRequestManager;
+use Evryn\LaravelToman\Tests\TestCase;
 
 final class PaymentRequestTest extends TestCase
 {

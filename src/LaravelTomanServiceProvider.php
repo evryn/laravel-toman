@@ -1,10 +1,10 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman;
+namespace Evryn\LaravelToman;
 
-use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
-use AmirrezaNasiri\LaravelToman\Contracts\PaymentRequester;
-use AmirrezaNasiri\LaravelToman\Managers\PaymentRequestManager;
+use Evryn\LaravelToman\Clients\GuzzleClient;
+use Evryn\LaravelToman\Contracts\PaymentRequester;
+use Evryn\LaravelToman\Managers\PaymentRequestManager;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 

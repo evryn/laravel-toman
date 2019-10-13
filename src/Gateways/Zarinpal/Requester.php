@@ -1,23 +1,23 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Gateways\Zarinpal;
+namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException;
-use AmirrezaNasiri\LaravelToman\Gateways\BaseRequester;
-use AmirrezaNasiri\LaravelToman\Results\RequestedPayment;
-use AmirrezaNasiri\LaravelToman\Tests\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Exceptions\InvalidConfigException;
+use Evryn\LaravelToman\Gateways\BaseRequester;
+use Evryn\LaravelToman\Results\RequestedPayment;
+use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Illuminate\Support\Arr;
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Facades\URL;
-use AmirrezaNasiri\LaravelToman\Helpers\Client as ClientHelper;
-use AmirrezaNasiri\LaravelToman\Helpers\Gateway as GatewayHelper;
+use Evryn\LaravelToman\Helpers\Client as ClientHelper;
+use Evryn\LaravelToman\Helpers\Gateway as GatewayHelper;
 
 /**
  * Class Requester
- * @package AmirrezaNasiri\LaravelToman\Gateways\Zarinpal
+ * @package Evryn\LaravelToman\Gateways\Zarinpal
  */
 class Requester extends BaseRequester
 {
@@ -96,7 +96,7 @@ class Requester extends BaseRequester
     /**
      * Request a new payment from gateway
      * @return RequestedPayment If new payment is created and is ready to pay
-     * @throws \AmirrezaNasiri\LaravelToman\Exceptions\GatewayException If new payment was not created
+     * @throws \Evryn\LaravelToman\Exceptions\GatewayException If new payment was not created
      * @throws InvalidConfigException
      */
     public function request(): RequestedPayment
@@ -125,7 +125,7 @@ class Requester extends BaseRequester
      * Get payable URL for user
      * @param $transactionId
      * @return string
-     * @throws \AmirrezaNasiri\LaravelToman\Exceptions\InvalidConfigException
+     * @throws \Evryn\LaravelToman\Exceptions\InvalidConfigException
      */
     private function getPaymentUrlFor($transactionId)
     {

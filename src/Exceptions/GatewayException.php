@@ -1,6 +1,6 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Exceptions;
+namespace Evryn\LaravelToman\Exceptions;
 
 class GatewayException extends Exception
 {

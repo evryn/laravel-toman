@@ -1,6 +1,6 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Helpers;
+namespace Evryn\LaravelToman\Helpers;
 
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\ClientException;

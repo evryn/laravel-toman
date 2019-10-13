@@ -1,6 +1,6 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Results;
+namespace Evryn\LaravelToman\Results;
 
 use Illuminate\Http\RedirectResponse;
 

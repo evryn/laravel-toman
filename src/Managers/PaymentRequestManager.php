@@ -1,10 +1,10 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Managers;
+namespace Evryn\LaravelToman\Managers;
 
 use Illuminate\Support\Manager;
-use AmirrezaNasiri\LaravelToman\Clients\GuzzleClient;
-use AmirrezaNasiri\LaravelToman\Gateways\Zarinpal\Requester as ZarinpalPaymentRequest;
+use Evryn\LaravelToman\Clients\GuzzleClient;
+use Evryn\LaravelToman\Gateways\Zarinpal\Requester as ZarinpalPaymentRequest;
 
 class PaymentRequestManager extends Manager
 {

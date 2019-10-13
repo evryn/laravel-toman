@@ -1,9 +1,9 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Facades;
+namespace Evryn\LaravelToman\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use AmirrezaNasiri\LaravelToman\Contracts\PaymentRequester;
+use Evryn\LaravelToman\Contracts\PaymentRequester;
 
 class PaymentRequest extends Facade
 {

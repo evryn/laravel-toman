@@ -1,18 +1,18 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Tests;
+namespace Evryn\LaravelToman\Tests;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
     protected function getPackageProviders($app)
     {
-        return ['AmirrezaNasiri\LaravelToman\LaravelTomanServiceProvider'];
+        return ['Evryn\LaravelToman\LaravelTomanServiceProvider'];
     }
 
     protected function getPackageAliases($app)
     {
         return [
-            'Payment' => 'AmirrezaNasiri\LaravelToman\Facades\PaymentRequest'
+            'Payment' => 'Evryn\LaravelToman\Facades\PaymentRequest'
         ];
     }
 }

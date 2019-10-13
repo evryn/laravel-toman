@@ -1,8 +1,8 @@
 <?php
 
-namespace AmirrezaNasiri\LaravelToman\Tests\Gateways;
+namespace Evryn\LaravelToman\Tests\Gateways;
 
-use AmirrezaNasiri\LaravelToman\Tests\TestCase;
+use Evryn\LaravelToman\Tests\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;

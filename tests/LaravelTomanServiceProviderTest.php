@@ -4,6 +4,8 @@
 namespace Evryn\LaravelToman\Tests;
 
 
+use Illuminate\Support\Facades\File;
+
 final class LaravelTomanServiceProviderTest extends TestCase
 {
     /** @test */
@@ -12,7 +14,7 @@ final class LaravelTomanServiceProviderTest extends TestCase
         $source = __DIR__ . '/../config/toman.php';
         $dest = config_path('toman.php');
 
-        $this->assertTrue(unlink($dest));
+        File::delete($dest);
 
         $this->artisan('vendor:publish', [
             '--provider' => 'Evryn\LaravelToman\LaravelTomanServiceProvider',
@@ -33,7 +35,7 @@ final class LaravelTomanServiceProviderTest extends TestCase
         ];
 
         foreach (array_values($map) as $dest) {
-            $this->assertTrue(unlink($dest));
+            File::delete($dest);
         }
 
         $this->artisan('vendor:publish', [

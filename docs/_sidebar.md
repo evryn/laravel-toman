@@ -6,5 +6,6 @@
   * [Configuration](configuration.md)
 
 * [Contributing](contributing.md)
+* [Changelog](changelog.md)
 * [Support 💜](support.md)
 

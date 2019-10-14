@@ -4,6 +4,7 @@
 
   * [Quick Start](quickstart.md)
   * [Configuration](configuration.md)
+  * [Translations](translations.md)
 
 * [Contributing](contributing.md)
 * [Changelog](changelog.md)

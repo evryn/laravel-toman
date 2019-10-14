@@ -1,4 +1,4 @@
-> ⚠️ **Warning**: This package is under development ...  
+> ⚠️ **Warning**: This package is under development. Don't use before first release.
 
 <h1 align="center">
   Laravel Toman

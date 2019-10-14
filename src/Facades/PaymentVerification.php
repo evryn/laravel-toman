@@ -2,8 +2,8 @@
 
 namespace Evryn\LaravelToman\Facades;
 
-use Evryn\LaravelToman\Contracts\PaymentVerifier;
 use Illuminate\Support\Facades\Facade;
+use Evryn\LaravelToman\Contracts\PaymentVerifier;
 
 class PaymentVerification extends Facade
 {

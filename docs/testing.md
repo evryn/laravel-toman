@@ -49,12 +49,12 @@ class PaymentTest extends TestCase
     /** @test */
     public function requests_with_correct_details()
     {
-        PaymentRequest::shouldReceive('callback')->with(URL::route('callback'))->andReturnSelf();
-        PaymentRequest::shouldReceive('description')->with('Your first payment')->andReturnSelf();
-        PaymentRequest::shouldReceive('mobile')->with('09350000000')->andReturnSelf();
-        PaymentRequest::shouldReceive('email')->with('amirreza@example.com')->andReturnSelf();
-        PaymentRequest::shouldReceive('amount')->with(1000)->andReturnSelf();
-        PaymentRequest::shouldReceive('request')->andReturn(
+        PaymentRequest::shouldReceive('callback')->once()->with(URL::route('callback'))->andReturnSelf();
+        PaymentRequest::shouldReceive('description')->once()->with('Your first payment')->andReturnSelf();
+        PaymentRequest::shouldReceive('mobile')->once()->with('09350000000')->andReturnSelf();
+        PaymentRequest::shouldReceive('email')->once()->with('amirreza@example.com')->andReturnSelf();
+        PaymentRequest::shouldReceive('amount')->once()->with(1000)->andReturnSelf();
+        PaymentRequest::shouldReceive('request')->once()->withNoArgs()->andReturn(
             new RequestedPayment('000123', 'https://example.com/000123/pay')
         );
 
@@ -66,7 +66,7 @@ class PaymentTest extends TestCase
 
 ## Testing PaymentVerification
 
-We can simulate callback request (without actual data) and write a Feature test for that:
+We can simulate callback request and write a Feature test for that:
 
 ```php
 <?php
@@ -84,12 +84,14 @@ class PaymentTest extends TestCase
     /** @test */
     public function verifies_payment_after_being_redirected_to_callback_page()
     {
-        PaymentVerification::shouldReceive('amount')->with(1000)->andReturnSelf();
-        PaymentVerification::shouldReceive('verify')->with(\Mockery::type(Request::class))->andReturn(
+        PaymentVerification::shouldReceive('amount')->once()->with(1000)->andReturnSelf();
+        PaymentVerification::shouldReceive('verify')->once()->with(\Mockery::type(Request::class))->andReturn(
             new VerifiedPayment('123456789')
         );
 
-        $this->get('/payment-callback')->assertOk();
+        // 'Authority' and 'Status' are part of Zarinpal callback data; see their docs.
+        // We'll add fakers to detach this implementation details soon.
+        $this->get('/payment-callback?Authority=1234')->assertOk();
     }
 
 }

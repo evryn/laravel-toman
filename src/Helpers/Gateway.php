@@ -7,7 +7,6 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Helpers\Client as ClientHelper;
-use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
 
 class Gateway
 {

@@ -11,7 +11,6 @@ use GuzzleHttp\Exception\ServerException;
 use Evryn\LaravelToman\Gateways\BaseRequester;
 use Evryn\LaravelToman\Results\RequestedPayment;
 use Evryn\LaravelToman\Helpers\Client as ClientHelper;
-use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Helpers\Gateway as GatewayHelper;
 use Evryn\LaravelToman\Exceptions\InvalidConfigException;
 
@@ -113,7 +112,7 @@ class Requester extends BaseRequester
 
         $transactionId = Arr::get($data, 'Authority');
 
-        if (Arr::get($data, 'Status') !== Status::PAYMENT_SUCCEED || ! $transactionId) {
+        if (Arr::get($data, 'Status') !== Status::OPERATION_SUCCEED || ! $transactionId) {
             GatewayHelper::fail($data);
         }
 

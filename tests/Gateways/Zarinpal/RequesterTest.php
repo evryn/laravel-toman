@@ -156,7 +156,7 @@ final class RequesterTest extends DriverTestCase
     public function errorProvider()
     {
         return [
-            [true, 200, Status::PAYMENT_SUCCEED],
+            [true, 200, Status::OPERATION_SUCCEED],
             [false, 404, Status::INCOMPLETE_DATA],
             [false, 200, Status::INCOMPLETE_DATA], // 404 HTTP code is not guaranteed in documents
             [false, 404, Status::WRONG_IP_OR_MERCHANT_ID],
@@ -172,7 +172,7 @@ final class RequesterTest extends DriverTestCase
             [false, 404, Status::INVALID_ADDITIONAL_DATA],
             [false, 404, Status::INVALID_EXPIRATION_RANGE],
             [false, 404, Status::REQUEST_ARCHIVED],
-            [false, 404, Status::PAYMENT_SUCCEED],
+            [false, 404, Status::OPERATION_SUCCEED],
             [false, 404, Status::UNEXPECTED],
         ];
     }

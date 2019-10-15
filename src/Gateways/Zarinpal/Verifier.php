@@ -11,7 +11,6 @@ use Evryn\LaravelToman\Gateways\BaseVerifier;
 use Evryn\LaravelToman\Results\VerifiedPayment;
 use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Helpers\Client as ClientHelper;
-use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Helpers\Gateway as GatewayHelper;
 use Evryn\LaravelToman\Exceptions\InvalidConfigException;
 
@@ -69,7 +68,7 @@ class Verifier extends BaseVerifier
         $data = ClientHelper::getResponseData($response);
 
         $status = $data['Status'];
-        if ($status !== Status::PAYMENT_SUCCEED) {
+        if ($status !== Status::OPERATION_SUCCEED) {
             GatewayHelper::fail($data);
         }
 

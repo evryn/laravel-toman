@@ -1,10 +1,11 @@
 <?php
 
 
-namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
+namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
 
 use Illuminate\Support\Arr;
+use ReflectionClass;
 
 class Status
 {
@@ -23,7 +24,7 @@ class Status
     const INVALID_ADDITIONAL_DATA = -41;
     const INVALID_EXPIRATION_RANGE = -42;
     const REQUEST_ARCHIVED = -54;
-    const PAYMENT_SUCCEED = 100;
+    const OPERATION_SUCCEED = 100;
     const ALREADY_VERIFIED = 101;
 
     // Package related
@@ -38,7 +39,7 @@ class Status
 
     protected static function getConstantName($value)
     {
-        $constants = array_flip((new \ReflectionClass(static::class))->getConstants());
+        $constants = array_flip((new ReflectionClass(static::class))->getConstants());
         return Arr::get($constants, $value);
     }
 }

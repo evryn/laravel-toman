@@ -16,7 +16,8 @@
         "gateway", "درگاه", "پرداخت"
     ],
     "require": {
-        "illuminate/support": "~5",
+        "php": "^7.2",
+        "illuminate/support": "~5.8.0|^6.0",
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {

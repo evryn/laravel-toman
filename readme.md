@@ -1,11 +1,12 @@
 <p align="center">
+  <h1>Laravel Toman</h1>
   <a href="https://evryn.github.io/laravel-toman/">
     <img alt="Laravel Toman" src="./docs/_media/logo.png">
   </a>
 </p>
 
 <p align="center">
-  A painless
+  A painless payment handler!
 </p>
 
 <p align="center">
@@ -36,10 +37,18 @@ Toman is a Laravel package which makes working with popular payment gateways muc
 ## Simple to use
 
 Request new payment as easy as:
-![Request Payment](docs/_media/payment-request-canvas.png)
+<p align="center">
+  <a href="https://evryn.github.io/laravel-toman/">
+    <img alt="Request new Payment" src="./docs/_media/payment-request-canvas.png">
+  </a>
+</p>
 
 And simply verify callback:
-![Request Verification](docs/_media/payment-verification-canvas.png)
+<p align="center">
+  <a href="https://evryn.github.io/laravel-toman/">
+    <img alt="Verify Payment" src="./docs/_media/payment-verification-canvas.png">
+  </a>
+</p>
 
 ## How to start?
-📚 [Read Documentation](https://evryn.github.io/laravel-toman/) and get started now!
+📚 [Read documents](https://evryn.github.io/laravel-toman/) and get started now!

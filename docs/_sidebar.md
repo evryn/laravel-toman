@@ -9,6 +9,8 @@
 * Available Gateways
 
   * [Zarinpal](gateways/zarinpal.md)
+  
+* [Testing](testing.md)
 
 * [Contributing](contributing.md)
 * [Changelog](changelog.md)

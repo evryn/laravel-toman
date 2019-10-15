@@ -1,7 +1,7 @@
 {
     "name": "evryn/laravel-toman",
     "description": "A simple stable Laravel package to handle popular payment gateways in Iran including Zarinpal.",
-    "license": "license",
+    "license": "MIT",
     "authors": [
         {
             "name": "Amirreza Nasiri",

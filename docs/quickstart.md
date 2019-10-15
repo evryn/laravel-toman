@@ -37,7 +37,7 @@ $requestedPayment = PaymentRequest::callback('...') // Set verification callback
     ->amount(2000)  // Set amount to pay
     ->request();
 
-// Save transaction id for verification purpose
+// Save transaction ID and amount for verification purpose
 $transactionId = $requestedPayment->getTransactionId();
 
 // Redirect user to payment page in your controller method

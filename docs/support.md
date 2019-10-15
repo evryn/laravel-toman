@@ -13,14 +13,18 @@ Donations are very welcome. You can send us some money using one of the followin
 We appreciate to receive a physical postcard from you or your company. We'll soon display all of them. Just leave me a message and I'll reply soon: `nasiri.amirreza.96@gmail.com` or [@Amirreza_Nasiri](https://twitter.com/amirreza_nasiri). 
 
  
-### Star and Fork
+### Follow, Star and Fork
 
-By giving a star and forking this repository, people will find it easily. It'll take ~7s, just hit these buttons on [the repository](https://github.com/evryn/laravel-toman):
-[![Star and Form](_media/star-and-fork.jpg)](https://github.com/evryn/laravel-toman)
+By following us, giving a star and forking this repository, you'll make this package more visible to people. It'll take ~11s, just hit these buttons on [the repository](https://github.com/evryn/laravel-toman):
+
+<a class="github-button" href="https://github.com/Evryn" data-size="large" data-show-count="true" aria-label="Follow @Evryn on GitHub">Follow @Evryn</a>
+<a class="github-button" href="https://github.com/evryn/laravel-toman" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star evryn/laravel-toman on GitHub">Star</a>
+<a class="github-button" href="https://github.com/evryn/laravel-toman/fork" data-icon="octicon-repo-forked" data-size="large" data-show-count="true" aria-label="Fork evryn/laravel-toman on GitHub">Fork</a>
+
 
 ### Contribute
 
-Knowing Laravel and package development? It would be very great if you could help us extend this project. See [Contribution Guide](contributing.md).
+Knowing Laravel and package development? It would be great if you could help us extend this project. See [Contribution Guide](contributing.md).
 
 ### Share it
 

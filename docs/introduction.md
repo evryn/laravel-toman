@@ -15,7 +15,7 @@ Payment is critical topic and its handlers must be tested from all aspects. Lara
 
 ## Elegant API
 
-API and methods are pretty easy to use! Requesting a new payment and verifying it will add <100 characters to your code! 😎
+API and methods are pretty easy to use! Requesting a new payment and verifying it will add <170 characters to your code base! 😎
 
 ## Supports Multiple Gateways
 
@@ -26,12 +26,13 @@ Currently following gateways are available to use:
 🔘 [YekPay.com](https://yekpay.com/)  
 🔘 [Pay.ir](https://pay.ir/)  
 🔘 [PayPing.ir](https://www.payping.ir/)  
+🔘 ...
 
 ## Easy to Test
 
 Writing test for your own application and want to see if you're using the package correctly? No problem at all!
 
-See our [Testing Guide]() to learn how to mock gateways and assert things!
+See our [Testing Guide](testing.md) to learn about how to mock gateways and assert things!
 
 <br></br>
 ➡ Why don't you see yourself? [Quick Start](quickstart.md)

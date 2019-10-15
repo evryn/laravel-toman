@@ -1,8 +1,8 @@
 # Configuration
 
-There are few configuration available to make you code more cleaner.
+There are few configurable options to make you code more cleaner.
 
-## Publish Config:
+## Publish Config
 Use following command to publish package config:
 ```bash
 php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProvider --tag=config
@@ -10,7 +10,7 @@ php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProv
 
 Now config file will be available at `config/toman.php`.
 
-## Common Options:
+## Package Options
  * `default`: 
  
 Indicates your default payment gateway among available gateways in `gateways` option. By default, it'll be read from `TOMAN_GATEWAY` variable in your `.env` file.
@@ -21,7 +21,7 @@ Contains all configs related to gateways. See `Available Gateways` section to fi
  
  * `description` (optional):  
 
-Most of available gateways require a description of payment upon new payment created. Here, you can set default description message. `:amount` in the string will replaced by actual payment amount. 
+Most of available gateways require a description of payment upon new payment creation. Here, you can set default description message. `:amount` in the string will replaced by actual payment amount. 
 
 You can override it with `description()` method on `PaymentRequest`.
 
@@ -31,7 +31,7 @@ This is default callback *route name* for payment verification. Chaining `callba
 
 Here is an example of defining a named route for callbacks in your `routes/web.php` file:
 ```php
-Route::get('/payment-callback', 'PaymentController@callback')->name('payment.callback);
+Route::get('/payment-callback', 'PaymentController@callback')->name('payment.callback');
                                       [this can be placed in config] ↑ 
 ```
  

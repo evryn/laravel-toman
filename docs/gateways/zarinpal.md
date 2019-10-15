@@ -10,7 +10,7 @@ Zarinpal gateway requires following variables in `.env` file to work:
 |----------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | TOMAN_GATEWAY 	    | (**Required**)<br>Must equal `zarinpal` in order to use this gateway provider.                                                                            	|
 | ZARINPAL_MERCHANT_ID 	| (**Required**)<br>Your gateway's merchant ID which can be gotten from your Zarinpal panel.<br>Example: 0bcf346fc-3a79-4b36-b936-5ccbc2be0696                                                                                                             	|
-| ZARINPAL_SANDBOX     	| (Optional. Default: false)<br>Set to `true` to make test calls in a simulated environment provided by Zarinpal without actual payments.<br>Delete the entity or set it to `false` to make calls in production environment and receive actual payments. 	|
+| ZARINPAL_SANDBOX     	| (Optional. Default: false)<br>Set it to `true` to make test calls in a simulated environment provided by Zarinpal without actual payments.<br>Delete the key or set it to `false` to make calls in production environment and receive actual payments. 	|
 
 Example:
 ```dotenv
@@ -54,7 +54,7 @@ try {
 | mobile      	| Sets `Mobile` data.                                                                                                             	|
 | email       	| Sets `Email` data.                                                                                                              	|
 | amount      	| Sets `Amount` data.                                                                                                             	|
-| request     	| Calls `PaymentRequest` Zarinpal endpoint and returns a `RequestedPayment` object with available transaction ID and payment URL.<br>It can also throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above).<br>It can throw `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Gateways\Zarinpal\Status`. 	|
+| request     	| Calls `PaymentRequest` Zarinpal endpoint and returns a `RequestedPayment` object with available transaction ID and payment URL.<br>Might throw `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Gateways\Zarinpal\Status`.<br>Might throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above). 	|
  
  
 ## Payment Verification
@@ -85,7 +85,7 @@ try {
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
 | amount      	| Sets `Amount` data. It should equal to the amount that payment request was created with.                                                                                                            	|
-| verify     	| Calls `PaymentVerification` Zarinpal endpoint with callback queries gotten from request and returns a `VerifiedPayment` object with available reference ID.<br>It can also throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above)<br>It can throw a `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Gateways\Zarinpal\Status`. 	|
+| verify     	| Calls `PaymentVerification` Zarinpal endpoint with callback queries gotten from request and returns a `VerifiedPayment` object with available reference ID.<br>Might throw a `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Gateways\Zarinpal\Status`.<br>Might throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above) 	|
  
 
 ## Translations

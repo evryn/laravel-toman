@@ -1,5 +1,7 @@
 <p align="center">
   <h1>Laravel Toman</h1>
+</p>
+<p align="center">
   <a href="https://evryn.github.io/laravel-toman/">
     <img alt="Laravel Toman" src="./docs/_media/logo.png">
   </a>

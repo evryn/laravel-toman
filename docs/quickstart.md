@@ -1,3 +1,5 @@
+> There is an example project using Laravel Toman you can find at [evryn/laravel-toman-example](https://github.com/evryn/laravel-toman-example). It contains payment code and few key tests.
+
 # Requirements
 
 Every released build is tested against combination of following config:

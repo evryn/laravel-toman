@@ -24,4 +24,4 @@ Elegant API • Heavily Tested • Multiple Gateways
 </a>
 
 [GitHub](https://github.com/evryn/laravel-toman)
-[Get Started](#get-started)
+[Get Started](#quickstart)

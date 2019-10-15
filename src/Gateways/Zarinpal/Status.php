@@ -1,11 +1,9 @@
 <?php
 
-
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-
-use Illuminate\Support\Arr;
 use ReflectionClass;
+use Illuminate\Support\Arr;
 
 class Status
 {
@@ -34,12 +32,14 @@ class Status
     public static function toMessage($status)
     {
         $translationKey = strtolower(self::getConstantName($status));
+
         return __("toman::zarinpal.status.$translationKey");
     }
 
     protected static function getConstantName($value)
     {
         $constants = array_flip((new ReflectionClass(static::class))->getConstants());
+
         return Arr::get($constants, $value);
     }
 }

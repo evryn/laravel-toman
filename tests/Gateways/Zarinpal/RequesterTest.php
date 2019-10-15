@@ -8,6 +8,7 @@ use Evryn\LaravelToman\Clients\GuzzleClient;
 use Evryn\LaravelToman\Gateways\Zarinpal\Requester;
 use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Exceptions\InvalidConfigException;
+use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Tests\Gateways\DriverTestCase;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\RedirectResponse;

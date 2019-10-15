@@ -25,7 +25,7 @@ ZARINPAL_MERCHANT_ID=0bcf346fc-3a79-4b36-b936-5ccbc2be0696
 In short, you can request a new payment with the following methods and catches:
 ```php
 use Evryn\LaravelToman\Facades\PaymentRequest;
-use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 
 // ...
 
@@ -54,7 +54,7 @@ try {
 | mobile      	| Sets `Mobile` data.                                                                                                             	|
 | email       	| Sets `Email` data.                                                                                                              	|
 | amount      	| Sets `Amount` data.                                                                                                             	|
-| request     	| Calls `PaymentRequest` Zarinpal endpoint and returns a `RequestedPayment` object with available transaction ID and payment URL.<br>It can also throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above).<br>It can throw `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status`. 	|
+| request     	| Calls `PaymentRequest` Zarinpal endpoint and returns a `RequestedPayment` object with available transaction ID and payment URL.<br>It can also throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above).<br>It can throw `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Gateways\Zarinpal\Status`. 	|
  
  
 ## Payment Verification
@@ -62,7 +62,7 @@ try {
 In short, you can verify a payment callback with the following methods and catches:
 ```php
 use Evryn\LaravelToman\Facades\PaymentVerification;
-use Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 
 // ...
 
@@ -85,7 +85,7 @@ try {
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
 | amount      	| Sets `Amount` data. It should equal to the amount that payment request was created with.                                                                                                            	|
-| verify     	| Calls `PaymentVerification` Zarinpal endpoint with callback queries gotten from request and returns a `VerifiedPayment` object with available reference ID.<br>It can also throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above)<br>It can throw a `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Tests\Gateways\Zarinpal\Status`. 	|
+| verify     	| Calls `PaymentVerification` Zarinpal endpoint with callback queries gotten from request and returns a `VerifiedPayment` object with available reference ID.<br>It can also throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above)<br>It can throw a `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Gateways\Zarinpal\Status`. 	|
  
 
 ## Translations

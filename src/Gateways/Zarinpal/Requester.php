@@ -105,7 +105,7 @@ class Requester extends BaseRequester
                 [RequestOptions::JSON => $this->makeRequestData()]
             );
         } catch (ClientException | ServerException $exception) {
-            GatewayHelper::fail($exception);
+            GatewayHelper::zarinFails($exception);
         }
 
         $data = ClientHelper::getResponseData($response);
@@ -113,7 +113,7 @@ class Requester extends BaseRequester
         $transactionId = Arr::get($data, 'Authority');
 
         if (Arr::get($data, 'Status') !== Status::OPERATION_SUCCEED || ! $transactionId) {
-            GatewayHelper::fail($data);
+            GatewayHelper::zarinFails($data);
         }
 
         return new RequestedPayment($transactionId, $this->getPaymentUrlFor($transactionId));

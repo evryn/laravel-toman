@@ -62,14 +62,14 @@ class Verifier extends BaseVerifier
                 [RequestOptions::JSON => $this->makeVerificationData($request)]
             );
         } catch (ClientException | ServerException $exception) {
-            GatewayHelper::fail($exception);
+            GatewayHelper::zarinFails($exception);
         }
 
         $data = ClientHelper::getResponseData($response);
 
         $status = $data['Status'];
         if ($status !== Status::OPERATION_SUCCEED) {
-            GatewayHelper::fail($data);
+            GatewayHelper::zarinFails($data);
         }
 
         return new VerifiedPayment($data['RefID']);

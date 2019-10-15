@@ -2,6 +2,7 @@
 
 namespace Evryn\LaravelToman\Helpers;
 
+use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Illuminate\Support\Arr;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
@@ -15,7 +16,7 @@ class Gateway
      * @param array|ClientException|ServerException|\Exception $data
      * @throws GatewayException
      */
-    public static function fail($data)
+    public static function zarinFails($data)
     {
         $previous = null;
         if ($data instanceof ClientException) {

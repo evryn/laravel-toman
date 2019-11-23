@@ -2,8 +2,8 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use ReflectionClass;
 use Illuminate\Support\Arr;
+use ReflectionClass;
 
 class Status
 {

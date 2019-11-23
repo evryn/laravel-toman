@@ -2,9 +2,9 @@
 
 namespace Evryn\LaravelToman\Managers;
 
-use Illuminate\Support\Manager;
 use Evryn\LaravelToman\Clients\GuzzleClient;
 use Evryn\LaravelToman\Gateways\Zarinpal\Verifier as ZarinpalPaymentVerification;
+use Illuminate\Support\Manager;
 
 class PaymentVerificationManager extends Manager
 {

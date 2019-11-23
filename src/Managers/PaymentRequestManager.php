@@ -2,9 +2,9 @@
 
 namespace Evryn\LaravelToman\Managers;
 
-use Illuminate\Support\Manager;
 use Evryn\LaravelToman\Clients\GuzzleClient;
 use Evryn\LaravelToman\Gateways\Zarinpal\Requester as ZarinpalPaymentRequest;
+use Illuminate\Support\Manager;
 
 class PaymentRequestManager extends Manager
 {

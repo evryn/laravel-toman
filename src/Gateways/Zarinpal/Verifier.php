@@ -2,17 +2,17 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use GuzzleHttp\Client;
-use Illuminate\Http\Request;
-use GuzzleHttp\RequestOptions;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use Evryn\LaravelToman\Gateways\BaseVerifier;
-use Evryn\LaravelToman\Results\VerifiedPayment;
 use Evryn\LaravelToman\Exceptions\GatewayException;
+use Evryn\LaravelToman\Exceptions\InvalidConfigException;
+use Evryn\LaravelToman\Gateways\BaseVerifier;
 use Evryn\LaravelToman\Helpers\Client as ClientHelper;
 use Evryn\LaravelToman\Helpers\Gateway as GatewayHelper;
-use Evryn\LaravelToman\Exceptions\InvalidConfigException;
+use Evryn\LaravelToman\Results\VerifiedPayment;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\RequestOptions;
+use Illuminate\Http\Request;
 
 /**
  * Class Verifier.

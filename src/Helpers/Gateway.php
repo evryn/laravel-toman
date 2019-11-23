@@ -2,12 +2,12 @@
 
 namespace Evryn\LaravelToman\Helpers;
 
-use Illuminate\Support\Arr;
+use Evryn\LaravelToman\Exceptions\GatewayException;
+use Evryn\LaravelToman\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Helpers\Client as ClientHelper;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
-use Evryn\LaravelToman\Gateways\Zarinpal\Status;
-use Evryn\LaravelToman\Exceptions\GatewayException;
-use Evryn\LaravelToman\Helpers\Client as ClientHelper;
+use Illuminate\Support\Arr;
 
 class Gateway
 {

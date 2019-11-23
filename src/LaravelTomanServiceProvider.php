@@ -2,13 +2,13 @@
 
 namespace Evryn\LaravelToman;
 
-use GuzzleHttp\Client;
-use Illuminate\Support\ServiceProvider;
 use Evryn\LaravelToman\Clients\GuzzleClient;
-use Evryn\LaravelToman\Contracts\PaymentVerifier;
 use Evryn\LaravelToman\Contracts\PaymentRequester;
+use Evryn\LaravelToman\Contracts\PaymentVerifier;
 use Evryn\LaravelToman\Managers\PaymentRequestManager;
 use Evryn\LaravelToman\Managers\PaymentVerificationManager;
+use GuzzleHttp\Client;
+use Illuminate\Support\ServiceProvider;
 
 class LaravelTomanServiceProvider extends ServiceProvider
 {

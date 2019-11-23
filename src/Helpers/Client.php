@@ -2,8 +2,8 @@
 
 namespace Evryn\LaravelToman\Helpers;
 
-use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\ClientException;
+use Psr\Http\Message\ResponseInterface;
 
 class Client
 {

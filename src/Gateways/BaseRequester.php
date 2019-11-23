@@ -2,9 +2,9 @@
 
 namespace Evryn\LaravelToman\Gateways;
 
+use Evryn\LaravelToman\Contracts\PaymentRequester;
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
-use Evryn\LaravelToman\Contracts\PaymentRequester;
 
 abstract class BaseRequester implements PaymentRequester
 {

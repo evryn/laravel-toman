@@ -2,8 +2,8 @@
 
 namespace Evryn\LaravelToman\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use Evryn\LaravelToman\Contracts\PaymentRequester;
+use Illuminate\Support\Facades\Facade;
 
 class PaymentRequest extends Facade
 {

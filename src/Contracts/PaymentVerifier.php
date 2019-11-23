@@ -2,8 +2,8 @@
 
 namespace Evryn\LaravelToman\Contracts;
 
-use Illuminate\Http\Request;
 use Evryn\LaravelToman\Results\VerifiedPayment;
+use Illuminate\Http\Request;
 
 interface PaymentVerifier
 {

@@ -37,7 +37,7 @@ try {
         ->email('amirreza@example.com')
         ->request();
 } catch (GatewayException $gatewayException) {
-    if ($gatewayException->getStatus() === Status::SHAPARAK_LIMITED) {
+    if ($gatewayException->getCode() === Status::SHAPARAK_LIMITED) {
         // there might be a problem with 'Amount' data.
     }
 } catch (InvalidConfigException $exception) {
@@ -70,9 +70,9 @@ try {
     $verifiedPayment = PaymentVerification::amount(1000)
         ->verify(request()); // or $request in your Controller
 } catch (GatewayException $gatewayException) {
-    if ($gatewayException->getStatus() === Status::NOT_PAID) {
+    if ($gatewayException->getCode() === Status::NOT_PAID) {
         // the payment has been cancelled
-    } elseif ($gatewayException->getStatus() === Status::ALREADY_VERIFIED) {
+    } elseif ($gatewayException->getCode() === Status::ALREADY_VERIFIED) {
         // the payment has already been verified before
     }
 } catch (InvalidConfigException $exception) {

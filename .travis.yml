@@ -3,6 +3,7 @@ language: php
 branches:
   only:
     - master
+    - laravel-5.4-compatible
 
 cache:
   directories:

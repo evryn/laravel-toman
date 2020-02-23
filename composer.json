@@ -23,8 +23,7 @@
     "require-dev": {
         "mockery/mockery": "^1.1",
         "orchestra/testbench": "~3.4.0",
-        "sempro/phpunit-pretty-print": "^1.0",
-        "phpunit/phpunit": "~6.0"
+        "sempro/phpunit-pretty-print": "^1.0"
     },
     "autoload": {
         "psr-4": {

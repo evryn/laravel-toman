@@ -126,7 +126,7 @@ final class RequesterTest extends DriverTestCase
         $exception = $this->getExpectedException();
 
         self::assertEquals(-11, $exception->getCode());
-        self::assertStringContainsString('callback', $exception->getMessage());
+        self::assertContains('callback', $exception->getMessage());
     }
 
     /**
@@ -280,7 +280,7 @@ final class RequesterTest extends DriverTestCase
             self::assertTrue($passes);
         } catch (InvalidConfigException $exception) {
             self::assertFalse($passes);
-            self::assertStringContainsString('sandbox', $exception->getMessage());
+            self::assertContains('sandbox', $exception->getMessage());
         }
     }
 

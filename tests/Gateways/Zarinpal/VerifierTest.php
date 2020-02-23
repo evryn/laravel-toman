@@ -220,7 +220,7 @@ final class VerifierTest extends DriverTestCase
             self::assertTrue($passes);
         } catch (InvalidConfigException $exception) {
             self::assertFalse($passes);
-            self::assertStringContainsString('sandbox', $exception->getMessage());
+            self::assertContains('sandbox', $exception->getMessage());
         }
     }
 

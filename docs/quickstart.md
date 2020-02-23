@@ -10,9 +10,11 @@ Every released build is tested against combination of following config:
 
 # Installation
 
+> ⚠️ Note: You're about to install a version of package that does not support latest version of Laravel. If you're using Laravel 5.4 to 5.7, continue reading. If you're using newer version, see master branch for latest stable version. 
+
 Install package using composer:
 ```bash
-composer require evryn/laravel-toman
+composer require evryn/laravel-toman:laravel-5.4-compatible
 ```
 
 # Setup

@@ -2,7 +2,6 @@
 
 namespace Evryn\LaravelToman\Managers;
 
-use Evryn\LaravelToman\Clients\GuzzleClient;
 use Evryn\LaravelToman\Gateways\Zarinpal\Requester as ZarinpalPaymentRequest;
 use Illuminate\Support\Manager;
 
@@ -24,9 +23,8 @@ class PaymentRequestManager extends Manager
      */
     public function createZarinpalDriver()
     {
-        return ZarinpalPaymentRequest::make(
-            config('toman.gateways.zarinpal'),
-            app(GuzzleClient::class)
+        return new ZarinpalPaymentRequest(
+            config('toman.gateways.zarinpal')
         );
     }
 }

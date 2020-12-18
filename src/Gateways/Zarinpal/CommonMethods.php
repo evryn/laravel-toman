@@ -2,8 +2,6 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use Evryn\LaravelToman\Exceptions\InvalidConfigException;
-
 trait CommonMethods
 {
     /**
@@ -22,7 +20,6 @@ trait CommonMethods
      * Get production or sandbox schema and hostname for requests.
      *
      * @return string
-     * @throws InvalidConfigException
      */
     private function getHost()
     {
@@ -35,19 +32,14 @@ trait CommonMethods
      * Check if request should be sent in a sandbox, testing environment.
      *
      * @return bool
-     * @throws InvalidConfigException
      */
     private function isSandbox()
     {
-        $sandbox = $this->getConfig('sandbox');
-
-        if ($sandbox === null || $sandbox === false) {
-            return false;
-        } elseif ($sandbox === true) {
+        if ($this->getConfig('sandbox') === true) {
             return true;
         }
 
-        throw new InvalidConfigException('sandbox');
+        return false;
     }
 
     /**

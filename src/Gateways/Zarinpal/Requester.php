@@ -2,45 +2,30 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use Evryn\LaravelToman\Exceptions\InvalidConfigException;
-use Evryn\LaravelToman\Gateways\BaseRequester;
-use Evryn\LaravelToman\Helpers\Client as ClientHelper;
-use Evryn\LaravelToman\Helpers\Gateway as GatewayHelper;
-use Evryn\LaravelToman\Results\RequestedPayment;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\RequestOptions;
-use Illuminate\Support\Arr;
+use Evryn\LaravelToman\Exceptions\GatewayClientException;
+use Evryn\LaravelToman\Exceptions\GatewayServerException;
+use Evryn\LaravelToman\Interfaces\PaymentRequesterInterface;
+use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
+use Evryn\LaravelToman\Support\HasConfig;
+use Evryn\LaravelToman\Support\HasData;
+use Evryn\LaravelToman\Support\RedirectsForPaying;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 
 /**
  * Class Requester.
  */
-class Requester extends BaseRequester
+class Requester implements PaymentRequesterInterface
 {
-    use CommonMethods;
+    use HasConfig, HasData, CommonMethods, RedirectsForPaying;
 
     /**
      * Requester constructor.
      * @param $config
-     * @param Client $client
      */
-    public function __construct($config, Client $client)
+    public function __construct(array $config = [])
     {
         $this->setConfig($config);
-        $this->client = $client;
-    }
-
-    /**
-     * Initialize a Requester object on-the-fly.
-     * @param $config
-     * @param Client $client
-     * @return self
-     */
-    public static function make($config, Client $client)
-    {
-        return new self($config, $client);
     }
 
     /**
@@ -48,7 +33,7 @@ class Requester extends BaseRequester
      * @param $callbackUrl string
      * @return $this
      */
-    public function callback($callbackUrl)
+    public function callback(string $callbackUrl): self
     {
         $this->data('CallbackURL', $callbackUrl);
 
@@ -60,9 +45,21 @@ class Requester extends BaseRequester
      * @param $mobile string
      * @return $this
      */
-    public function mobile($mobile)
+    public function mobile(string $mobile): self
     {
         $this->data('Mobile', $mobile);
+
+        return $this;
+    }
+
+    /**
+     * Set <i>MerchantID</i> data.
+     * @param string $merchantId
+     * @return $this
+     */
+    public function merchantId(string $merchantId): self
+    {
+        $this->data('MerchantID', $merchantId);
 
         return $this;
     }
@@ -72,7 +69,7 @@ class Requester extends BaseRequester
      * @param $email string
      * @return $this
      */
-    public function email($email)
+    public function email(string $email): self
     {
         $this->data('Email', $email);
 
@@ -81,10 +78,10 @@ class Requester extends BaseRequester
 
     /**
      * Set <i>Description</i> data and override config.
-     * @param $amount
+     * @param string $description
      * @return $this
      */
-    public function description($description)
+    public function description(string $description): self
     {
         $this->data('Description', $description);
 
@@ -95,45 +92,36 @@ class Requester extends BaseRequester
      * Request a new payment from gateway.
      * @return RequestedPayment If new payment is created and is ready to pay
      * @throws \Evryn\LaravelToman\Exceptions\GatewayException If new payment was not created
-     * @throws InvalidConfigException
      */
-    public function request(): RequestedPayment
+    public function request(): RequestedPaymentInterface
     {
-        try {
-            $response = $this->client->post(
-                $this->makeRequestURL(),
-                [RequestOptions::JSON => $this->makeRequestData()]
+        $response = Http::post($this->makeRequestURL(), $this->makeRequestData());
+        $data = $response->json();
+
+        // In case of connection issued. It indicates a proper time to switch gateway to
+        // another provider.
+        if ($response->serverError()) {
+            throw new GatewayServerException(
+                'Unable to connect to ZarinPal servers.',
+                $response->status()
             );
-        } catch (ClientException | ServerException $exception) {
-            GatewayHelper::zarinFails($exception);
         }
 
-        $data = ClientHelper::getResponseData($response);
-
-        $transactionId = Arr::get($data, 'Authority');
-
-        if (Arr::get($data, 'Status') !== Status::OPERATION_SUCCEED || ! $transactionId) {
-            GatewayHelper::zarinFails($data);
+        // Client errors (4xx) are not guaranteed to be come with error messages. We need to
+        // check requested payment status too.
+        if ($response->clientError() || $data['Status'] != Status::OPERATION_SUCCEED) {
+            throw new GatewayClientException(
+                Status::toMessage($data['Status']),
+                $data['Status']
+            );
         }
 
-        return new RequestedPayment($transactionId, $this->getPaymentUrlFor($transactionId));
-    }
-
-    /**
-     * Get payable URL for user.
-     * @param $transactionId
-     * @return string
-     * @throws \Evryn\LaravelToman\Exceptions\InvalidConfigException
-     */
-    private function getPaymentUrlFor($transactionId)
-    {
-        return $this->getHost()."/pg/StartPay/{$transactionId}";
+        return new RequestedPayment($data['Authority'], $this->getHost());
     }
 
     /**
      * Make environment-aware verification endpoint URL.
      * @return string
-     * @throws InvalidConfigException
      */
     private function makeRequestURL()
     {
@@ -157,26 +145,28 @@ class Requester extends BaseRequester
      * Get 'CallbackURL' from data or default one from config if available.
      * @return array|mixed|string
      */
-    private function getCallbackUrl()
+    private function getCallbackUrl(): string
     {
-        if ($data = $this->getData('CallbackURL')) {
-            return $data;
+        if ($callbackUrl = $this->getData('CallbackURL')) {
+            return $callbackUrl;
         }
 
         if ($defaultRoute = config('toman.callback_route')) {
             return URL::route($defaultRoute);
         }
+
+        return '';
     }
 
     /**
      * Get 'Description' from data or default one from config if available.
      * @return array|mixed|string
      */
-    private function getDescription()
+    private function getDescription(): string
     {
         $description = $this->getData('Description');
 
-        if (! $description) {
+        if (!$description) {
             $description = config('toman.description');
         }
 

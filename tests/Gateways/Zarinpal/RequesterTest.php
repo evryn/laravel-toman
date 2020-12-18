@@ -4,27 +4,45 @@
 namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
 
-use Evryn\LaravelToman\Clients\GuzzleClient;
+use Evryn\LaravelToman\Exceptions\GatewayClientException;
+use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\Gateways\Zarinpal\Requester;
-use Evryn\LaravelToman\Exceptions\GatewayException;
-use Evryn\LaravelToman\Exceptions\InvalidConfigException;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
-use Evryn\LaravelToman\Tests\Gateways\DriverTestCase;
-use GuzzleHttp\Psr7\Response;
+use Evryn\LaravelToman\Tests\TestCase;
+use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 
 
-final class RequesterTest extends DriverTestCase
+final class RequesterTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
     /** @test */
     public function can_request_production_payment()
     {
-        $gateway = Requester::make([
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx',
-        ], $this->mockedPurchaseResponse());
+        // By send a real (out-of-sandbox) request to create a new ZarinPal transaction
+        // we need to ensure that it sends request to correct production URL, with correct
+        // data and amount.
+        // We also need to check that created payment can be redirected to default gateway
+        // or the specific one.
 
-        $gateway->callback('https://example.com/verify-here')
+        Http::fake([
+            'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
+                'Status' => '100',
+                'Authority' => 'A0000012345',
+            ], 200),
+        ]);
+
+        $gateway = new Requester([
+            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
+        ]);
+
+        $gateway->callback('https://example.com/callback')
             ->amount(1500)
             ->description('An awesome payment gateway!')
             ->data('Mobile', '09350000000')
@@ -32,34 +50,46 @@ final class RequesterTest extends DriverTestCase
 
         $paymentRequest = $gateway->request();
 
-        $this->assertLastRequestedUrlEquals('https://www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json');
-        $this->assertLastRequestedDataEquals([
-            "MerchantID" => "xxxx-xxxx-xxxx-xxxx",
-            "Amount" => 1500,
-            "CallbackURL" => 'https://example.com/verify-here',
-            "Description" => 'An awesome payment gateway!',
-            "Mobile" => '09350000000',
-            "Email" => 'amirreza@example.com',
-        ]);
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json'
+                && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'
+                && $request['Amount'] == 1500
+                && $request['CallbackURL'] === 'https://example.com/callback'
+                && $request['Description'] === 'An awesome payment gateway!'
+                && $request['Mobile'] === '09350000000'
+                && $request['Email'] === 'amirreza@example.com';
+        });
 
-        self::assertEquals('0000012345', $paymentRequest->getTransactionId());
-        self::assertEquals("https://www.zarinpal.com/pg/StartPay/0000012345", $paymentRequest->getPaymentUrl());
+        self::assertEquals('A0000012345', $paymentRequest->getTransactionId());
 
-        $redirect = $paymentRequest->pay();
+        self::assertEquals("https://www.zarinpal.com/pg/StartPay/A0000012345", $paymentRequest->getPaymentUrl());
+        self::assertEquals("https://www.zarinpal.com/pg/StartPay/A0000012345/example", $paymentRequest->getPaymentUrl(['gateway' => 'example']));
 
-        self::assertInstanceOf(RedirectResponse::class, $redirect);
-        self::assertEquals("https://www.zarinpal.com/pg/StartPay/0000012345", $redirect->getTargetUrl());
+        $redirectDefault = $paymentRequest->pay();
+        self::assertInstanceOf(RedirectResponse::class, $redirectDefault);
+        self::assertEquals("https://www.zarinpal.com/pg/StartPay/A0000012345", $redirectDefault->getTargetUrl());
+
+        $redirectSpecific = $paymentRequest->pay(['gateway' => 'example']);
+        self::assertInstanceOf(RedirectResponse::class, $redirectSpecific);
+        self::assertEquals("https://www.zarinpal.com/pg/StartPay/A0000012345/example", $redirectSpecific->getTargetUrl());
     }
 
     /** @test */
     public function can_request_sandbox_payment()
     {
-        $gateway = Requester::make([
-            'sandbox' => true,
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx',
-        ], $this->mockedPurchaseResponse());
+        Http::fake([
+            'sandbox.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
+                'Status' => '100',
+                'Authority' => 'A0000012345',
+            ], 200),
+        ]);
 
-        $gateway->callback('https://example.com/verify-here')
+        $gateway = new Requester([
+            'sandbox' => true,
+            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
+        ]);
+
+        $gateway->callback('https://example.com/callback')
             ->amount(1500)
             ->description('An awesome payment gateway!')
             ->data('Mobile', '09350000000')
@@ -67,252 +97,261 @@ final class RequesterTest extends DriverTestCase
 
         $paymentRequest = $gateway->request();
 
-        $this->assertLastRequestedUrlEquals('https://sandbox.zarinpal.com/pg/rest/WebGate/PaymentRequest.json');
-        $this->assertLastRequestedDataEquals([
-            "MerchantID" => "xxxx-xxxx-xxxx-xxxx",
-            "Amount" => 1500,
-            "CallbackURL" => 'https://example.com/verify-here',
-            "Description" => 'An awesome payment gateway!',
-            "Mobile" => '09350000000',
-            "Email" => 'amirreza@example.com',
-        ]);
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://sandbox.zarinpal.com/pg/rest/WebGate/PaymentRequest.json'
+                && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'
+                && $request['Amount'] == 1500
+                && $request['CallbackURL'] === 'https://example.com/callback'
+                && $request['Description'] === 'An awesome payment gateway!'
+                && $request['Mobile'] === '09350000000'
+                && $request['Email'] === 'amirreza@example.com';
+        });
 
-        self::assertEquals('0000012345', $paymentRequest->getTransactionId());
-        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/0000012345", $paymentRequest->getPaymentUrl());
+        self::assertEquals('A0000012345', $paymentRequest->getTransactionId());
 
-        $redirect = $paymentRequest->pay();
+        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/A0000012345", $paymentRequest->getPaymentUrl());
+        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/A0000012345/example", $paymentRequest->getPaymentUrl(['gateway' => 'example']));
 
-        self::assertInstanceOf(RedirectResponse::class, $redirect);
-        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/0000012345", $redirect->getTargetUrl());
-    }
+        $redirectDefault = $paymentRequest->pay();
+        self::assertInstanceOf(RedirectResponse::class, $redirectDefault);
+        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/A0000012345", $redirectDefault->getTargetUrl());
 
-    /**
-     * @group external
-     * @test
-     */
-    public function can_request_a_real_sandbox_payment()
-    {
-        $gateway = Requester::make([
-            'sandbox' => true,
-            'merchant_id' => env('ZARINPAL_MERCHANT_ID'),
-        ], app(GuzzleClient::class));
-
-        $gateway->callback('https://example.com/verify-here')
-            ->amount(1500)
-            ->description('My description!')
-            ->data('Email', 'amirreza@example.com')
-            ->mobile('09350000000');
-
-        self::assertGreaterThanOrEqual(3, strlen($gateway->request()->getTransactionId()));
+        $redirectSpecific = $paymentRequest->pay(['gateway' => 'example']);
+        self::assertInstanceOf(RedirectResponse::class, $redirectSpecific);
+        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/A0000012345/example", $redirectSpecific->getTargetUrl());
     }
 
     /** @test */
-    public function converts_validation_error_to_exception()
+    public function throws_server_exception_in_case_of_gateway_issue()
     {
-        $client = $this->mockedGuzzleClient(new Response(404, [], json_encode([
-            'Status' => -11,
-            'Authority' => '',
-            'errors' => [
-                'CallbackURL' => 'The callback u r l field is required.',
-                'Email' => 'The email must be a valid email address.',
-            ]
-        ])));
+        // When requesting a valid payment result in 5xx error, we consider this as an
+        // issue in gateway-side (server) and expect an exception to be thrown containing
+        // HTTP status code.
 
-        $this->expectException( GatewayException::class );
-        $this->expectExceptionMessage('The callback u r l field is required.');
+        Http::fake([
+            'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response(null, 555),
+        ]);
 
-        Requester::make($this->validConfig(), $client)->request();
+        $gateway = new Requester([
+            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
+        ]);
 
-        $exception = $this->getExpectedException();
+        $this->expectException(GatewayServerException::class);
 
-        self::assertEquals(-11, $exception->getCode());
-        self::assertStringContainsString('callback', $exception->getMessage());
+        $gateway->callback('https://example.com/callback')
+            ->amount(1500)
+            ->description('An awesome payment gateway!')
+            ->data('Mobile', '09350000000')
+            ->email('amirreza@example.com')
+            ->request();
+
+        self::assertEquals(555, $this->getExpectedException()->getCode());
+    }
+
+    public function clientErrorProvider()
+    {
+        return [
+            [200, Status::INCOMPLETE_DATA], // 404 HTTP code is not guaranteed for errors
+            [404, Status::INCOMPLETE_DATA],
+            [404, Status::WRONG_IP_OR_MERCHANT_ID],
+            [404, Status::SHAPARAK_LIMITED],
+            [404, Status::INSUFFICIENT_USER_LEVEL],
+            [404, Status::REQUEST_NOT_FOUND],
+            [404, Status::UNABLE_TO_EDIT_REQUEST],
+            [404, Status::NO_FINANCIAL_OPERATION],
+            [404, Status::FAILED_TRANSACTION],
+            [404, Status::AMOUNTS_NOT_EQUAL],
+            [404, Status::TRANSACTION_SPLITTING_LIMITED],
+            [404, Status::METHOD_ACCESS_DENIED],
+            [404, Status::INVALID_ADDITIONAL_DATA],
+            [404, Status::INVALID_EXPIRATION_RANGE],
+            [404, Status::REQUEST_ARCHIVED],
+            [404, Status::OPERATION_SUCCEED],
+            [404, Status::UNEXPECTED],
+        ];
     }
 
     /**
      * @test
-     * @dataProvider errorProvider
+     * @dataProvider clientErrorProvider
      */
-    public function converts_other_gateway_errors_to_exception($passes, $httpCode, $status)
+    public function throws_client_exception_with_default_messages_if_no_error_is_given($httpStatus, $statusCode)
     {
-        $client = $this->mockedGuzzleClient(new Response($httpCode, [], json_encode([
-            'Status' => $status,
-            'Authority' => '',
-        ])));
+        // When requesting a valid payment result in 4xx error, but there is nothing in errors data,
+        // we consider this as an issue in merchant-side (client) and expect an exception to be thrown
+        // containing real error code with default message of that code.
 
-        try {
-            Requester::make($this->validConfig(), $client)->request();
-            self::assertTrue($passes);
-        } catch (GatewayException $exception) {
-            self::assertEquals($status, $exception->getCode());
-            self::assertEquals(Status::toMessage($status), $exception->getMessage());
-            return true;
-        }
+        Http::fake([
+            'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
+                'Status' => $statusCode,
+            ], $httpStatus),
+        ]);
 
-        if (!$passes) {
-            self::fail('No GatewayException is thrown!');
-        }
+        $gateway = new Requester([
+            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
+        ]);
+
+        $this->expectException(GatewayClientException::class);
+
+        $gateway->callback('https://example.com/callback')
+            ->amount(1500)
+            ->description('An awesome payment gateway!')
+            ->data('Mobile', '09350000000')
+            ->email('amirreza@example.com')
+            ->request();
+
+        self::assertEquals($statusCode, $this->getExpectedException()->getCode());
+        self::assertEquals(__("toman::zarinpal.status.$statusCode"), $this->getExpectedException()->getMessage());
     }
 
-    public function errorProvider()
+    /**
+     * @test
+     * @dataProvider clientErrorProvider
+     */
+    public function throws_client_exception_with_first_given_error_message($httpStatus, $statusCode)
     {
-        return [
-            [true, 200, Status::OPERATION_SUCCEED],
-            [false, 404, Status::INCOMPLETE_DATA],
-            [false, 200, Status::INCOMPLETE_DATA], // 404 HTTP code is not guaranteed in documents
-            [false, 404, Status::WRONG_IP_OR_MERCHANT_ID],
-            [false, 404, Status::SHAPARAK_LIMITED],
-            [false, 404, Status::INSUFFICIENT_USER_LEVEL],
-            [false, 404, Status::REQUEST_NOT_FOUND],
-            [false, 404, Status::UNABLE_TO_EDIT_REQUEST],
-            [false, 404, Status::NO_FINANCIAL_OPERATION],
-            [false, 404, Status::FAILED_TRANSACTION],
-            [false, 404, Status::AMOUNTS_NOT_EQUAL],
-            [false, 404, Status::TRANSACTION_SPLITTING_LIMITED],
-            [false, 404, Status::METHOD_ACCESS_DENIED],
-            [false, 404, Status::INVALID_ADDITIONAL_DATA],
-            [false, 404, Status::INVALID_EXPIRATION_RANGE],
-            [false, 404, Status::REQUEST_ARCHIVED],
-            [false, 404, Status::OPERATION_SUCCEED],
-            [false, 404, Status::UNEXPECTED],
-        ];
+        // When requesting a valid payment result in 4xx error, with given error messages,
+        // we consider this as an issue in merchant-side (client) and expect an exception to be thrown
+        // containing real error code and first error message.
+
+        Http::fake([
+            'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
+                'Status' => $statusCode,
+                'errors' => [
+                    'Email' => 'The email must be a valid email address.',
+                ]
+            ], $httpStatus),
+        ]);
+
+        $gateway = new Requester([
+            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
+        ]);
+
+        $this->expectException(GatewayClientException::class);
+
+        $gateway->callback('https://example.com/callback')
+            ->amount(1500)
+            ->description('An awesome payment gateway!')
+            ->data('Mobile', '09350000000')
+            ->email('amirreza@example.com')
+            ->request();
+
+        self::assertEquals($statusCode, $this->getExpectedException()->getCode());
+        self::assertEquals('The email must be a valid email address.', $this->getExpectedException()->getMessage());
     }
 
     /** @test */
     public function can_set_merchant_id_elegantly()
     {
-        $client = $this->mockedPurchaseResponse(2);
+        // We need to ensure that developer can set merchant id elegantly, with their preferred methods
 
-        Requester::make($this->validConfig(['merchant_id' => '1111-1111-1111-1111']), $client)
-            ->request();
-        $this->assertDataInRequest('1111-1111-1111-1111', 'MerchantID');
+        $this->fakeValidResponse();
 
-        Requester::make($this->validConfig(['merchant_id' => '1111-1111-1111-1111']), $client)
-            ->data('MerchantID', '2222-2222-2222-2222')
-            ->request();
-        $this->assertDataInRequest('2222-2222-2222-2222', 'MerchantID');
-    }
+        (new Requester($this->validConfig(['merchant_id' => '11111'])))->request();
+        Http::assertNthRequestFieldEquals('11111', 'MerchantID', 1);
 
-    /** @test */
-    public function can_set_amount_elegantly()
-    {
-        $client = $this->mockedPurchaseResponse(2);
+        (new Requester($this->validConfig()))->data('MerchantID', '33333')->request();
+        Http::assertNthRequestFieldEquals('33333', 'MerchantID', 2);
 
-        Requester::make($this->validConfig(), $client)->amount(1000)->request();
-        $this->assertDataInRequest(1000, 'Amount');
-
-        Requester::make($this->validConfig(), $client)->data('Amount', 3500)->request();
-        $this->assertDataInRequest(3500, 'Amount');
+        (new Requester($this->validConfig()))->merchantId('44444')->request();
+        Http::assertNthRequestFieldEquals('44444', 'MerchantID', 3);
     }
 
     /** @test */
     public function can_set_callback_url_elegantly()
     {
-        $this->app['router']->get('/verify-payment')->name('payment.callback');
+        // We need to ensure that developer can set callback url elegantly, from configured route
+        // or with their preferred methods
 
-        $client = $this->mockedPurchaseResponse(3);
+        $this->fakeValidResponse();
 
+        $this->app['router']->get('/callback')->name('payment.callback');
         config(['toman.callback_route' => 'payment.callback']);
-        Requester::make($this->validConfig(), $client)->request();
-        $this->assertDataInRequest(URL::route('payment.callback'), 'CallbackURL');
+        (new Requester($this->validConfig()))->request();
+        Http::assertNthRequestFieldEquals(URL::route('payment.callback'), 'CallbackURL', 1);
 
-        Requester::make($this->validConfig(), $client)->callback('https://example.com/callbackA')->request();
-        $this->assertDataInRequest('https://example.com/callbackA', 'CallbackURL');
+        (new Requester($this->validConfig()))->data('CallbackURL', 'https://example.com/callback')->request();
+        Http::assertNthRequestFieldEquals('https://example.com/callback', 'CallbackURL', 2);
 
-        Requester::make($this->validConfig(), $client)->data('CallbackURL', 'https://example.com/callbackB')->request();
-        $this->assertDataInRequest('https://example.com/callbackB', 'CallbackURL');
+        (new Requester($this->validConfig()))->callback('https://example.com/callback')->request();
+        Http::assertNthRequestFieldEquals('https://example.com/callback', 'CallbackURL', 3);
+    }
+
+    /** @test */
+    public function can_set_amount_elegantly()
+    {
+        // We need to ensure that developer can set amount elegantly, with their preferred methods
+
+        $this->fakeValidResponse();
+
+        (new Requester($this->validConfig()))->data('Amount', '10000')->request();
+        Http::assertNthRequestFieldEquals('10000', 'Amount', 1);
+
+        (new Requester($this->validConfig()))->amount(20000)->request();
+        Http::assertNthRequestFieldEquals(20000, 'Amount', 2);
     }
 
     /** @test */
     public function can_set_description_elegantly()
     {
-        $client = $this->mockedPurchaseResponse(4);
+        // We need to ensure that developer can set amount elegantly, from configured description
+        // or with their preferred methods
+
+        $this->fakeValidResponse();
 
         config(['toman.description' => 'Paying :amount for invoice']);
-        Requester::make($this->validConfig(), $client)->amount(5000)->request();
-        $this->assertDataInRequest('Paying 5000 for invoice', 'Description');
+        (new Requester($this->validConfig()))->amount(5000)->request();
+        Http::assertNthRequestFieldEquals('Paying 5000 for invoice', 'Description', 1);
 
-        Requester::make($this->validConfig(), $client)->description('Some descriptions')->request();
-        $this->assertDataInRequest('Some descriptions', 'Description');
+        (new Requester($this->validConfig()))->amount(5000)->data('Description', 'Paying :amount for invoice')->request();
+        Http::assertNthRequestFieldEquals('Paying 5000 for invoice', 'Description', 2);
 
-        Requester::make($this->validConfig(), $client)->data('Description', 'Other text')->request();
-        $this->assertDataInRequest('Other text', 'Description');
+        (new Requester($this->validConfig()))->amount(5000)->description('Paying :amount for invoice')->request();
+        Http::assertNthRequestFieldEquals('Paying 5000 for invoice', 'Description', 3);
     }
 
     /** @test */
     public function can_set_mobile_elegantly()
     {
-        $client = $this->mockedPurchaseResponse(2);
+        // We need to ensure that developer can set mobile elegantly, with their preferred methods
 
-        Requester::make($this->validConfig(), $client)->mobile('09350000000')->request();
-        $this->assertDataInRequest('09350000000', 'Mobile');
+        $this->fakeValidResponse();
 
-        Requester::make($this->validConfig(), $client)->data('Mobile', '09351111111')->request();
-        $this->assertDataInRequest('09351111111', 'Mobile');
+        (new Requester($this->validConfig()))->data('Mobile', '09350000000')->request();
+        Http::assertNthRequestFieldEquals('09350000000', 'Mobile', 1);
+
+        (new Requester($this->validConfig()))->mobile('09350000000')->request();
+        Http::assertNthRequestFieldEquals('09350000000', 'Mobile', 2);
     }
 
     /** @test */
     public function can_set_email_elegantly()
     {
-        $client = $this->mockedPurchaseResponse(2);
+        // We need to ensure that developer can set email elegantly, with their preferred methods
 
-        Requester::make($this->validConfig(), $client)->email('amirreza@example.com')->request();
-        $this->assertDataInRequest('amirreza@example.com', 'Email');
+        $this->fakeValidResponse();
 
-        Requester::make($this->validConfig(), $client)->data('Email', 'alireza@example.com')->request();
-        $this->assertDataInRequest('alireza@example.com', 'Email');
-    }
+        (new Requester($this->validConfig()))->data('Email', 'amirreza@example.com')->request();
+        Http::assertNthRequestFieldEquals('amirreza@example.com', 'Email', 1);
 
-    /**
-     * @test
-     * @dataProvider sandboxProvider
-     */
-    public function validates_sandbox($passes, $sandbox)
-    {
-        $client = $this->mockedPurchaseResponse();
-
-        $gateway = Requester::make($this->validConfig([
-            'sandbox' => $sandbox
-        ]), $client);
-
-        try {
-            $gateway->request();
-            self::assertTrue($passes);
-        } catch (InvalidConfigException $exception) {
-            self::assertFalse($passes);
-            self::assertStringContainsString('sandbox', $exception->getMessage());
-        }
-    }
-
-    public function sandboxProvider()
-    {
-        return [
-            "Passes without value" => [true, null],
-            "Passes with false" => [true, false],
-            "Passes with true" => [true, true],
-            "Fails with string" => [false, 'true'],
-            "Fails with array" => [false, ['true']],
-        ];
+        (new Requester($this->validConfig()))->email('amirreza@example.com')->request();
+        Http::assertNthRequestFieldEquals('amirreza@example.com', 'Email', 2);
     }
 
     private function validConfig($overridden = [])
     {
         return array_merge([
-            'sandbox' => true,
             'merchant_id' => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
         ], $overridden);
     }
 
-    private function mockedPurchaseResponse($times = 1)
+    private function fakeValidResponse()
     {
-        $responses = [];
-        foreach (range(1, $times) as $i) {
-            $responses[] = new Response(200, [], json_encode([
-                'Status' => 100,
-                'Authority' => '0000012345',
-            ]));
-        }
-
-        return $this->mockedGuzzleClient($responses);
+        Http::fake([
+            'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
+                'Status' => '100',
+                'Authority' => 'A0000012345',
+            ], 200),
+        ]);
     }
 }

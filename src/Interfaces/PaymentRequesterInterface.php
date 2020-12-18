@@ -1,10 +1,8 @@
 <?php
 
-namespace Evryn\LaravelToman\Contracts;
+namespace Evryn\LaravelToman\Interfaces;
 
-use Evryn\LaravelToman\Results\RequestedPayment;
-
-interface PaymentRequester
+interface PaymentRequesterInterface
 {
     /**
      * Set driver-specific data parameter on-the-fly.
@@ -12,14 +10,14 @@ interface PaymentRequester
      * @param null $value
      * @return mixed
      */
-    public function data($key, $value = null);
+    public function data(string $key, $value = null);
 
     /**
      * Get all driver-specific data or specific key.
-     * @param null $key
+     * @param string|null $key
      * @return mixed
      */
-    public function getData($key = null);
+    public function getData(string $key = null);
 
     /**
      * Callback URL used to return user after payment by the gateway.
@@ -40,11 +38,11 @@ interface PaymentRequester
      * @param $description
      * @return mixed
      */
-    public function description($description);
+    public function description(string $description);
 
     /**
      * Request new payment transaction from gateway provider.
      * @return mixed
      */
-    public function request(): RequestedPayment;
+    public function request(): RequestedPaymentInterface;
 }

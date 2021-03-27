@@ -11,6 +11,8 @@ final class LaravelTomanServiceProviderTest extends TestCase
     /** @test */
     public function publishes_config_correctly()
     {
+        // We need to ensure that artisan can publish `toman.php` config file properly
+
         $source = __DIR__ . '/../config/toman.php';
         $dest = config_path('toman.php');
 
@@ -29,6 +31,8 @@ final class LaravelTomanServiceProviderTest extends TestCase
     /** @test */
     public function publishes_translations_correctly()
     {
+        // We need to ensure that artisan can publish default translations files properly
+
         $map = [
             __DIR__ . '/../resources/lang/en/zarinpal.php' => resource_path('lang/vendor/toman/en/zarinpal.php'),
             __DIR__ . '/../resources/lang/fa/zarinpal.php' => resource_path('lang/vendor/toman/fa/zarinpal.php'),

@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   php:
-    image: php:7.2-alpine
+    image: php:7.3-alpine
     volumes:
       - .:/var/www/html
 

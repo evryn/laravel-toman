@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
-
 
 use Evryn\LaravelToman\Exceptions\GatewayClientException;
 use Evryn\LaravelToman\Exceptions\GatewayServerException;
@@ -14,31 +12,37 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 
-
 final class RequesterTest extends TestCase
 {
-    protected function setUp(): void
+    public static function endpointProvider()
     {
-        parent::setUp();
+        return [
+            'Sandbox' => [true, 'sandbox.zarinpal.com'],
+            'Production' => [false, 'www.zarinpal.com'],
+        ];
     }
 
-    /** @test */
-    public function can_request_production_payment()
+    /**
+     * @test
+     * @dataProvider endpointProvider
+     */
+    public function can_request_payment(bool $sandbox, string $baseUrl)
     {
-        // By send a real (out-of-sandbox) request to create a new ZarinPal transaction
-        // we need to ensure that it sends request to correct production URL, with correct
+        // By sending a request to create a new ZarinPal transaction,
+        // we need to ensure that it sends request to proper endpoint, with correct
         // data and amount.
         // We also need to check that created payment can be redirected to default gateway
         // or the specific one.
 
         Http::fake([
-            'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
+            "$baseUrl/pg/rest/WebGate/PaymentRequest.json" => Http::response([
                 'Status' => '100',
                 'Authority' => 'A0000012345',
             ], 200),
         ]);
 
         $gateway = new Requester([
+            'sandbox' => $sandbox,
             'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
         ]);
 
@@ -50,8 +54,8 @@ final class RequesterTest extends TestCase
 
         $paymentRequest = $gateway->request();
 
-        Http::assertSent(function (Request $request) {
-            return $request->url() === 'https://www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json'
+        Http::assertSent(function (Request $request) use ($baseUrl) {
+            return $request->url() === "https://$baseUrl/pg/rest/WebGate/PaymentRequest.json"
                 && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'
                 && $request['Amount'] == 1500
                 && $request['CallbackURL'] === 'https://example.com/callback'
@@ -62,63 +66,16 @@ final class RequesterTest extends TestCase
 
         self::assertEquals('A0000012345', $paymentRequest->getTransactionId());
 
-        self::assertEquals("https://www.zarinpal.com/pg/StartPay/A0000012345", $paymentRequest->getPaymentUrl());
-        self::assertEquals("https://www.zarinpal.com/pg/StartPay/A0000012345/example", $paymentRequest->getPaymentUrl(['gateway' => 'example']));
+        self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345", $paymentRequest->getPaymentUrl());
+        self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345/example", $paymentRequest->getPaymentUrl(['gateway' => 'example']));
 
         $redirectDefault = $paymentRequest->pay();
         self::assertInstanceOf(RedirectResponse::class, $redirectDefault);
-        self::assertEquals("https://www.zarinpal.com/pg/StartPay/A0000012345", $redirectDefault->getTargetUrl());
+        self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345", $redirectDefault->getTargetUrl());
 
         $redirectSpecific = $paymentRequest->pay(['gateway' => 'example']);
         self::assertInstanceOf(RedirectResponse::class, $redirectSpecific);
-        self::assertEquals("https://www.zarinpal.com/pg/StartPay/A0000012345/example", $redirectSpecific->getTargetUrl());
-    }
-
-    /** @test */
-    public function can_request_sandbox_payment()
-    {
-        Http::fake([
-            'sandbox.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
-                'Status' => '100',
-                'Authority' => 'A0000012345',
-            ], 200),
-        ]);
-
-        $gateway = new Requester([
-            'sandbox' => true,
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
-        ]);
-
-        $gateway->callback('https://example.com/callback')
-            ->amount(1500)
-            ->description('An awesome payment gateway!')
-            ->data('Mobile', '09350000000')
-            ->email('amirreza@example.com');
-
-        $paymentRequest = $gateway->request();
-
-        Http::assertSent(function (Request $request) {
-            return $request->url() === 'https://sandbox.zarinpal.com/pg/rest/WebGate/PaymentRequest.json'
-                && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'
-                && $request['Amount'] == 1500
-                && $request['CallbackURL'] === 'https://example.com/callback'
-                && $request['Description'] === 'An awesome payment gateway!'
-                && $request['Mobile'] === '09350000000'
-                && $request['Email'] === 'amirreza@example.com';
-        });
-
-        self::assertEquals('A0000012345', $paymentRequest->getTransactionId());
-
-        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/A0000012345", $paymentRequest->getPaymentUrl());
-        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/A0000012345/example", $paymentRequest->getPaymentUrl(['gateway' => 'example']));
-
-        $redirectDefault = $paymentRequest->pay();
-        self::assertInstanceOf(RedirectResponse::class, $redirectDefault);
-        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/A0000012345", $redirectDefault->getTargetUrl());
-
-        $redirectSpecific = $paymentRequest->pay(['gateway' => 'example']);
-        self::assertInstanceOf(RedirectResponse::class, $redirectSpecific);
-        self::assertEquals("https://sandbox.zarinpal.com/pg/StartPay/A0000012345/example", $redirectSpecific->getTargetUrl());
+        self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345/example", $redirectSpecific->getTargetUrl());
     }
 
     /** @test */
@@ -187,18 +144,9 @@ final class RequesterTest extends TestCase
             ], $httpStatus),
         ]);
 
-        $gateway = new Requester([
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
-        ]);
-
         $this->expectException(GatewayClientException::class);
 
-        $gateway->callback('https://example.com/callback')
-            ->amount(1500)
-            ->description('An awesome payment gateway!')
-            ->data('Mobile', '09350000000')
-            ->email('amirreza@example.com')
-            ->request();
+        $this->validRequester()->request();
 
         self::assertEquals($statusCode, $this->getExpectedException()->getCode());
         self::assertEquals(__("toman::zarinpal.status.$statusCode"), $this->getExpectedException()->getMessage());
@@ -223,18 +171,9 @@ final class RequesterTest extends TestCase
             ], $httpStatus),
         ]);
 
-        $gateway = new Requester([
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
-        ]);
-
         $this->expectException(GatewayClientException::class);
 
-        $gateway->callback('https://example.com/callback')
-            ->amount(1500)
-            ->description('An awesome payment gateway!')
-            ->data('Mobile', '09350000000')
-            ->email('amirreza@example.com')
-            ->request();
+        $this->validRequester()->request();
 
         self::assertEquals($statusCode, $this->getExpectedException()->getCode());
         self::assertEquals('The email must be a valid email address.', $this->getExpectedException()->getMessage());
@@ -338,14 +277,26 @@ final class RequesterTest extends TestCase
         Http::assertNthRequestFieldEquals('amirreza@example.com', 'Email', 2);
     }
 
-    private function validConfig($overridden = [])
+    private function validConfig($overridden = []): array
     {
         return array_merge([
             'merchant_id' => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
         ], $overridden);
     }
 
-    private function fakeValidResponse()
+    private function validRequester(): Requester
+    {
+        return (new Requester([
+            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
+        ]))
+            ->callback('https://example.com/callback')
+            ->amount(1500)
+            ->description('An awesome payment gateway!')
+            ->data('Mobile', '09350000000')
+            ->email('amirreza@example.com');
+    }
+
+    private function fakeValidResponse(): void
     {
         Http::fake([
             'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([

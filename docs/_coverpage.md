@@ -1,7 +1,7 @@
 
 ![logo](_media/logo.png)
 
-# Laravel Toman <small>1.0</small>
+# Laravel Toman <small>2.0</small>
 
 > A painless payment handler!
 

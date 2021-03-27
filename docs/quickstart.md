@@ -2,11 +2,10 @@
 
 # Requirements
 
-Every released build is tested against combination of following config:
- * PHP: 7.2+
- * Laravel: 5.8+
- 
- If you're not using this config, you should really take a look at lifetime support of Laravel and PHP.
+| Package | Laravel Framework | PHP  | Status |
+| ------------- |:-------------:|:-----:| ---:|
+| v2      | 8.*, 7.* | >=7.3 | Active 🚀 |
+| v1.1      | 6.*, 5.8.*       |   >=7.2 |  |
 
 # Installation
 

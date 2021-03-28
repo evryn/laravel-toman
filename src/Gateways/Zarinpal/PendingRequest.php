@@ -24,6 +24,7 @@ class PendingRequest
     protected $data = [];
 
     protected $dataMethodMap = [
+        'merchantid' => 'MerchantID',
         'amount' => 'Amount',
         'callback' => 'CallbackURL',
         'mobile' => 'Mobile',
@@ -87,7 +88,7 @@ class PendingRequest
 
     /**
      * Request a new payment from gateway.
-     * @return RequestedPayment If new payment is created and is ready to pay
+     * @return RequestedPayment
      */
     public function request(): RequestedPaymentInterface
     {

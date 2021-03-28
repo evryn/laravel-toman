@@ -56,7 +56,8 @@ final class RequesterTest extends TestCase
         tap($gateway->request(), function (RequestedPayment $request) use ($baseUrl) {
 
             Http::assertSent(function (Request $request) use ($baseUrl) {
-                return $request->url() === "https://$baseUrl/pg/rest/WebGate/PaymentRequest.json"
+                return $request->method() === 'POST'
+                    && $request->url() === "https://$baseUrl/pg/rest/WebGate/PaymentRequest.json"
                     && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'
                     && $request['Amount'] == 1500
                     && $request['CallbackURL'] === 'https://example.com/callback'
@@ -170,7 +171,7 @@ final class RequesterTest extends TestCase
 
             try {
                 $request->throw();
-                $this->fail('GatewayServerException has no thrown.');
+                $this->fail('GatewayClientException has no thrown.');
             } catch (GatewayClientException $exception) {
                 self::assertEquals($statusCode, $exception->getCode());
                 self::assertEquals($exception->getCode(), $request->status());

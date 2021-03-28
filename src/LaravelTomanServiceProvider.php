@@ -2,11 +2,8 @@
 
 namespace Evryn\LaravelToman;
 
-use Evryn\LaravelToman\Contracts\PaymentVerifier;
-use Evryn\LaravelToman\Interfaces\PaymentRequesterInterface;
-use Evryn\LaravelToman\Managers\PaymentRequestManager;
-use Evryn\LaravelToman\Managers\PaymentVerificationManager;
-use GuzzleHttp\Client;
+use Evryn\LaravelToman\Interfaces\TomanInterface;
+use Evryn\LaravelToman\Managers\TomanManager;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelTomanServiceProvider extends ServiceProvider
@@ -37,12 +34,8 @@ class LaravelTomanServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(self::CONFIG_FILE, 'toman');
 
-        $this->app->singleton(PaymentRequesterInterface::class, function ($app) {
-            return new PaymentRequestManager($app);
-        });
-
-        $this->app->singleton(PaymentVerifier::class, function ($app) {
-            return new PaymentVerificationManager($app);
+        $this->app->singleton(TomanInterface::class, function ($app) {
+            return new TomanManager($app);
         });
     }
 

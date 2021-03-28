@@ -2,8 +2,11 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
+use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
 
 class RequestedPayment implements RequestedPaymentInterface
 {
@@ -15,15 +18,69 @@ class RequestedPayment implements RequestedPaymentInterface
      * @var string
      */
     private $baseUrl;
+    /**
+     * @var GatewayException|null
+     */
+    private $exception;
+    /**
+     * @var array
+     */
+    private $messages;
 
-    public function __construct(string $transactionId, string $baseUrl)
+    public function __construct(GatewayException $exception = null, array $messages = [], $transactionId = null, string $baseUrl = null)
     {
         $this->transactionId = $transactionId;
         $this->baseUrl = $baseUrl;
+        $this->exception = $exception;
+        $this->messages = $messages;
     }
 
-    public function getTransactionId(): string
+    public function successful(): bool
     {
+        return !$this->exception;
+    }
+
+    public function failed(): bool
+    {
+        return !$this->successful();
+    }
+
+    public function throw(): void
+    {
+        if ($this->failed()) {
+            throw $this->exception;
+        }
+    }
+
+    public function status()
+    {
+        return $this->failed() ? $this->exception->getCode() : null;
+    }
+
+    public function message(): ?string
+    {
+        return Arr::first($this->messages());
+    }
+
+    public function messages(): array
+    {
+        if ($this->messages) {
+            return $this->messages;
+        }
+
+        if ($this->failed()) {
+            return [$this->exception->getMessage()];
+        }
+
+        return [];
+    }
+
+    public function transactionId(): ?string
+    {
+        if ($this->failed()) {
+            $this->throw();
+        }
+
         return $this->transactionId;
     }
 
@@ -34,11 +91,11 @@ class RequestedPayment implements RequestedPaymentInterface
      * @param array $options ZarinPal accepts `gateway` option to target a specific bank gateway. Contact with their support for more info.
      * @return string
      */
-    public function getPaymentUrl(array $options = []): string
+    public function paymentUrl(array $options = []): ?string
     {
         $gateway = isset($options['gateway']) ? "/{$options['gateway']}" : '';
 
-        return "{$this->baseUrl}/pg/StartPay/{$this->transactionId}{$gateway}";
+        return "{$this->baseUrl}/pg/StartPay/{$this->transactionId()}{$gateway}";
     }
 
     /**
@@ -48,6 +105,6 @@ class RequestedPayment implements RequestedPaymentInterface
      */
     public function pay(array $options = []): RedirectResponse
     {
-        return redirect()->to($this->getPaymentUrl($options));
+        return redirect()->to($this->paymentUrl($options));
     }
 }

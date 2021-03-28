@@ -2,10 +2,10 @@
 
 namespace Evryn\LaravelToman\Managers;
 
-use Evryn\LaravelToman\Gateways\Zarinpal\Requester as ZarinpalPaymentRequest;
+use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest as ZarinpalPendingRequest;
 use Illuminate\Support\Manager;
 
-class PaymentRequestManager extends Manager
+class TomanManager extends Manager
 {
     /**
      * Get the default payment gateway name.
@@ -19,11 +19,11 @@ class PaymentRequestManager extends Manager
 
     /**
      * Create Zarinpal gateway driver.
-     * @return ZarinpalPaymentRequest
+     * @return ZarinpalPendingRequest
      */
     public function createZarinpalDriver()
     {
-        return new ZarinpalPaymentRequest(
+        return new ZarinpalPendingRequest(
             config('toman.gateways.zarinpal')
         );
     }

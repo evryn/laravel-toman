@@ -2,10 +2,10 @@
 
 namespace Evryn\LaravelToman\Facades;
 
-use Evryn\LaravelToman\Interfaces\PaymentRequesterInterface;
+use Evryn\LaravelToman\Interfaces\TomanInterface;
 use Illuminate\Support\Facades\Facade;
 
-class PaymentRequest extends Facade
+class Toman extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -14,6 +14,6 @@ class PaymentRequest extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return PaymentRequesterInterface::class;
+        return TomanInterface::class;
     }
 }

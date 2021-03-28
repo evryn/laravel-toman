@@ -4,7 +4,8 @@ namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Exceptions\GatewayClientException;
 use Evryn\LaravelToman\Exceptions\GatewayServerException;
-use Evryn\LaravelToman\Gateways\Zarinpal\Requester;
+use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
+use Evryn\LaravelToman\Gateways\Zarinpal\RequestedPayment;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\Client\Request;
@@ -41,7 +42,7 @@ final class RequesterTest extends TestCase
             ], 200),
         ]);
 
-        $gateway = new Requester([
+        $gateway = new PendingRequest([
             'sandbox' => $sandbox,
             'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
         ]);
@@ -52,79 +53,98 @@ final class RequesterTest extends TestCase
             ->data('Mobile', '09350000000')
             ->email('amirreza@example.com');
 
-        $paymentRequest = $gateway->request();
+        tap($gateway->request(), function (RequestedPayment $request) use ($baseUrl) {
 
-        Http::assertSent(function (Request $request) use ($baseUrl) {
-            return $request->url() === "https://$baseUrl/pg/rest/WebGate/PaymentRequest.json"
-                && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'
-                && $request['Amount'] == 1500
-                && $request['CallbackURL'] === 'https://example.com/callback'
-                && $request['Description'] === 'An awesome payment gateway!'
-                && $request['Mobile'] === '09350000000'
-                && $request['Email'] === 'amirreza@example.com';
+            Http::assertSent(function (Request $request) use ($baseUrl) {
+                return $request->url() === "https://$baseUrl/pg/rest/WebGate/PaymentRequest.json"
+                    && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'
+                    && $request['Amount'] == 1500
+                    && $request['CallbackURL'] === 'https://example.com/callback'
+                    && $request['Description'] === 'An awesome payment gateway!'
+                    && $request['Mobile'] === '09350000000'
+                    && $request['Email'] === 'amirreza@example.com';
+            });
+
+            // Since request is successful, we need to ensure that nothing can be
+            // thrown and determiners are correct
+            $request->throw();
+            self::assertTrue($request->successful());
+            self::assertFalse($request->failed());
+
+            self::assertEquals('A0000012345', $request->transactionId());
+
+            $redirectDefault = $request->pay();
+            self::assertInstanceOf(RedirectResponse::class, $redirectDefault);
+            self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345", $redirectDefault->getTargetUrl());
+            self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345", $request->paymentUrl());
+
+            $redirectSpecific = $request->pay(['gateway' => 'example']);
+            self::assertInstanceOf(RedirectResponse::class, $redirectSpecific);
+            self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345/example", $redirectSpecific->getTargetUrl());
+            self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345/example", $request->paymentUrl(['gateway' => 'example']));
         });
-
-        self::assertEquals('A0000012345', $paymentRequest->getTransactionId());
-
-        self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345", $paymentRequest->getPaymentUrl());
-        self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345/example", $paymentRequest->getPaymentUrl(['gateway' => 'example']));
-
-        $redirectDefault = $paymentRequest->pay();
-        self::assertInstanceOf(RedirectResponse::class, $redirectDefault);
-        self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345", $redirectDefault->getTargetUrl());
-
-        $redirectSpecific = $paymentRequest->pay(['gateway' => 'example']);
-        self::assertInstanceOf(RedirectResponse::class, $redirectSpecific);
-        self::assertEquals("https://$baseUrl/pg/StartPay/A0000012345/example", $redirectSpecific->getTargetUrl());
     }
 
     /** @test */
-    public function throws_server_exception_in_case_of_gateway_issue()
+    public function fails_with_gateway_exception()
     {
         // When requesting a valid payment result in 5xx error, we consider this as an
-        // issue in gateway-side (server) and expect an exception to be thrown containing
-        // HTTP status code.
+        // issue in gateway-side (server) and expect an expect API to provide proper results
 
         Http::fake([
             'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response(null, 555),
         ]);
 
-        $gateway = new Requester([
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
-        ]);
+        tap($this->validPendingRequest()->request(), function (RequestedPayment $request) {
+            self::assertFalse($request->successful());
+            self::assertTrue($request->failed());
 
-        $this->expectException(GatewayServerException::class);
+            try {
+                $request->throw();
+                $this->fail('GatewayServerException has no thrown.');
+            } catch (GatewayServerException $exception) {
+                self::assertEquals(555, $exception->getCode());
+                self::assertEquals($exception->getMessage(), $request->message());
+                self::assertEquals($exception->getCode(), $request->status());
+            }
 
-        $gateway->callback('https://example.com/callback')
-            ->amount(1500)
-            ->description('An awesome payment gateway!')
-            ->data('Mobile', '09350000000')
-            ->email('amirreza@example.com')
-            ->request();
+            try {
+                $request->transactionId();
+                $this->fail('GatewayServerException has no thrown.');
+            } catch (GatewayServerException $exception) {}
 
-        self::assertEquals(555, $this->getExpectedException()->getCode());
+            try {
+                $request->paymentUrl();
+                $this->fail('GatewayServerException has no thrown.');
+            } catch (GatewayServerException $exception) {}
+
+            try {
+                $request->pay();
+                $this->fail('GatewayServerException has no thrown.');
+            } catch (GatewayServerException $exception) {}
+        });
     }
 
     public function clientErrorProvider()
     {
         return [
-            [200, Status::INCOMPLETE_DATA], // 404 HTTP code is not guaranteed for errors
-            [404, Status::INCOMPLETE_DATA],
-            [404, Status::WRONG_IP_OR_MERCHANT_ID],
-            [404, Status::SHAPARAK_LIMITED],
-            [404, Status::INSUFFICIENT_USER_LEVEL],
-            [404, Status::REQUEST_NOT_FOUND],
-            [404, Status::UNABLE_TO_EDIT_REQUEST],
-            [404, Status::NO_FINANCIAL_OPERATION],
-            [404, Status::FAILED_TRANSACTION],
-            [404, Status::AMOUNTS_NOT_EQUAL],
-            [404, Status::TRANSACTION_SPLITTING_LIMITED],
-            [404, Status::METHOD_ACCESS_DENIED],
-            [404, Status::INVALID_ADDITIONAL_DATA],
-            [404, Status::INVALID_EXPIRATION_RANGE],
-            [404, Status::REQUEST_ARCHIVED],
-            [404, Status::OPERATION_SUCCEED],
-            [404, Status::UNEXPECTED],
+            [200, Status::INCOMPLETE_DATA, 'incomplete_data'], // 404 HTTP code is not guaranteed for errors
+            [404, Status::INCOMPLETE_DATA, 'incomplete_data'],
+            [404, Status::WRONG_IP_OR_MERCHANT_ID, 'wrong_ip_or_merchant_id'],
+            [404, Status::SHAPARAK_LIMITED, 'shaparak_limited'],
+            [404, Status::INSUFFICIENT_USER_LEVEL, 'insufficient_user_level'],
+            [404, Status::REQUEST_NOT_FOUND, 'request_not_found'],
+            [404, Status::UNABLE_TO_EDIT_REQUEST, 'unable_to_edit_request'],
+            [404, Status::NO_FINANCIAL_OPERATION, 'no_financial_operation'],
+            [404, Status::FAILED_TRANSACTION, 'failed_transaction'],
+            [404, Status::AMOUNTS_NOT_EQUAL, 'amounts_not_equal'],
+            [404, Status::TRANSACTION_SPLITTING_LIMITED, 'transaction_splitting_limited'],
+            [404, Status::METHOD_ACCESS_DENIED, 'method_access_denied'],
+            [404, Status::INVALID_ADDITIONAL_DATA, 'invalid_additional_data'],
+            [404, Status::INVALID_EXPIRATION_RANGE, 'invalid_expiration_range'],
+            [404, Status::REQUEST_ARCHIVED, 'request_archived'],
+            [404, Status::OPERATION_SUCCEED, 'operation_succeed'],
+            [404, Status::UNEXPECTED, 'unexpected'],
         ];
     }
 
@@ -132,11 +152,11 @@ final class RequesterTest extends TestCase
      * @test
      * @dataProvider clientErrorProvider
      */
-    public function throws_client_exception_with_default_messages_if_no_error_is_given($httpStatus, $statusCode)
+    public function fails_with_client_exception_without_message($httpStatus, $statusCode, $messageKey)
     {
         // When requesting a valid payment result in 4xx error, but there is nothing in errors data,
-        // we consider this as an issue in merchant-side (client) and expect an exception to be thrown
-        // containing real error code with default message of that code.
+        // we consider this as an issue in merchant-side (client) and expect an expect API to provide
+        // proper results.
 
         Http::fake([
             'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
@@ -144,39 +164,93 @@ final class RequesterTest extends TestCase
             ], $httpStatus),
         ]);
 
-        $this->expectException(GatewayClientException::class);
+        tap($this->validPendingRequest()->request(), function (RequestedPayment $request) use ($statusCode, $messageKey) {
+            self::assertFalse($request->successful());
+            self::assertTrue($request->failed());
 
-        $this->validRequester()->request();
+            try {
+                $request->throw();
+                $this->fail('GatewayServerException has no thrown.');
+            } catch (GatewayClientException $exception) {
+                self::assertEquals($statusCode, $exception->getCode());
+                self::assertEquals($exception->getCode(), $request->status());
 
-        self::assertEquals($statusCode, $this->getExpectedException()->getCode());
-        self::assertEquals(__("toman::zarinpal.status.$statusCode"), $this->getExpectedException()->getMessage());
+                self::assertEquals(__("toman::zarinpal.status.$messageKey"), $exception->getMessage());
+                self::assertEquals(__("toman::zarinpal.status.$messageKey"), $request->message());
+                self::assertEquals([__("toman::zarinpal.status.$messageKey")], $request->messages());
+            }
+
+            try {
+                $request->transactionId();
+                $this->fail('GatewayClientException has no thrown.');
+            } catch (GatewayClientException $exception) {}
+
+            try {
+                $request->paymentUrl();
+                $this->fail('GatewayClientException has no thrown.');
+            } catch (GatewayClientException $exception) {}
+
+            try {
+                $request->pay();
+                $this->fail('GatewayClientException has no thrown.');
+            } catch (GatewayClientException $exception) {}
+        });
     }
 
     /**
      * @test
      * @dataProvider clientErrorProvider
      */
-    public function throws_client_exception_with_first_given_error_message($httpStatus, $statusCode)
+    public function fails_with_client_exception_with_message($httpStatus, $statusCode, $messageKey)
     {
         // When requesting a valid payment result in 4xx error, with given error messages,
-        // we consider this as an issue in merchant-side (client) and expect an exception to be thrown
-        // containing real error code and first error message.
+        // we consider this as an issue in merchant-side (client) and expect an expect API
+        // to provide proper results
 
         Http::fake([
             'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
                 'Status' => $statusCode,
                 'errors' => [
                     'Email' => 'The email must be a valid email address.',
+                    'Amount' => 'The amount must be valid.',
                 ]
             ], $httpStatus),
         ]);
 
-        $this->expectException(GatewayClientException::class);
+        tap($this->validPendingRequest()->request(), function (RequestedPayment $request) use ($statusCode, $messageKey) {
+            self::assertFalse($request->successful());
+            self::assertTrue($request->failed());
 
-        $this->validRequester()->request();
+            try {
+                $request->throw();
+                $this->fail('GatewayServerException has no thrown.');
+            } catch (GatewayClientException $exception) {
+                self::assertEquals($statusCode, $exception->getCode());
+                self::assertEquals($exception->getCode(), $request->status());
 
-        self::assertEquals($statusCode, $this->getExpectedException()->getCode());
-        self::assertEquals('The email must be a valid email address.', $this->getExpectedException()->getMessage());
+                self::assertEquals(__("toman::zarinpal.status.$messageKey"), $exception->getMessage());
+                self::assertEquals('The email must be a valid email address.', $request->message());
+                self::assertEquals([
+                    'Email' => 'The email must be a valid email address.',
+                    'Amount' => 'The amount must be valid.'
+                ], $request->messages());
+            }
+
+            try {
+                $request->transactionId();
+                $this->fail('GatewayClientException has no thrown.');
+            } catch (GatewayClientException $exception) {}
+
+            try {
+                $request->paymentUrl();
+                $this->fail('GatewayClientException has no thrown.');
+            } catch (GatewayClientException $exception) {}
+
+            try {
+                $request->pay();
+                $this->fail('GatewayClientException has no thrown.');
+            } catch (GatewayClientException $exception) {}
+        });
     }
 
     /** @test */
@@ -186,13 +260,13 @@ final class RequesterTest extends TestCase
 
         $this->fakeValidResponse();
 
-        (new Requester($this->validConfig(['merchant_id' => '11111'])))->request();
+        (new PendingRequest($this->validConfig(['merchant_id' => '11111'])))->request();
         Http::assertNthRequestFieldEquals('11111', 'MerchantID', 1);
 
-        (new Requester($this->validConfig()))->data('MerchantID', '33333')->request();
+        (new PendingRequest($this->validConfig()))->data('MerchantID', '33333')->request();
         Http::assertNthRequestFieldEquals('33333', 'MerchantID', 2);
 
-        (new Requester($this->validConfig()))->merchantId('44444')->request();
+        (new PendingRequest($this->validConfig()))->merchantId('44444')->request();
         Http::assertNthRequestFieldEquals('44444', 'MerchantID', 3);
     }
 
@@ -204,16 +278,16 @@ final class RequesterTest extends TestCase
 
         $this->fakeValidResponse();
 
-        $this->app['router']->get('/callback')->name('payment.callback');
+        $this->app['router']->get('/callback1')->name('payment.callback');
         config(['toman.callback_route' => 'payment.callback']);
-        (new Requester($this->validConfig()))->request();
+        (new PendingRequest($this->validConfig()))->request();
         Http::assertNthRequestFieldEquals(URL::route('payment.callback'), 'CallbackURL', 1);
 
-        (new Requester($this->validConfig()))->data('CallbackURL', 'https://example.com/callback')->request();
-        Http::assertNthRequestFieldEquals('https://example.com/callback', 'CallbackURL', 2);
+        (new PendingRequest($this->validConfig()))->data('CallbackURL', 'https://example.com/callback2')->request();
+        Http::assertNthRequestFieldEquals('https://example.com/callback2', 'CallbackURL', 2);
 
-        (new Requester($this->validConfig()))->callback('https://example.com/callback')->request();
-        Http::assertNthRequestFieldEquals('https://example.com/callback', 'CallbackURL', 3);
+        (new PendingRequest($this->validConfig()))->callback('https://example.com/callback3')->request();
+        Http::assertNthRequestFieldEquals('https://example.com/callback3', 'CallbackURL', 3);
     }
 
     /** @test */
@@ -223,10 +297,10 @@ final class RequesterTest extends TestCase
 
         $this->fakeValidResponse();
 
-        (new Requester($this->validConfig()))->data('Amount', '10000')->request();
+        (new PendingRequest($this->validConfig()))->data('Amount', '10000')->request();
         Http::assertNthRequestFieldEquals('10000', 'Amount', 1);
 
-        (new Requester($this->validConfig()))->amount(20000)->request();
+        (new PendingRequest($this->validConfig()))->amount(20000)->request();
         Http::assertNthRequestFieldEquals(20000, 'Amount', 2);
     }
 
@@ -239,13 +313,13 @@ final class RequesterTest extends TestCase
         $this->fakeValidResponse();
 
         config(['toman.description' => 'Paying :amount for invoice']);
-        (new Requester($this->validConfig()))->amount(5000)->request();
+        (new PendingRequest($this->validConfig()))->amount(5000)->request();
         Http::assertNthRequestFieldEquals('Paying 5000 for invoice', 'Description', 1);
 
-        (new Requester($this->validConfig()))->amount(5000)->data('Description', 'Paying :amount for invoice')->request();
+        (new PendingRequest($this->validConfig()))->amount(5000)->data('Description', 'Paying :amount for invoice')->request();
         Http::assertNthRequestFieldEquals('Paying 5000 for invoice', 'Description', 2);
 
-        (new Requester($this->validConfig()))->amount(5000)->description('Paying :amount for invoice')->request();
+        (new PendingRequest($this->validConfig()))->amount(5000)->description('Paying :amount for invoice')->request();
         Http::assertNthRequestFieldEquals('Paying 5000 for invoice', 'Description', 3);
     }
 
@@ -256,10 +330,10 @@ final class RequesterTest extends TestCase
 
         $this->fakeValidResponse();
 
-        (new Requester($this->validConfig()))->data('Mobile', '09350000000')->request();
+        (new PendingRequest($this->validConfig()))->data('Mobile', '09350000000')->request();
         Http::assertNthRequestFieldEquals('09350000000', 'Mobile', 1);
 
-        (new Requester($this->validConfig()))->mobile('09350000000')->request();
+        (new PendingRequest($this->validConfig()))->mobile('09350000000')->request();
         Http::assertNthRequestFieldEquals('09350000000', 'Mobile', 2);
     }
 
@@ -270,10 +344,10 @@ final class RequesterTest extends TestCase
 
         $this->fakeValidResponse();
 
-        (new Requester($this->validConfig()))->data('Email', 'amirreza@example.com')->request();
+        (new PendingRequest($this->validConfig()))->data('Email', 'amirreza@example.com')->request();
         Http::assertNthRequestFieldEquals('amirreza@example.com', 'Email', 1);
 
-        (new Requester($this->validConfig()))->email('amirreza@example.com')->request();
+        (new PendingRequest($this->validConfig()))->email('amirreza@example.com')->request();
         Http::assertNthRequestFieldEquals('amirreza@example.com', 'Email', 2);
     }
 
@@ -284,11 +358,9 @@ final class RequesterTest extends TestCase
         ], $overridden);
     }
 
-    private function validRequester(): Requester
+    private function validPendingRequest(): PendingRequest
     {
-        return (new Requester([
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
-        ]))
+        return (new PendingRequest($this->validConfig()))
             ->callback('https://example.com/callback')
             ->amount(1500)
             ->description('An awesome payment gateway!')

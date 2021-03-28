@@ -2,12 +2,11 @@
 
 namespace Evryn\LaravelToman\Tests\Facades;
 
-use Evryn\LaravelToman\Facades\PaymentRequest;
-use Evryn\LaravelToman\Gateways\Zarinpal\Requester as ZarinpalRequester;
-use Evryn\LaravelToman\Managers\PaymentRequestManager;
+use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest as ZarinpalPendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 
-final class PaymentRequestTest extends TestCase
+final class TomanTest extends TestCase
 {
     /** @test */
     public function resolves_to_configured_zarinpal_gateway()
@@ -20,12 +19,12 @@ final class PaymentRequestTest extends TestCase
             ]
         ]);
 
-        $gateway = PaymentRequest::getFacadeRoot()->driver();
+        $gateway = Toman::getFacadeRoot()->driver();
 
-        self::assertInstanceOf(ZarinpalRequester::class, $gateway);
+        self::assertInstanceOf(ZarinpalPendingRequest::class, $gateway);
         self::assertEquals([
             'sandbox' => true,
             'merchant_id' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-        ], $gateway->getConfig());
+        ], $gateway->config());
     }
 }

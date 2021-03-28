@@ -2,6 +2,7 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
+use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Arr;
 
@@ -14,6 +15,7 @@ use Illuminate\Support\Arr;
  * @method $this merchantId(string $merchantId)
  * @method $this email(string $email)
  * @method $this description(string $description)
+ * @method $this transactionId(string $transactionId)
  */
 class PendingRequest
 {
@@ -26,9 +28,9 @@ class PendingRequest
     protected $dataMethodMap = [
         'merchantid' => 'MerchantID',
         'amount' => 'Amount',
+        'transactionid' => 'Authority',
         'callback' => 'CallbackURL',
         'mobile' => 'Mobile',
-        'merchantid' => 'MerchantID',
         'email' => 'Email',
         'description' => 'Description',
     ];
@@ -93,6 +95,15 @@ class PendingRequest
     public function request(): RequestedPaymentInterface
     {
         return (new RequestFactory($this))->request();
+    }
+
+    /**
+     * Check a transaction for verification
+     * @return CheckedPaymentInterface
+     */
+    public function verify(): CheckedPaymentInterface
+    {
+        return (new VerificationFactory($this))->verify();
     }
 
     /**

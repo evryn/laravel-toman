@@ -9,22 +9,52 @@
   <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
   <link rel="icon" href="_media/icon.png">
   <style>
+    html[lang=fa] {
+      text-align: right;
+      direction: rtl;
+    }
+    html[lang=fa] .sidebar ul {
+      margin: 0 15px 0 0;
+    }
     aside > h1 > a > small {
       top: 6px;
       font-size: 70%;
       position: relative;
     }
+    .green {
+      color: #28B463;
+    }
+    .red {
+      color: #CB4335;
+    }
   </style>
 </head>
-<body>
+<body class="rtl">
   <div id="app">Opening wallet ...</div>
   <script>
     window.$docsify = {
       loadSidebar: true,
-      coverpage: true,
+      loadNavbar: true,
+      fallbackLanguages: ['fa'],
+      coverpage: ['/', '/fa/'],
       name: 'Laravel Toman<small>2.0</small>',
       repo: 'https://github.com/evryn/laravel-toman/',
-      homepage: 'introduction.md',
+      alias: {
+        '/changelog': 'https://raw.githubusercontent.com/evryn/laravel-toman/master/CHANGELOG.md',
+        '/contributing': 'https://raw.githubusercontent.com/evryn/laravel-toman/master/CONTRIBUTING.md',
+        '/fa/(.*)': './fa/$1',
+      },
+      plugins: [
+        function(hook) {
+          hook.afterEach(function(html) {
+            var lang = location.hash.match(/#\/(fa)\//);
+            lang = lang ? lang[1] : 'en'
+            document.documentElement.setAttribute('lang', lang);
+
+            return html;
+          });
+        }
+      ]
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>

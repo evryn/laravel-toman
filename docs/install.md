@@ -1,4 +1,4 @@
-> There is an example project using Laravel Toman you can find at [evryn/laravel-toman-example](https://github.com/evryn/laravel-toman-example). It contains payment code and few key tests.
+> There is an example project using Laravel Toman you can find at [evryn/laravel-toman-example](https://github.com/evryn/laravel-toman-example). It contains a payment implementation and few critical tests.
 
 # Requirements
 
@@ -9,14 +9,16 @@
 
 # Installation
 
-Install package using composer:
+Install package using Composer:
 ```bash
 composer require evryn/laravel-toman
 ```
 
+> See your desired gateway usage in the Payment Gateways section.
+
 # Setup
 
-Specify default gateway and gateway-specific options in your `.env` file. For example if you're using Zarinpal gateway:
+Specify default gateway and gateway-specific options in your `.env` file. For example, if you're using Zarinpal gateway:
 ```bash
 ...
 
@@ -24,17 +26,17 @@ TOMAN_GATEWAY=zarinpal
 ZARINPAL_MERCHANT_ID=xxxx-xxxx-xxxx-xxxx
 ```
 
-> See `Available Gateways` section to find gateway-specific settings.
+> See the Available Gateways section to find gateway-specific settings.
 
 # Create new Payment
 
 First, request a new payment from your gateway in your controller:
 ```php
-use Evryn\LaravelToman\Facades\PaymentRequest;
+use Evryn\LaravelToman\Facades\Toman;
 
 // ...
 
-$requestedPayment = PaymentRequest::callback('...') // Set verification callback URL
+$request = Toman::callback('...') // Set verification callback URL
     ->amount(2000)  // Set amount to pay
     ->request();
 

@@ -1,16 +1,16 @@
 # Zarinpal Gateway
 
-[Zarinpal.com](https://www.zarinpal.com) gateway was added in version 1.0 and implementation of it is based on version 1.3 of their [official document](https://github.com/ZarinPal-Lab/Documentation-PaymentGateway/).
+Implementation of [Zarinpal.com](https://www.zarinpal.com) gateway is based on version 1.3 of their [official document](https://github.com/ZarinPal-Lab/Documentation-PaymentGateway/).
 
-## Config
+## Serup
 
-Zarinpal gateway requires following variables in `.env` file to work:
+Zarinpal gateway requires the following variables in `.env` file to work:
 
 | Environment Variable 	| Description                                                                                                                                                                                                                                        	|
 |----------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | TOMAN_GATEWAY 	    | (**Required**)<br>Must equal `zarinpal` in order to use this gateway provider.                                                                            	|
 | ZARINPAL_MERCHANT_ID 	| (**Required**)<br>Your gateway's merchant ID which can be gotten from your Zarinpal panel.<br>Example: 0bcf346fc-3a79-4b36-b936-5ccbc2be0696                                                                                                             	|
-| ZARINPAL_SANDBOX     	| (Optional. Default: false)<br>Set it to `true` to make test calls in a simulated environment provided by Zarinpal without actual payments.<br>Delete the key or set it to `false` to make calls in production environment and receive actual payments. 	|
+| ZARINPAL_SANDBOX     	| (Optional. Default: false)<br>Set it to `true` in your development environment to make test calls in a simulated environment provided by Zarinpal without real payments.
 
 Example:
 ```dotenv
@@ -20,76 +20,106 @@ TOMAN_GATEWAY=zarinpal
 ZARINPAL_MERCHANT_ID=0bcf346fc-3a79-4b36-b936-5ccbc2be0696
 ```
 
-## Payment Request
+## Request New Payment
 
-In short, you can request a new payment with the following methods and catches:
 ```php
-use Evryn\LaravelToman\Facades\PaymentRequest;
-use Evryn\LaravelToman\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Facades\Toman;
 
 // ...
 
-try {
-    $requestedPayment = PaymentRequest::amount(1000)
-        ->description('Subscrbing to Plan A')
-        ->callback('https://example.com/callback')
-        ->mobile('09350000000')
-        ->email('amirreza@example.com')
-        ->request();
-} catch (GatewayException $gatewayException) {
-    if ($gatewayException->getCode() === Status::SHAPARAK_LIMITED) {
-        // there might be a problem with 'Amount' data.
-    }
-} catch (InvalidConfigException $exception) {
-    // Woops! wrong merchant_id or sandbox option is configurated.
+$request = Toman::amount(1000)
+    // ->description('Subscribing to Plan A')
+    // ->callback(route('payment.callback'))
+    // ->mobile('09350000000')
+    // ->email('amirreza@example.com')
+    ->request();
+
+if ($request->successful()) {
+    $transactionId = $request->transactionId();
+    // Store created transaction details for verification
+
+    return $request->pay(); // Redirect to payment URL
 }
 
-// Use $requestedPayment...
+if ($request->failed()) {
+    // Handle transaction request failure; Probably showing proper error to user.
+}
 ```
+
+For requesting payment using `Toman` facade:
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
-| callback    	| Sets `CallbackURL` data and overrides `callback_route` config.                                                                  	|
-| description 	| Sets `Description` data and overrides `description` config.                                                                     	|
-| mobile      	| Sets `Mobile` data.                                                                                                             	|
-| email       	| Sets `Email` data.                                                                                                              	|
-| amount      	| Sets `Amount` data.                                                                                                             	|
-| request     	| Calls `PaymentRequest` Zarinpal endpoint and returns a `RequestedPayment` object with available transaction ID and payment URL.<br>Might throw `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Gateways\Zarinpal\Status`.<br>Might throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above). 	|
+| amount(`$amount`)      	| **(Required)** Set amount for payment.                                                                                                             	|
+| callback(`$url`)    	| Set an absolute callback URL. Overrides `callback_route` config.                                  	|
+| description(`$string`) 	| Set description. Overrides `description` config.                                                                     	|
+| mobile(`$mobile`)      	| Set mobile.                                                                                                             	|
+| email(`$email`)       	| Set email.                                                                                                              	|
+| request()     	| Request payment and return `RequestedPayment` object                                                                              |
+
+
+Using returned `RequestedPayment`:
+
+| <div style="width:200px">Method</div>             	| Description                                                                                                                     	|
+|--------------------	|---------------------------------------------------------------------------------------------------------------------------------	|
+| successful()    	| Payment request was successful, its transaction ID is available and can be redirected for payment.                                                                 	|
+| transactionId()      	| <span class="green"><span class="green">[On Success]</span></span> Get transaction ID.                                                                                                             	|
+| pay(`$options = []`)      	| <span class="green">[On Success]</span> Redirect to payment URL from your controller. Returns a `RedirectResponse` object.<br>An option can be optionally passed in to explicitly select final gateway: `['gateway' => 'Sep']` . You can contact ZarinPal to make them available.                                                                                                            	|
+| paymentUrl(`$options = []`)       	| <span class="green">[On Success]</span> Get payment URL. `$options` is optional and same as above.                                                                                                            	|
+| failed() 	| Payment request was failed and proper messages and exception are available.                                                                     	|
+| messages()      	| <span class="red">[On Failure]</span> Get list of error messages.                                                                                                             	|
+| message()     	| <span class="red">[On Failure]</span> Get first error message. |
+| throw()     	| <span class="red">[On Failure]</span> Throw exception related to the failure. |
+
  
  
-## Payment Verification
+## Verify Payment
 
 In short, you can verify a payment callback with the following methods and catches:
+
 ```php
-use Evryn\LaravelToman\Facades\PaymentVerification;
-use Evryn\LaravelToman\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Facades\Toman;
 
 // ...
 
-try {
-    $verifiedPayment = PaymentVerification::amount(1000)
-        ->verify(request()); // or $request in your Controller
-} catch (GatewayException $gatewayException) {
-    if ($gatewayException->getCode() === Status::NOT_PAID) {
-        // the payment has been cancelled
-    } elseif ($gatewayException->getCode() === Status::ALREADY_VERIFIED) {
-        // the payment has already been verified before
-    }
-} catch (InvalidConfigException $exception) {
-    // Woops! wrong merchant_id or sandbox option is configurated.
+$payment = Toman::amount(1000)
+    // ->referenceId('A00001234')
+    ->verify();
+
+$transactionId = $payment->transactionId();
+
+if ($payment->successful()) {
+    $referenceId = $payment->referenceId();
+    // Store a successful transaction details
 }
 
-// Use $verifiedPayment...
+if ($payment->alreadyVerified()) {
+    // ...
+}
+
+if ($payment->failed()) {
+    // ...
+}
 ```
+
+For requesting payment using `Toman` facade:
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
-| amount      	| Sets `Amount` data. It should equal to the amount that payment request was created with.                                                                                                            	|
-| verify     	| Calls `PaymentVerification` Zarinpal endpoint with callback queries gotten from request and returns a `VerifiedPayment` object with available reference ID.<br>Might throw a `GatewayException` if the request was rejected by Zarinpal. `GatewayException` is filled with user-friendly message that can be translated (see [Translations](#translations) section) and status code constants in `Evryn\LaravelToman\Gateways\Zarinpal\Status`.<br>Might throw an `InvalidConfigException` if gateway-specific configs are not set correctly (see [Config](#config) section above) 	|
- 
+| amount(`$amount`)      	| **(Required)** Set amount that is expected to be paid.                                                                                                             	|
+| transactionId(`$id`)    	| Set transaction ID to verify. If not, it'll extract from incoming callback request automatically.                                  	|
+| verify()     	| Verify payment and return `CheckedPayment` object                                                                              |
 
-## Translations
 
-Currently, two `fa` (Persian) and `en` (English) languages are added to display payment status (in `GatewayException` especially).
+Using returned `CheckedPayment`:
 
-See [Getting Started/Translations](../translations.md) to find out how to set application locale or customize these messages.
+| Method             	| Description                                                                                                                     	|
+|--------------------	|---------------------------------------------------------------------------------------------------------------------------------	|
+| transactionId()      	| Get transaction ID.                                                                                                             	|
+| successful()    	| Payment is newly verified and its reference ID is available.                                                                 	|
+| transactionId()      	| <span class="green">[On Success]</span> Get reference ID.                                                                                                             	|
+| alreadyVerified()    	| Payment was once verified before.                                                                 	|
+| failed() 	| Payment was failed and proper messages and exception are available.                                                                     	|
+| messages()      	| <span class="red">[On Failure]</span> Get list of error messages.                                                                                                             	|
+| message()     	| <span class="red">[On Failure]</span> Get first error message. |
+| throw()     	| <span class="red">[On Failure]</span> Throw exception related to the failure. |

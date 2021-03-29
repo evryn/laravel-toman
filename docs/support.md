@@ -25,7 +25,7 @@ By following us, giving a star and forking this repository, you'll make this pac
 
 ### Contribute
 
-Knowing about Laravel and package development? It would be great if you could help us extend this project. See [Contribution Guide](contributing.md).
+Knowing about Laravel and package development? It would be great if you could help us extend this project. See [Contribution Guide](../CONTRIBUTING.md).
 
 ### Share it
 

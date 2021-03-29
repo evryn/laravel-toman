@@ -1,18 +1,18 @@
-* [Introduction](introduction.md)
+* [Introduction](README.md)
 
 * Getting started
 
-  * [Quick Start](quickstart.md)
+  * [Installation](install.md)
   * [Configuration](configuration.md)
   * [Translations](translations.md)
     
-* Available Gateways
+* Payment Gateways
 
   * [Zarinpal](gateways/zarinpal.md)
   
 * [Testing](testing.md)
 
-* [Contributing](contributing.md)
-* [Changelog](changelog.md)
+* [Contributing](../CONTRIBUTING.md)
+* [Changelog](../CHANGELOG.md)
 * [Support 💜](support.md)
 

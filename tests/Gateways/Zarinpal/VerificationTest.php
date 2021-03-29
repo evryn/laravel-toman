@@ -12,7 +12,7 @@ use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
-final class VerifierTest extends TestCase
+final class VerificationTest extends TestCase
 {
     public static function endpointProvider()
     {

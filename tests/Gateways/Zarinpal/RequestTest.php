@@ -15,7 +15,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 
-final class RequesterTest extends TestCase
+final class RequestTest extends TestCase
 {
     public static function endpointProvider()
     {

@@ -3,6 +3,7 @@
 namespace Evryn\LaravelToman\Facades;
 
 use Evryn\LaravelToman\Factory;
+use Evryn\LaravelToman\FakeRequest;
 use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Facades\Facade;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static RequestedPaymentInterface request() Request a new payment
  *
- * @method static PendingRequest fakeRequest(string $transactionId) Stub a successful payment request with the given transaction ID
+ * @method static FakeRequest fakeRequest() Stub a fake payment request
  * @method static PendingRequest fakeFailedRequest() Stub a failed payment request
  * @method static void assertRequested(callable $callback)
  */

@@ -21,7 +21,7 @@ class Factory
     private $recording = false;
 
     /**
-     * @var null|string
+     * @var null|FakeRequest
      */
     private $fakeRequest = null;
 
@@ -39,18 +39,11 @@ class Factory
         $this->container = $container;
     }
 
-    public function fakeRequest($transactionId)
+    public function fakeRequest()
     {
         $this->record();
 
-        $this->fakeRequest = $transactionId;
-    }
-
-    public function fakeFailedRequest()
-    {
-        $this->record();
-
-        $this->fakeRequest = false;
+        return $this->fakeRequest = new FakeRequest();
     }
 
     /**

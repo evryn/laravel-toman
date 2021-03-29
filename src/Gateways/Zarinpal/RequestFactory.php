@@ -3,8 +3,8 @@
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Exceptions\GatewayClientException;
-use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Exceptions\GatewayServerException;
+use Evryn\LaravelToman\FakeRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 
@@ -28,12 +28,12 @@ class RequestFactory
         $this->pendingRequest = $pendingRequest;
     }
 
-    public static function fake($transactionId)
+    public static function fakeFrom(FakeRequest $fakeRequest)
     {
         return new RequestedPayment(
-            $transactionId ? null : new GatewayException('Payment request failed in test environment.'),
+            $fakeRequest->getException(),
             [],
-            $transactionId,
+            $fakeRequest->getTransactionId(),
             'example.com'
         );
     }

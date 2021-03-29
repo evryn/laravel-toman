@@ -2,17 +2,11 @@
 
 namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
-use Evryn\LaravelToman\Exceptions\GatewayClientException;
 use Evryn\LaravelToman\Exceptions\GatewayException;
-use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\Facades\Toman;
-use Evryn\LaravelToman\Gateways\Zarinpal\CheckedPayment;
 use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
-use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Validation\ValidationException;
 use PHPUnit\Framework\AssertionFailedError;
 
 final class FakeTest extends TestCase
@@ -20,7 +14,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_request_passes_when_truth_check_is_true()
     {
-        Toman::fakeRequest('A000123');
+        Toman::fakeRequest()->successful('A001234');
 
         Toman::request();
 
@@ -32,7 +26,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_request_fails_when_truth_check_is_false()
     {
-        Toman::fakeRequest('A000123');
+        Toman::fakeRequest()->successful('A001234');
 
         Toman::request();
 
@@ -46,7 +40,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_sent_request_data()
     {
-        Toman::fakeRequest('A000123');
+        Toman::fakeRequest()->successful('A001234');
 
         Toman
             ::amount(500)
@@ -66,12 +60,12 @@ final class FakeTest extends TestCase
     /** @test */
     public function fake_request_with_transaction_id_produces_successful_result()
     {
-        Toman::fakeRequest('A0001234');
+        Toman::fakeRequest()->successful('A001234');
 
         $request = Toman::request();
 
         self::assertTrue($request->successful());
-        self::assertEquals('A0001234', $request->transactionId());
+        self::assertEquals('A001234', $request->transactionId());
         self::assertNotEmpty($request->paymentUrl());
         self::assertInstanceOf(RedirectResponse::class, $request->pay());
         $request->throw();
@@ -80,11 +74,21 @@ final class FakeTest extends TestCase
     /** @test */
     public function fake_request_without_transaction_id_produces_failed_result()
     {
-        Toman::fakeFailedRequest();
+        Toman::fakeRequest()->failed('Your request has failed.', 500);
 
         $request = Toman::request();
 
         self::assertTrue($request->failed());
+
+        try {
+            $request->throw();
+            self::fail('Nothing is thrown.');
+        } catch (GatewayException $e) {
+            self::assertEquals(500, $e->getCode());
+            self::assertEquals('Your request has failed.', $e->getMessage());
+            self::assertEquals('Your request has failed.', $request->message());
+            self::assertEquals(['Your request has failed.'], $request->messages());
+        }
 
         try {
             $request->transactionId();
@@ -98,11 +102,6 @@ final class FakeTest extends TestCase
 
         try {
             $request->paymentUrl();
-            self::fail('Nothing is thrown.');
-        } catch (GatewayException $e) {}
-
-        try {
-            $request->throw();
             self::fail('Nothing is thrown.');
         } catch (GatewayException $e) {}
     }

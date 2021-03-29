@@ -2,7 +2,9 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
+use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
+use Evryn\LaravelToman\Interfaces\PendingRequestInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Arr;
 
@@ -19,6 +21,11 @@ use Illuminate\Support\Arr;
  */
 class PendingRequest
 {
+    /**
+     * @var Factory
+     */
+    private $factory;
+
     /** @var array Driver config */
     protected $config;
 
@@ -39,20 +46,19 @@ class PendingRequest
      * Requester constructor.
      * @param $config
      */
-    public function __construct(array $config = [])
+    public function __construct(Factory $factory, array $config = [])
     {
-        $this->setConfig($config);
+        $this->factory = $factory;
+        $this->config($config);
     }
 
-    protected function setConfig(array $config = [])
+    public function config($key = null)
     {
-        $this->config = $config;
+        if (is_array($key)) {
+            $this->config = $key;
+            return $this;
+        }
 
-        return $this;
-    }
-
-    public function config(string $key = null)
-    {
         return $key ? Arr::get($this->config, $key) : $this->config;
     }
 

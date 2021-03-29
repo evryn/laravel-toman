@@ -4,6 +4,7 @@ namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Exceptions\GatewayClientException;
 use Evryn\LaravelToman\Exceptions\GatewayServerException;
+use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\CheckedPayment;
 use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
@@ -34,10 +35,10 @@ final class VerifierTest extends TestCase
             ], 200),
         ]);
 
-        $gateway = (new PendingRequest([
+        $gateway = $this->gateway([
             'sandbox' => $sandbox,
             'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
-        ]))
+        ])
             ->amount(1500)
             ->transactionId('A0000012345');
 
@@ -80,10 +81,10 @@ final class VerifierTest extends TestCase
             'Authority' => 'A0000012345'
         ]);
 
-        $gateway = (new PendingRequest([
+        $gateway = $this->gateway([
             'sandbox' => $sandbox,
             'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
-        ]))
+        ])
             ->amount(1500)
             ->transactionId('A0000012345');
 
@@ -129,7 +130,7 @@ final class VerifierTest extends TestCase
 
         $this->expectException(ValidationException::class);
 
-        (new PendingRequest($this->validConfig()))->verify();
+        $this->configuredGateway()->verify();
     }
 
     /** @test */
@@ -142,7 +143,7 @@ final class VerifierTest extends TestCase
             ], 200),
         ]);
 
-        $gateway = (new PendingRequest($this->validConfig()))
+        $gateway = $this->configuredGateway()
             ->amount(1500)
             ->transactionId('A0000012345');
 
@@ -167,7 +168,9 @@ final class VerifierTest extends TestCase
             'www.zarinpal.com/pg/rest/WebGate/PaymentVerification.json' => Http::response(null, 555),
         ]);
 
-        tap($this->validPendingRequest()->verify(), function (CheckedPayment $verification) {
+        $gateway = $this->configuredGateway()->transactionId('A0000012345');
+
+        tap($gateway->verify(), function (CheckedPayment $verification) {
             self::assertFalse($verification->successful());
             self::assertFalse($verification->alreadyVerified());
             self::assertTrue($verification->failed());
@@ -228,7 +231,9 @@ final class VerifierTest extends TestCase
             ], $httpStatus),
         ]);
 
-        tap($this->validPendingRequest()->verify(), function (CheckedPayment $verification) use ($statusCode, $messageKey) {
+        $gateway = $this->configuredGateway()->transactionId('A0000012345');
+
+        tap($gateway->verify(), function (CheckedPayment $verification) use ($statusCode, $messageKey) {
             self::assertFalse($verification->successful());
             self::assertFalse($verification->alreadyVerified());
             self::assertTrue($verification->failed());
@@ -261,13 +266,13 @@ final class VerifierTest extends TestCase
 
         $this->fakeValidResponse();
 
-        (new PendingRequest($this->validConfig(['merchant_id' => '11111'])))->verify();
+        $this->gateway(['merchant_id' => '11111'])->verify();
         Http::assertNthRequestFieldEquals('11111', 'MerchantID', 1);
 
-        (new PendingRequest($this->validConfig()))->data('MerchantID', '33333')->verify();
+        $this->configuredGateway()->data('MerchantID', '33333')->verify();
         Http::assertNthRequestFieldEquals('33333', 'MerchantID', 2);
 
-        (new PendingRequest($this->validConfig()))->merchantId('44444')->verify();
+        $this->configuredGateway()->merchantId('44444')->verify();
         Http::assertNthRequestFieldEquals('44444', 'MerchantID', 3);
     }
 
@@ -278,10 +283,10 @@ final class VerifierTest extends TestCase
 
         $this->fakeValidResponse();
 
-        (new PendingRequest($this->validConfig()))->data('Amount', '10000')->verify();
+        $this->configuredGateway()->data('Amount', '10000')->verify();
         Http::assertNthRequestFieldEquals('10000', 'Amount', 1);
 
-        (new PendingRequest($this->validConfig()))->amount(20000)->verify();
+        $this->configuredGateway()->amount(20000)->verify();
         Http::assertNthRequestFieldEquals(20000, 'Amount', 2);
     }
 
@@ -292,10 +297,10 @@ final class VerifierTest extends TestCase
 
         $this->fakeValidResponse();
 
-        (new PendingRequest($this->validConfig()))->data('Authority', 'A0001234')->verify();
+        $this->configuredGateway()->data('Authority', 'A0001234')->verify();
         Http::assertNthRequestFieldEquals('A0001234', 'Authority', 1);
 
-        (new PendingRequest($this->validConfig()))->transactionId('A0001234')->verify();
+        $this->configuredGateway()->transactionId('A0001234')->verify();
         Http::assertNthRequestFieldEquals('A0001234', 'Authority', 2);
     }
 
@@ -318,8 +323,18 @@ final class VerifierTest extends TestCase
 
     private function validPendingRequest(): PendingRequest
     {
-        return (new PendingRequest($this->validConfig()))
-            ->amount(1500)
-            ->transactionId('A0000012345');
+        return $this->configuredGateway();
+    }
+
+    private function configuredGateway(): PendingRequest
+    {
+        return $this->gateway([
+            'merchant_id' => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+        ]);
+    }
+
+    private function gateway($config = []): PendingRequest
+    {
+        return (new Factory($this->app))->gateway('zarinpal', $config);
     }
 }

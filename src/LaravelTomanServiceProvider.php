@@ -3,7 +3,7 @@
 namespace Evryn\LaravelToman;
 
 use Evryn\LaravelToman\Interfaces\TomanInterface;
-use Evryn\LaravelToman\Managers\TomanManager;
+use Evryn\LaravelToman\Managers\PendingRequestManager;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelTomanServiceProvider extends ServiceProvider
@@ -34,8 +34,8 @@ class LaravelTomanServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(self::CONFIG_FILE, 'toman');
 
-        $this->app->singleton(TomanInterface::class, function ($app) {
-            return new TomanManager($app);
+        $this->app->singleton(Factory::class, function ($app) {
+            return new Factory($app);
         });
     }
 

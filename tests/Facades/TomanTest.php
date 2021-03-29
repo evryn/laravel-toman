@@ -19,7 +19,7 @@ final class TomanTest extends TestCase
             ]
         ]);
 
-        $gateway = Toman::getFacadeRoot()->driver();
+        $gateway = Toman::data('key', 'value');
 
         self::assertInstanceOf(ZarinpalPendingRequest::class, $gateway);
         self::assertEquals([

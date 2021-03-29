@@ -2,7 +2,7 @@
 
 namespace Evryn\LaravelToman\Facades;
 
-use Evryn\LaravelToman\Interfaces\TomanInterface;
+use Evryn\LaravelToman\Factory;
 use Illuminate\Support\Facades\Facade;
 
 class Toman extends Facade
@@ -14,6 +14,6 @@ class Toman extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return TomanInterface::class;
+        return Factory::class;
     }
 }

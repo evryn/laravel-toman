@@ -1,5 +1,3 @@
-> There is an example project using Laravel Toman you can find at [evryn/laravel-toman-example](https://github.com/evryn/laravel-toman-example). It contains payment code and few key tests.
-
 # Requirements
 
 | Package | Laravel Framework | PHP  | Status |
@@ -11,7 +9,7 @@
 
 Install package using composer:
 ```bash
-composer require evryn/laravel-toman
+composer require "evryn/laravel-toman":"^1.1"
 ```
 
 # Setup

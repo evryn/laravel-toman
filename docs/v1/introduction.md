@@ -36,5 +36,3 @@ See our [Testing Guide](testing.md) to learn about how to mock gateways and asse
 
 <br></br>
 ➡ Why don't you see yourself? [Quick Start](quickstart.md)
-
-➡ Looking for old documents? <a href="v1/index.html">V1 Docs</a>

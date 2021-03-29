@@ -9,6 +9,27 @@
   <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
   <link rel="icon" href="_media/icon.png">
   <style>
+    .header-alert {
+      border-bottom: 0;
+      position: fixed;
+      text-decoration: none;
+      text-align: center;
+      top: 0;
+      z-index: 1;
+      width: 100%;
+      margin: 5px;
+    }
+    .header-alert span {
+      background-color: #ff6565;
+      border: 1px solid #ff2929;
+      border-radius: 10px;
+      padding: 10px;
+      color: white;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
     aside > h1 > a > small {
       top: 6px;
       font-size: 70%;
@@ -17,12 +38,18 @@
   </style>
 </head>
 <body>
+  <div class="header-alert">
+    <a href="../index.html">
+      <span>
+            Version 1.x is not maintained anymore. Read documents of version 2.x.
+      </span>
+    </a>
+  </div>
   <div id="app">Opening wallet ...</div>
   <script>
     window.$docsify = {
       loadSidebar: true,
-      coverpage: true,
-      name: 'Laravel Toman<small>2.0</small>',
+      name: "Laravel Toman <small>1.1</small>",
       repo: 'https://github.com/evryn/laravel-toman/',
       homepage: 'introduction.md',
     }

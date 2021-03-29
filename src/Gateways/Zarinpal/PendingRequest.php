@@ -4,28 +4,22 @@ namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
-use Evryn\LaravelToman\Interfaces\PendingRequestInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Arr;
 
 /**
  * Class Requester.
  *
- * @method $this amount(int $amount)
- * @method $this callback(string $callbackUrl)
- * @method $this mobile(string $mobile)
- * @method $this merchantId(string $merchantId)
- * @method $this email(string $email)
- * @method $this description(string $description)
- * @method $this transactionId(string $transactionId)
+ * @method PendingRequest amount(int $amount = null) Get or set amount of payment
+ * @method PendingRequest callback(string $callbackUrl = null) Get or set absolute URL for payment verification callback
+ * @method PendingRequest mobile(string $mobile = null) Get or set mobile data
+ * @method PendingRequest merchantId(string $merchantId = null) Get or set gateway merchant ID
+ * @method PendingRequest email(string $email = null) Get or set email data
+ * @method PendingRequest description(string $description = null) Get or set description. `:amount` will be replaced by the given amount.
+ * @method PendingRequest transactionId(string $transactionId = null) Get or set transaction ID. Can be used for specific transaction verification.
  */
 class PendingRequest
 {
-    /**
-     * @var Factory
-     */
-    private $factory;
-
     /** @var array Driver config */
     protected $config;
 
@@ -41,6 +35,11 @@ class PendingRequest
         'email' => 'Email',
         'description' => 'Description',
     ];
+
+    /**
+     * @var null|string
+     */
+    private $fakeRequestTransactionId = null;
 
     /**
      * Requester constructor.
@@ -100,6 +99,11 @@ class PendingRequest
      */
     public function request(): RequestedPaymentInterface
     {
+        if ($this->fakeRequestTransactionId) {
+            $this->factory->recordPendingRequest($this);
+            return RequestFactory::fake($this->fakeRequestTransactionId);
+        }
+
         return (new RequestFactory($this))->request();
     }
 
@@ -112,6 +116,11 @@ class PendingRequest
         return (new VerificationFactory($this))->verify();
     }
 
+    public function stub($fakeRequestTransactionId)
+    {
+        $this->fakeRequestTransactionId = $fakeRequestTransactionId;
+    }
+
     /**
      * Dynamically call the setters
      *
@@ -122,7 +131,11 @@ class PendingRequest
     public function __call(string $method, array $parameters)
     {
         if ($field = $this->dataMethodMap[strtolower($method)] ?? null) {
-            return $this->data($field, $parameters[0]);
+            if (isset($parameters[0])) {
+                return $this->data($field, $parameters[0]);
+            }
+
+            return $this->data($field);
         }
 
         throw new \BadMethodCallException(sprintf(

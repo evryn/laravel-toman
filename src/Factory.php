@@ -1,13 +1,12 @@
 <?php
 
-
 namespace Evryn\LaravelToman;
 
-
-use Evryn\LaravelToman\Interfaces\PendingRequestInterface;
+use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
 use Evryn\LaravelToman\Managers\PendingRequestManager;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Traits\Macroable;
+use PHPUnit\Framework\Assert as PHPUnit;
 
 class Factory
 {
@@ -15,6 +14,21 @@ class Factory
      * @var Container
      */
     private $container;
+
+    /**
+     * @var bool
+     */
+    private $recording = false;
+
+    /**
+     * @var null|string
+     */
+    private $fakeRequest = null;
+
+    /**
+     * @var null|PendingRequest
+     */
+    private $recordedPendingRequest = null;
 
     use Macroable {
         __call as macroCall;
@@ -25,15 +39,80 @@ class Factory
         $this->container = $container;
     }
 
-    public function gateway(string $name = null, array $config = [])
+    public function fakeRequest($transactionId)
     {
-        $gateway = (new PendingRequestManager($this->container, $this))->driver($name);
+        $this->record();
 
-        if ($config) {
-            $gateway->config($config);
+        $this->fakeRequest = $transactionId;
+    }
+
+    public function fakeFailedRequest()
+    {
+        $this->record();
+
+        $this->fakeRequest = false;
+    }
+
+    /**
+     * Assert that a payment request is recorded matching a given truth test.
+     *
+     * @param  callable  $callback
+     * @return void
+     */
+    public function assertRequested($callback)
+    {
+        if (!$this->recordedPendingRequest) {
+            PHPUnit::fail('No payment request is recorded.');
         }
 
-        return $gateway;
+        PHPUnit::assertTrue(
+            $this->isRecorded($callback),
+            'Recorded payment request does not match the expectation.'
+        );
+    }
+
+    private function record()
+    {
+        $this->recording = true;
+    }
+
+    public function recordPendingRequest($pendingRequest)
+    {
+        if ($this->recording) {
+            $this->recordedPendingRequest = $pendingRequest;
+        }
+    }
+
+    /**
+     * Determine if requested with given truth test
+     *
+     * @param  callable  $callback
+     * @return bool
+     */
+    private function isRecorded($callback = null)
+    {
+        if (empty($this->recordedPendingRequest)) {
+            return false;
+        }
+
+        $callback = $callback ?: function () {
+            return true;
+        };
+
+        return $callback($this->recordedPendingRequest);
+    }
+
+    public function gateway(string $name = null, array $config = [])
+    {
+        $pendingRequest = (new PendingRequestManager($this->container, $this))->driver($name);
+
+        if ($config) {
+            $pendingRequest->config($config);
+        }
+
+        $pendingRequest->stub($this->fakeRequest);
+
+        return $pendingRequest;
     }
 
     /**

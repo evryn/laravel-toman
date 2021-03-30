@@ -4,6 +4,7 @@ namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\FakeRequest;
+use Evryn\LaravelToman\FakeVerification;
 use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Arr;
@@ -41,6 +42,11 @@ class PendingRequest
      * @var null|FakeRequest
      */
     private $fakeRequest = null;
+
+    /**
+     * @var null|FakeVerification
+     */
+    private $fakeVerification = null;
 
     /**
      * Requester constructor.
@@ -114,12 +120,18 @@ class PendingRequest
      */
     public function verify(): CheckedPaymentInterface
     {
+        if ($this->fakeVerification) {
+            $this->factory->recordPendingRequest($this);
+            return VerificationFactory::fakeFrom($this->fakeVerification);
+        }
+
         return (new VerificationFactory($this))->verify();
     }
 
-    public function stub(FakeRequest $fakeRequest = null)
+    public function stub(FakeRequest $fakeRequest = null, FakeVerification $fakeVerification = null)
     {
         $this->fakeRequest = $fakeRequest;
+        $this->fakeVerification = $fakeVerification;
     }
 
     /**

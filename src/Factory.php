@@ -26,6 +26,11 @@ class Factory
     private $fakeRequest = null;
 
     /**
+     * @var null|FakeVerification
+     */
+    private $fakeVerification = null;
+
+    /**
      * @var null|PendingRequest
      */
     private $recordedPendingRequest = null;
@@ -46,6 +51,13 @@ class Factory
         return $this->fakeRequest = new FakeRequest();
     }
 
+    public function fakeVerification()
+    {
+        $this->record();
+
+        return $this->fakeVerification = new FakeVerification();
+    }
+
     /**
      * Assert that a payment request is recorded matching a given truth test.
      *
@@ -54,13 +66,31 @@ class Factory
      */
     public function assertRequested($callback)
     {
-        if (!$this->recordedPendingRequest) {
+        if (!$this->recordedPendingRequest || !$this->fakeRequest) {
             PHPUnit::fail('No payment request is recorded.');
         }
 
         PHPUnit::assertTrue(
             $this->isRecorded($callback),
             'Recorded payment request does not match the expectation.'
+        );
+    }
+
+    /**
+     * Assert that a payment verification is recorded matching a given truth test.
+     *
+     * @param  callable  $callback
+     * @return void
+     */
+    public function assertCheckedForVerification($callback)
+    {
+        if (!$this->recordedPendingRequest || !$this->fakeVerification) {
+            PHPUnit::fail('No payment verification is recorded.');
+        }
+
+        PHPUnit::assertTrue(
+            $this->isRecorded($callback),
+            'Recorded payment verification does not match the expectation.'
         );
     }
 
@@ -103,7 +133,7 @@ class Factory
             $pendingRequest->config($config);
         }
 
-        $pendingRequest->stub($this->fakeRequest);
+        $pendingRequest->stub($this->fakeRequest, $this->fakeVerification);
 
         return $pendingRequest;
     }

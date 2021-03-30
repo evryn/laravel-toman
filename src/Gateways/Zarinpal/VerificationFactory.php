@@ -4,9 +4,8 @@ namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Exceptions\GatewayClientException;
 use Evryn\LaravelToman\Exceptions\GatewayServerException;
+use Evryn\LaravelToman\FakeVerification;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Validator;
 
 /**
  * Class Requester.
@@ -26,6 +25,31 @@ class VerificationFactory
     public function __construct(PendingRequest $pendingRequest)
     {
         $this->pendingRequest = $pendingRequest;
+    }
+
+    public static function fakeFrom(FakeVerification $fakeVerification)
+    {
+        $status = null;
+
+        if ($fakeVerification->getStatus() === $fakeVerification::FAILED) {
+            $status = Status::FAILED_TRANSACTION;
+        }
+
+        if ($fakeVerification->getStatus() === $fakeVerification::SUCCESSFUL) {
+            $status = Status::OPERATION_SUCCEED;
+        }
+
+        if ($fakeVerification->getStatus() === $fakeVerification::ALREADY_VERIFIED) {
+            $status = Status::ALREADY_VERIFIED;
+        }
+
+        return new CheckedPayment(
+            $status,
+            $fakeVerification->getException(),
+            [],
+            $fakeVerification->getTransactionId(),
+            $fakeVerification->getReferenceId()
+        );
     }
 
     public function verify(): CheckedPayment

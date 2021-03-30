@@ -105,4 +105,108 @@ final class FakeTest extends TestCase
             self::fail('Nothing is thrown.');
         } catch (GatewayException $e) {}
     }
+
+    /** @test */
+    public function assert_verification_passes_when_truth_check_is_true()
+    {
+        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->successful();
+
+        Toman::verify();
+
+        Toman::assertCheckedForVerification(function (PendingRequest $request) {
+            return true;
+        });
+    }
+
+    /** @test */
+    public function assert_verification_fails_when_truth_check_is_false()
+    {
+        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->successful();
+
+        Toman::verify();
+
+        $this->expectException(AssertionFailedError::class);
+
+        Toman::assertCheckedForVerification(function (PendingRequest $request) {
+            return false;
+        });
+    }
+
+    /** @test */
+    public function can_assert_sent_verification_data()
+    {
+        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->successful();
+
+        Toman
+            ::amount(500)
+            ->callback('http://example.com/callback')
+            ->data('CustomData', 'Example')
+            ->verify();
+
+        Toman::assertCheckedForVerification(function (PendingRequest $request) {
+            self::assertEquals(500, $request->amount());
+            self::assertEquals('http://example.com/callback', $request->callback());
+            self::assertEquals('Example', $request->data('CustomData'));
+
+            return true;
+        });
+    }
+
+    /** @test */
+    public function fake_successful_verification_produces_proper_results()
+    {
+        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->successful();
+
+        $verification = Toman::verify();
+
+        self::assertTrue($verification->successful());
+        self::assertFalse($verification->alreadyVerified());
+        self::assertFalse($verification->failed());
+        self::assertEquals('A001234', $verification->transactionId());
+        self::assertEquals('R123', $verification->referenceId());
+        $verification->throw();
+    }
+
+    /** @test */
+    public function fake_already_verified_verification_produces_proper_results()
+    {
+        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->alreadyVerified();
+
+        $verification = Toman::verify();
+
+        self::assertTrue($verification->alreadyVerified());
+        self::assertFalse($verification->successful());
+        self::assertFalse($verification->failed());
+        self::assertEquals('A001234', $verification->transactionId());
+        self::assertEquals('R123', $verification->referenceId());
+        $verification->throw();
+    }
+
+    /** @test */
+    public function fake_failed_verification_produces_proper_results()
+    {
+        Toman::fakeVerification()->transactionId('A001234')->failed('Your request has failed.', 500);
+
+        $request = Toman::verify();
+
+        self::assertTrue($request->failed());
+        self::assertFalse($request->successful());
+        self::assertFalse($request->alreadyVerified());
+        self::assertEquals('A001234', $request->transactionId());
+
+        try {
+            $request->throw();
+            self::fail('Nothing is thrown.');
+        } catch (GatewayException $e) {
+            self::assertEquals(500, $e->getCode());
+            self::assertEquals('Your request has failed.', $e->getMessage());
+            self::assertEquals('Your request has failed.', $request->message());
+            self::assertEquals(['Your request has failed.'], $request->messages());
+        }
+
+        try {
+            $request->referenceId();
+            self::fail('Nothing is thrown.');
+        } catch (GatewayException $e) {}
+    }
 }

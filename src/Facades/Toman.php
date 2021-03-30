@@ -4,7 +4,9 @@ namespace Evryn\LaravelToman\Facades;
 
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\FakeRequest;
+use Evryn\LaravelToman\FakeVerification;
 use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
+use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Facades\Facade;
 
@@ -21,10 +23,12 @@ use Illuminate\Support\Facades\Facade;
  * @method static PendingRequest transactionId(string $transactionId = null) Get or set transaction ID. Can be used for specific transaction verification.
  *
  * @method static RequestedPaymentInterface request() Request a new payment
+ * @method static CheckedPaymentInterface verify() Verify a payment
  *
  * @method static FakeRequest fakeRequest() Stub a fake payment request
- * @method static PendingRequest fakeFailedRequest() Stub a failed payment request
  * @method static void assertRequested(callable $callback)
+ * @method static FakeVerification fakeVerification() Stub a fake payment verification
+ * @method static void assertCheckedForVerification(callable $callback)
  */
 class Toman extends Facade
 {

@@ -14,7 +14,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_request_passes_when_truth_check_is_true()
     {
-        Toman::fakeRequest()->successful('A001234');
+        Toman::fakeRequest()->transactionId('A001234')->successful();
 
         Toman::request();
 
@@ -26,7 +26,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_request_fails_when_truth_check_is_false()
     {
-        Toman::fakeRequest()->successful('A001234');
+        Toman::fakeRequest()->transactionId('A001234')->successful();
 
         Toman::request();
 
@@ -40,7 +40,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_sent_request_data()
     {
-        Toman::fakeRequest()->successful('A001234');
+        Toman::fakeRequest()->transactionId('A001234')->successful();
 
         Toman
             ::amount(500)
@@ -60,7 +60,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function fake_request_with_transaction_id_produces_successful_result()
     {
-        Toman::fakeRequest()->successful('A001234');
+        Toman::fakeRequest()->transactionId('A001234')->successful();
 
         $request = Toman::request();
 

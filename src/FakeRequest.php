@@ -6,19 +6,32 @@ use Evryn\LaravelToman\Exceptions\GatewayException;
 
 class FakeRequest
 {
+    const SUCCESSFUL = 'successful';
+    const FAILED = 'failed';
+
+    private $status;
     private $transactionId;
     private $exception;
 
-    public function successful(string $transactionId = 'T10001000'): self
+    public function successful(): self
     {
-        $this->transactionId = $transactionId;
+        $this->status = self::SUCCESSFUL;
 
         return $this;
     }
 
     public function failed($error = 'Stubbed payment failure.', $status = 400): self
     {
+        $this->status = self::FAILED;
+
         $this->exception = new GatewayException($error, $status);
+
+        return $this;
+    }
+
+    public function transactionId(string $transactionId)
+    {
+        $this->transactionId = $transactionId;
 
         return $this;
     }
@@ -31,5 +44,10 @@ class FakeRequest
     public function getException()
     {
         return $this->exception;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

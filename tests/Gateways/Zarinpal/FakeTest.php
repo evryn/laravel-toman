@@ -7,6 +7,7 @@ use Evryn\LaravelToman\Facades\Toman;
 use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Route;
 use PHPUnit\Framework\AssertionFailedError;
 
 final class FakeTest extends TestCase
@@ -52,6 +53,28 @@ final class FakeTest extends TestCase
             self::assertEquals(500, $request->amount());
             self::assertEquals('http://example.com/callback', $request->callback());
             self::assertEquals('Example', $request->data('CustomData'));
+
+            return true;
+        });
+    }
+
+    /** @test */
+    public function can_assert_default_request_data_too()
+    {
+        Toman::fakeRequest()->transactionId('A001234')->successful();
+        Route::get('payment/callback', function () {})->name('payment.callback');
+        config([
+            'toman.callback_route' => 'payment.callback',
+            'toman.description' => 'Pay :amount',
+            'toman.gateways.zarinpal.merchant_id' => 'xxxxx-yyyyy-zzzzz',
+        ]);
+
+        Toman::amount(500)->request();
+
+        Toman::assertRequested(function (PendingRequest $request) {
+            self::assertEquals('xxxxx-yyyyy-zzzzz', $request->merchantId());
+            self::assertEquals(route('payment.callback'), $request->callback());
+            self::assertEquals('Pay 500', $request->description());
 
             return true;
         });
@@ -147,6 +170,23 @@ final class FakeTest extends TestCase
             self::assertEquals(500, $request->amount());
             self::assertEquals('http://example.com/callback', $request->callback());
             self::assertEquals('Example', $request->data('CustomData'));
+
+            return true;
+        });
+    }
+
+    /** @test */
+    public function can_assert_default_verification_data_too()
+    {
+        Toman::fakeVerification()->transactionId('A001234')->successful();
+        config(['toman.gateways.zarinpal.merchant_id' => 'xxxxx-yyyyy-zzzzz']);
+        request()->merge(['Authority' => 'A0123456']);
+
+        Toman::amount(500)->verify();
+
+        Toman::assertCheckedForVerification(function (PendingRequest $request) {
+            self::assertEquals('xxxxx-yyyyy-zzzzz', $request->merchantId());
+            self::assertEquals('A0123456', $request->transactionId());
 
             return true;
         });

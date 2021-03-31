@@ -27,8 +27,10 @@ class VerificationFactory
         $this->pendingRequest = $pendingRequest;
     }
 
-    public static function fakeFrom(FakeVerification $fakeVerification)
+    public function fakeFrom(FakeVerification $fakeVerification)
     {
+        $this->prepareRequestData();
+
         $status = null;
 
         if ($fakeVerification->getStatus() === $fakeVerification::FAILED) {
@@ -54,7 +56,9 @@ class VerificationFactory
 
     public function verify(): CheckedPayment
     {
-        $response = Http::post($this->makeRequestURL(), $this->makeRequestData());
+        $this->prepareRequestData();
+
+        $response = Http::post($this->makeRequestURL(), $this->pendingRequest->data());
         $data = $response->json();
         $status = $data['Status'] ?? null;
 
@@ -74,7 +78,7 @@ class VerificationFactory
         }
 
         // Client errors (4xx) are not guaranteed to be come with error messages. We need to
-        // check payment verification status too.
+        // check requested payment status too.
         if ($response->clientError() || !in_array($status, [Status::OPERATION_SUCCEED, Status::ALREADY_VERIFIED])) {
             return new CheckedPayment(
                 $status,
@@ -104,25 +108,22 @@ class VerificationFactory
      * Make config-aware verification endpoint required data.
      * @return array
      */
-    private function makeRequestData()
+    private function prepareRequestData()
     {
-        return array_merge($this->pendingRequest->data(), [
-            'MerchantID' => $this->getMerchantId(),
-            'Authority' => $this->getTransactionId(),
-            'Amount' => $this->pendingRequest->data('Amount'),
-        ]);
+        $this->pendingRequest->merchantId($this->getMerchantId());
+        $this->pendingRequest->transactionId($this->getTransactionId());
     }
 
     private function getTransactionId()
     {
-        if ($transactionId = $this->pendingRequest->data('Authority')) {
+        if ($transactionId = $this->pendingRequest->transactionId()) {
             return $transactionId;
         }
 
         if (request()->has('Authority')) {
             request()->validate(['Authority' => 'required|string']);
 
-            return $transactionId;
+            return request('Authority');
         }
 
         return null;

@@ -107,8 +107,9 @@ class PendingRequest
     public function request(): RequestedPaymentInterface
     {
         if ($this->fakeRequest) {
-            $this->factory->recordPendingRequest($this);
-            return RequestFactory::fakeFrom($this->fakeRequest);
+            return tap((new RequestFactory($this))->fakeFrom($this->fakeRequest), function () {
+                $this->factory->recordPendingRequest($this);
+            });
         }
 
         return (new RequestFactory($this))->request();
@@ -121,8 +122,9 @@ class PendingRequest
     public function verify(): CheckedPaymentInterface
     {
         if ($this->fakeVerification) {
-            $this->factory->recordPendingRequest($this);
-            return VerificationFactory::fakeFrom($this->fakeVerification);
+            return tap((new VerificationFactory($this))->fakeFrom($this->fakeVerification), function () {
+                $this->factory->recordPendingRequest($this);
+            });
         }
 
         return (new VerificationFactory($this))->verify();

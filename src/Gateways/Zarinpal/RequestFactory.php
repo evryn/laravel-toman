@@ -28,8 +28,10 @@ class RequestFactory
         $this->pendingRequest = $pendingRequest;
     }
 
-    public static function fakeFrom(FakeRequest $fakeRequest)
+    public function fakeFrom(FakeRequest $fakeRequest)
     {
+        $this->prepareRequestData();
+
         return new RequestedPayment(
             $fakeRequest->getException(),
             [],
@@ -40,7 +42,9 @@ class RequestFactory
 
     public function request(): RequestedPayment
     {
-        $response = Http::post($this->makeRequestURL(), $this->makeRequestData());
+        $this->prepareRequestData();
+
+        $response = Http::post($this->makeRequestURL(), $this->pendingRequest->data());
         $data = $response->json();
 
         // In case of connection issued. It indicates a proper time to switch gateway to
@@ -82,18 +86,16 @@ class RequestFactory
      * Make config-aware verification endpoint required data.
      * @return array
      */
-    private function makeRequestData()
+    private function prepareRequestData()
     {
-        return array_merge($this->pendingRequest->data(), [
-            'MerchantID' => $this->getMerchantId(),
-            'CallbackURL' => $this->getCallbackUrl(),
-            'Description' => $this->getDescription(),
-        ]);
+        $this->pendingRequest->merchantId($this->getMerchantId());
+        $this->pendingRequest->callback($this->getCallbackUrl());
+        $this->pendingRequest->description($this->getDescription());
     }
 
     private function getCallbackUrl()
     {
-        if ($callbackUrlData = $this->pendingRequest->data('CallbackURL')) {
+        if ($callbackUrlData = $this->pendingRequest->callback()) {
             return $callbackUrlData;
         }
 
@@ -108,8 +110,8 @@ class RequestFactory
     {
         return str_replace(
             ':amount',
-            $this->pendingRequest->data('Amount'),
-            $this->pendingRequest->data('Description') ?: config('toman.description')
+            $this->pendingRequest->amount(),
+            $this->pendingRequest->description() ?: config('toman.description')
         );
     }
 }

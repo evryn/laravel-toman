@@ -85,8 +85,7 @@ final class VerificationTest extends TestCase
             'sandbox' => $sandbox,
             'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
         ])
-            ->amount(1500)
-            ->transactionId('A0000012345');
+            ->amount(1500);
 
         tap($gateway->verify(), function (CheckedPayment $request) use ($baseUrl) {
 

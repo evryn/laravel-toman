@@ -25,11 +25,7 @@ trait InteractsWithPendingRequest
      */
     private function isSandbox()
     {
-        if ($this->pendingRequest->config('sandbox') === true) {
-            return true;
-        }
-
-        return false;
+        return $this->pendingRequest->config('sandbox') === true;
     }
 
     /**
@@ -39,8 +35,6 @@ trait InteractsWithPendingRequest
      */
     private function getMerchantId()
     {
-        $merchantId = $this->pendingRequest->data('MerchantID');
-
-        return $merchantId ?? $this->pendingRequest->config('merchant_id');
+        return $this->pendingRequest->merchantId() ?: $this->pendingRequest->config('merchant_id');
     }
 }

@@ -1,4 +1,4 @@
-# Zarinpal Gateway
+# Using Zarinpal Gateway
 
 Implementation of [Zarinpal.com](https://www.zarinpal.com) gateway is based on version 1.3 of their [official document](https://github.com/ZarinPal-Lab/Documentation-PaymentGateway/).
 
@@ -123,3 +123,73 @@ Using returned `CheckedPayment`:
 | messages()      	| <span class="red">[On Failure]</span> Get list of error messages.                                                                                                             	|
 | message()     	| <span class="red">[On Failure]</span> Get first error message. |
 | throw()     	| <span class="red">[On Failure]</span> Throw exception related to the failure. |
+
+<hr></hr>
+
+# 🧪 Testing Zarinpal Gateway
+If you're making automated tests for your application and want to see if you're interacting with Laravel Toman properly, go on.
+
+## Test Payment Request 
+
+Use `Toman::fakeRequest()` to stub request result and assert expected request data with `Toman::assertRequested()` method by a truth test.
+
+```php
+use Evryn\LaravelToman\Facades\Toman;
+
+final class PaymentRequestTest extends TestCase
+{
+    /** @test */
+    public function requests_new_payment_with_proper_data()
+    {
+        // Stub a successful or failed payment request result
+        Toman::fakeRequest()->successful()->withTransactionId('A123');
+        // Toman::fakeRequest()->failed();
+
+        // Act with your app ...
+
+        // Assert that you've correctly requested payment
+        Toman::assertRequested(function ($request) {
+            return $request->merchantId() === 'your-merchant-id'
+                && $request->callback() === route('callback-route')
+                && $request->amount() === 50000;
+        });
+    }
+}
+```
+
+## Test Payment Verification 
+
+Use `Toman::fakeVerification()` to stub verification result and assert its expected data with `Toman::assertCheckedForVerification()` method by a truth test.
+
+```php
+use Evryn\LaravelToman\Facades\Toman;
+
+final class PaymentRequestTest extends TestCase
+{
+    /** @test */
+    public function verifies_payment_with_proper_data()
+    {
+        // Stub a successful, already verified or failed payment verification result
+        Toman::fakeVerification()
+            ->successful()
+            ->withTransactionId('A123')
+            ->withReferenceId('R123');
+        // Toman::fakeVerification()
+        //     ->alreadyVerified()
+        //     ->withTransactionId('A123')
+        //     ->withReferenceId('R123');
+        // Toman::fakeVerification()
+        //     ->failed()
+        //     ->withTransactionId('A123');
+
+        // Act with your app ...
+
+        // Assert that you've correctly verified payment
+        Toman::assertCheckedForVerification(function ($request) {
+            return $request->merchantId() === 'your-merchant-id'
+                && $request->transactionId() === 'A123'
+                && $request->amount() === 50000;
+        });
+    }
+}
+```

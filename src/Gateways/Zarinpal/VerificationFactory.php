@@ -74,7 +74,7 @@ class VerificationFactory
         }
 
         // Client errors (4xx) are not guaranteed to be come with error messages. We need to
-        // check requested payment status too.
+        // check payment verification status too.
         if ($response->clientError() || !in_array($status, [Status::OPERATION_SUCCEED, Status::ALREADY_VERIFIED])) {
             return new CheckedPayment(
                 $status,
@@ -109,6 +109,7 @@ class VerificationFactory
         return array_merge($this->pendingRequest->data(), [
             'MerchantID' => $this->getMerchantId(),
             'Authority' => $this->getTransactionId(),
+            'Amount' => $this->pendingRequest->data('Amount'),
         ]);
     }
 

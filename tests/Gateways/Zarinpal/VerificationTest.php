@@ -161,9 +161,6 @@ final class VerificationTest extends TestCase
     /** @test */
     public function fails_with_gateway_exception()
     {
-        // When requesting a valid payment result in 5xx error, we consider this as an
-        // issue in gateway-side (server) and expect an expect API to provide proper results
-
         Http::fake([
             'www.zarinpal.com/pg/rest/WebGate/PaymentVerification.json' => Http::response(null, 555),
         ]);
@@ -221,10 +218,6 @@ final class VerificationTest extends TestCase
      */
     public function fails_with_client_exception_without_message($httpStatus, $statusCode, $messageKey)
     {
-        // When requesting a valid payment result in 4xx error, but there is nothing in errors data,
-        // we consider this as an issue in merchant-side (client) and expect an expect API to provide
-        // proper results.
-
         Http::fake([
             'www.zarinpal.com/pg/rest/WebGate/PaymentVerification.json' => Http::response([
                 'Status' => $statusCode,
@@ -293,7 +286,7 @@ final class VerificationTest extends TestCase
     /** @test */
     public function can_set_transaction_id_elegantly()
     {
-        // We need to ensure that developer can set amount elegantly, with their preferred methods
+        // We need to ensure that developer can set transaction id elegantly, with their preferred methods
 
         $this->fakeValidResponse();
 
@@ -312,18 +305,6 @@ final class VerificationTest extends TestCase
                 'RefID' => '10001000',
             ], 200),
         ]);
-    }
-
-    private function validConfig($overridden = []): array
-    {
-        return array_merge([
-            'merchant_id' => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
-        ], $overridden);
-    }
-
-    private function validPendingRequest(): PendingRequest
-    {
-        return $this->configuredGateway();
     }
 
     private function configuredGateway(): PendingRequest

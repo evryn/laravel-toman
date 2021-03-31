@@ -22,6 +22,12 @@
     and start using in <5m
 </p>
 
+<p style="text-align: right; direction: rtl">
+    📚
+    <a target="_blank" href="https://evryn.github.io/laravel-toman/#/fa/">داکیومنت فارسی</a>
+    رو بخونین و تو 5 دقیقه استفاده‌اش کنین
+</p>
+
 # About Toman (تومَن)
 Toman is a Laravel package which makes working with popular payment gateways much easier.
 
@@ -35,17 +41,17 @@ Toman is a Laravel package which makes working with popular payment gateways muc
 
 ## Simple to use
 
-Request new payment as easy as:
+Request a new payment:
 <p align="center">
   <a href="https://evryn.github.io/laravel-toman/">
-    <img alt="Request new Payment" src="./docs/_media/payment-request-canvas.png">
+    <img alt="Request new Payment" src="./docs/_media/payment-request.png">
   </a>
 </p>
 
-And simply verify callback:
+And simply verify its callback:
 <p align="center">
   <a href="https://evryn.github.io/laravel-toman/">
-    <img alt="Verify Payment" src="./docs/_media/payment-verification-canvas.png">
+    <img alt="Verify Payment" src="./docs/_media/payment-verification.png">
   </a>
 </p>
 

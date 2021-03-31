@@ -15,7 +15,7 @@ Payment is a critical topic, and its handlers must be tested from all aspects. L
 
 ## Elegant API
 
-APIs are pretty much easy to use! Requesting a new payment and verifying it will add <170 characters to your codebase! 😎
+APIs are pretty much easy to use! Requesting a new payment and verifying it will add ~10 lines to your codebase! 😎
 
 ## Supports Multiple Gateways
 

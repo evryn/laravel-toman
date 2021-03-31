@@ -37,14 +37,14 @@ class FakeVerification
         return $this;
     }
 
-    public function transactionId(string $transactionId): self
+    public function withTransactionId(string $transactionId): self
     {
         $this->transactionId = $transactionId;
 
         return $this;
     }
 
-    public function referenceId(string $referenceId): self
+    public function withReferenceId(string $referenceId): self
     {
         $this->referenceId = $referenceId;
 

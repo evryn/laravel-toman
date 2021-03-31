@@ -15,7 +15,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_request_passes_when_truth_check_is_true()
     {
-        Toman::fakeRequest()->transactionId('A001234')->successful();
+        Toman::fakeRequest()->withTransactionId('A001234')->successful();
 
         Toman::request();
 
@@ -27,7 +27,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_request_fails_when_truth_check_is_false()
     {
-        Toman::fakeRequest()->transactionId('A001234')->successful();
+        Toman::fakeRequest()->withTransactionId('A001234')->successful();
 
         Toman::request();
 
@@ -41,7 +41,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_sent_request_data()
     {
-        Toman::fakeRequest()->transactionId('A001234')->successful();
+        Toman::fakeRequest()->withTransactionId('A001234')->successful();
 
         Toman
             ::amount(500)
@@ -61,7 +61,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_default_request_data_too()
     {
-        Toman::fakeRequest()->transactionId('A001234')->successful();
+        Toman::fakeRequest()->withTransactionId('A001234')->successful();
         Route::get('payment/callback', function () {})->name('payment.callback');
         config([
             'toman.callback_route' => 'payment.callback',
@@ -83,7 +83,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function fake_request_with_transaction_id_produces_successful_result()
     {
-        Toman::fakeRequest()->transactionId('A001234')->successful();
+        Toman::fakeRequest()->withTransactionId('A001234')->successful();
 
         $request = Toman::request();
 
@@ -132,7 +132,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_verification_passes_when_truth_check_is_true()
     {
-        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->successful();
+        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
 
         Toman::verify();
 
@@ -144,7 +144,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_verification_fails_when_truth_check_is_false()
     {
-        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->successful();
+        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
 
         Toman::verify();
 
@@ -158,7 +158,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_sent_verification_data()
     {
-        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->successful();
+        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
 
         Toman
             ::amount(500)
@@ -178,7 +178,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_default_verification_data_too()
     {
-        Toman::fakeVerification()->transactionId('A001234')->successful();
+        Toman::fakeVerification()->withTransactionId('A001234')->successful();
         config(['toman.gateways.zarinpal.merchant_id' => 'xxxxx-yyyyy-zzzzz']);
         request()->merge(['Authority' => 'A0123456']);
 
@@ -195,7 +195,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function fake_successful_verification_produces_proper_results()
     {
-        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->successful();
+        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
 
         $verification = Toman::verify();
 
@@ -210,7 +210,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function fake_already_verified_verification_produces_proper_results()
     {
-        Toman::fakeVerification()->transactionId('A001234')->referenceId('R123')->alreadyVerified();
+        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->alreadyVerified();
 
         $verification = Toman::verify();
 
@@ -225,7 +225,7 @@ final class FakeTest extends TestCase
     /** @test */
     public function fake_failed_verification_produces_proper_results()
     {
-        Toman::fakeVerification()->transactionId('A001234')->failed('Your request has failed.', 500);
+        Toman::fakeVerification()->withTransactionId('A001234')->failed('Your request has failed.', 500);
 
         $request = Toman::verify();
 

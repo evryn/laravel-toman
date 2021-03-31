@@ -3,6 +3,7 @@
 namespace Evryn\LaravelToman;
 
 use Evryn\LaravelToman\Exceptions\GatewayException;
+use Illuminate\Support\Facades\Http;
 
 class FakeRequest
 {
@@ -30,14 +31,14 @@ class FakeRequest
         return $this;
     }
 
-    public function transactionId(string $transactionId)
+    public function withTransactionId(string $transactionId)
     {
         $this->transactionId = $transactionId;
 
         return $this;
     }
 
-    public function referenceId(string $referenceId)
+    public function withReferenceId(string $referenceId)
     {
         $this->referenceId = $referenceId;
 

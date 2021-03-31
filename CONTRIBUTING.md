@@ -1,12 +1,9 @@
 # Contributing
 
-Contributions are welcome and will be fully credited.
-
-Contributions are accepted via Pull Requests on [Github](https://github.com/amirrezanasiri/laraveltoman).
+Contributions are welcome and will be fully credited. They are accepted via Pull Requests on [Laravel Toman](https://github.com/evryn/laravel-toman) repository.
 
 # Things you can do
 If you want to contribute but do not know where to start, this list provides some starting points.
- * Add callback fakers to simulate actual gateway callbacks.
  * Add a new Payment Gateway:
    * [YekPay.com](https://yekpay.com/)  
    * [Pay.ir](https://pay.ir/)  

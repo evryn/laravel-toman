@@ -2,7 +2,7 @@
 
 Implementation of [Zarinpal.com](https://www.zarinpal.com) gateway is based on version 1.3 of their [official document](https://github.com/ZarinPal-Lab/Documentation-PaymentGateway/).
 
-## Serup
+## Setup
 
 Zarinpal gateway requires the following variables in `.env` file to work:
 
@@ -126,17 +126,17 @@ Using returned `CheckedPayment`:
 
 <hr></hr>
 
-# 🧪 Testing Zarinpal Gateway
+# Testing Zarinpal Gateway
 If you're making automated tests for your application and want to see if you're interacting with Laravel Toman properly, go on.
 
-## Test Payment Request 
+## 🧪 Test Payment Request 
 
 Use `Toman::fakeRequest()` to stub request result and assert expected request data with `Toman::assertRequested()` method by a truth test.
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
 
-final class PaymentRequestTest extends TestCase
+final class PaymentTest extends TestCase
 {
     /** @test */
     public function requests_new_payment_with_proper_data()
@@ -157,14 +157,14 @@ final class PaymentRequestTest extends TestCase
 }
 ```
 
-## Test Payment Verification 
+## 🧪 Test Payment Verification 
 
 Use `Toman::fakeVerification()` to stub verification result and assert its expected data with `Toman::assertCheckedForVerification()` method by a truth test.
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
 
-final class PaymentRequestTest extends TestCase
+final class PaymentTest extends TestCase
 {
     /** @test */
     public function verifies_payment_with_proper_data()

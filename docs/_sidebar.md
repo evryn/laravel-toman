@@ -8,9 +8,7 @@
     
 * Payment Gateways
 
-  * [Zarinpal](gateways/zarinpal.md)
-  
-* [Testing](testing.md)
+  * [💳 Zarinpal](gateways/zarinpal.md)
 
 * [Contributing](../CONTRIBUTING.md)
 * [Changelog](../CHANGELOG.md)

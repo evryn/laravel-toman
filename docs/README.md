@@ -19,8 +19,7 @@ APIs are pretty much easy to use! Requesting a new payment and verifying it will
 
 ## Supports Multiple Gateways
 
-Will support indeed. We'll stick to a simple-to-use and completely-tested package, so adding new gateways may take some time.
-
+We are planning to add new gateway providers. They'll require minimum possible changes in your code.
 Currently, following gateways are available to use:  
 ✅ [Zarinpal.com](https://zarinpal.com)  
 🔘 [YekPay.com](https://yekpay.com/)  
@@ -32,7 +31,7 @@ Currently, following gateways are available to use:
 
 Writing a test for your application and want to see if you're using the package correctly? No problem at all!
 
-See our [Testing Guide](testing.md) to learn about how to mock gateways and assert their behaviour!
+See our testing instructions in your payment gateway section!
 
 <br></br>
 ➡ Why don't you see yourself? [Quick Start](install.md)

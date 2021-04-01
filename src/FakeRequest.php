@@ -12,7 +12,6 @@ class FakeRequest
 
     private $status;
     private $transactionId;
-    private $referenceId;
     private $exception;
 
     public function successful(): self
@@ -38,21 +37,9 @@ class FakeRequest
         return $this;
     }
 
-    public function withReferenceId(string $referenceId)
-    {
-        $this->referenceId = $referenceId;
-
-        return $this;
-    }
-
     public function getTransactionId()
     {
         return $this->transactionId;
-    }
-
-    public function getReferenceId()
-    {
-        return $this->referenceId;
     }
 
     public function getException()

@@ -11,23 +11,8 @@ use Illuminate\Support\Facades\Http;
 /**
  * Class Requester.
  */
-class PaymentVerification
+class PaymentVerification extends BaseRequest
 {
-    use InteractsWithPendingRequest;
-
-    /**
-     * @var PendingRequest
-     */
-    private $pendingRequest;
-
-    /**
-     * Requester constructor.
-     */
-    public function __construct(PendingRequest $pendingRequest)
-    {
-        $this->pendingRequest = $pendingRequest;
-    }
-
     public function fakeFrom(FakeVerification $fakeVerification)
     {
         $this->prepareRequestData();
@@ -59,7 +44,7 @@ class PaymentVerification
     {
         $this->prepareRequestData();
 
-        $response = Http::post($this->makeRequestURL(), $this->pendingRequest->data());
+        $response = Http::post($this->getEndpoint('PaymentVerification'), $this->pendingRequest->data());
         $data = $response->json();
         $status = $data['Status'] ?? null;
 
@@ -97,17 +82,7 @@ class PaymentVerification
     }
 
     /**
-     * Make environment-aware verification endpoint URL.
-     * @return string
-     */
-    private function makeRequestURL()
-    {
-        return $this->getHost().'/pg/rest/WebGate/PaymentVerification.json';
-    }
-
-    /**
      * Make config-aware verification endpoint required data.
-     * @return array
      */
     private function prepareRequestData()
     {

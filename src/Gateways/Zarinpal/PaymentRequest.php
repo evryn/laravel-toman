@@ -5,30 +5,14 @@ namespace Evryn\LaravelToman\Gateways\Zarinpal;
 use Evryn\LaravelToman\Exceptions\GatewayClientException;
 use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\FakeRequest;
-use Evryn\LaravelToman\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
 
 /**
  * Class Requester.
  */
-class PaymentRequest
+class PaymentRequest extends BaseRequest
 {
-    use InteractsWithPendingRequest;
-
-    /**
-     * @var PendingRequest
-     */
-    private $pendingRequest;
-
-    /**
-     * Requester constructor.
-     */
-    public function __construct(PendingRequest $pendingRequest)
-    {
-        $this->pendingRequest = $pendingRequest;
-    }
-
     public function fakeFrom(FakeRequest $fakeRequest)
     {
         $this->prepareRequestData();
@@ -45,7 +29,7 @@ class PaymentRequest
     {
         $this->prepareRequestData();
 
-        $response = Http::post($this->makeRequestURL(), $this->pendingRequest->data());
+        $response = Http::post($this->getEndpoint('PaymentRequest'), $this->pendingRequest->data());
         $data = $response->json();
 
         // In case of connection issued. It indicates a proper time to switch gateway to
@@ -75,17 +59,7 @@ class PaymentRequest
     }
 
     /**
-     * Make environment-aware verification endpoint URL.
-     * @return string
-     */
-    private function makeRequestURL()
-    {
-        return $this->getHost().'/pg/rest/WebGate/PaymentRequest.json';
-    }
-
-    /**
      * Make config-aware verification endpoint required data.
-     * @return array
      */
     private function prepareRequestData()
     {

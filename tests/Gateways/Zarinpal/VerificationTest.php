@@ -9,6 +9,7 @@ use Evryn\LaravelToman\Gateways\Zarinpal\CheckedPayment;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
@@ -44,7 +45,7 @@ final class VerificationTest extends TestCase
 
         tap($gateway->verify(), function (CheckedPayment $request) use ($baseUrl) {
 
-            Http::assertSent(function (\Illuminate\Http\Client\Request $request) use ($baseUrl) {
+            Http::assertSent(function (Request $request) use ($baseUrl) {
                 return $request->method() === 'POST'
                     && $request->url() === "https://$baseUrl/pg/rest/WebGate/PaymentVerification.json"
                     && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'
@@ -89,7 +90,7 @@ final class VerificationTest extends TestCase
 
         tap($gateway->verify(), function (CheckedPayment $request) use ($baseUrl) {
 
-            Http::assertSent(function (\Illuminate\Http\Client\Request $request) use ($baseUrl) {
+            Http::assertSent(function (Request $request) use ($baseUrl) {
                 return $request->method() === 'POST'
                     && $request->url() === "https://$baseUrl/pg/rest/WebGate/PaymentVerification.json"
                     && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'

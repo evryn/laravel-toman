@@ -1,5 +1,2 @@
-preset: laravel
-
-finder:
-  exclude:
-    - "tests"
+php:
+  preset: laravel

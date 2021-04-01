@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="AmirrezaNasiri's LaravelToman Test Suit">
+        <testsuite name="Evryn LaravelToman Test Suit">
             <directory suffix=".php">./tests/</directory>
         </testsuite>
     </testsuites>

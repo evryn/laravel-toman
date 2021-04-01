@@ -75,7 +75,7 @@ Using returned `RequestedPayment`:
  
 ## Verify Payment
 
-In short, you can verify a payment callback with the following methods and catches:
+Verification must be implemented in the callback route.
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
@@ -118,13 +118,13 @@ Using returned `CheckedPayment`:
 | transactionId()      	| Get transaction ID.                                                                                                             	|
 | successful()    	| Payment is newly verified and its reference ID is available.                                                                 	|
 | transactionId()      	| <span class="green">[On Success]</span> Get reference ID.                                                                                                             	|
-| alreadyVerified()    	| Payment was once verified before.                                                                 	|
+| alreadyVerified()    	| Payment was once verified before. Reference ID is available too.                                                                	|
 | failed() 	| Payment was failed and proper messages and exception are available.                                                                     	|
 | messages()      	| <span class="red">[On Failure]</span> Get list of error messages.                                                                                                             	|
 | message()     	| <span class="red">[On Failure]</span> Get first error message. |
 | throw()     	| <span class="red">[On Failure]</span> Throw exception related to the failure. |
 
-<hr></hr>
+<hr>
 
 # Testing Zarinpal Gateway
 If you're making automated tests for your application and want to see if you're interacting with Laravel Toman properly, go on.

@@ -3,7 +3,7 @@
 
 # Laravel Toman <small>2.0</small>
 
-> درگاه پرداخت، مثل آب خوردن!
+> درگاه پرداخت - مثل آب خوردن!
 
 استفاده آسان • تست شده • پشتیبانی از چندین درگاه
 
@@ -23,5 +23,5 @@
     <img alt="StyleCI" src="https://styleci.io/repos/214276918/shield">
 </a>
 
-[GitHub](https://github.com/evryn/laravel-toman)
-[Get Started](#quickstart)
+[گیت‌هاب](https://github.com/evryn/laravel-toman)
+[شروع به کار](#quickstart)

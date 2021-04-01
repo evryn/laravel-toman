@@ -7,14 +7,23 @@
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
+  <link rel="stylesheet" href="//cdn.font-store.ir/yekan.css">
   <link rel="icon" href="_media/icon.png">
   <style>
-    html[lang=fa] {
+    html[lang=fa] body {
+      font-family: 'yekan',serif;
       text-align: right;
       direction: rtl;
     }
     html[lang=fa] .sidebar ul {
       margin: 0 15px 0 0;
+    }
+    html[lang=fa] section.cover .cover-main>p:last-child a {
+      padding: .5em 2rem .7em;
+      letter-spacing: unset;
+    }
+    .fa {
+      font-family: 'yekan',serif;
     }
     aside > h1 > a > small {
       top: 6px;
@@ -26,6 +35,14 @@
     }
     .red {
       color: #CB4335;
+    }
+    .ltr {
+      text-align: left;
+      direction: ltr;
+    }
+    code {
+      text-align: left;
+      direction: ltr;
     }
   </style>
 </head>

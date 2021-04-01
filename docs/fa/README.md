@@ -1,9 +1,8 @@
-# About Toman (تومَن)
-Toman is a Laravel package which makes working with popular payment gateways much easier.
+# درباره Toman (تومَن)
+تومَن یه پکیج لاراوله که کار کردن با درگاه‌های پرداخت رو خیلی راحت‌تر می‌کنه.
+کلی پکیج دیگه واسه هندل کردن درگاه‌ها وجود داره اما این پکیج ممکنه واستون مناسب‌تر باشه، چون:
 
-There are dozens of gateway handlers; Here is why you may choose Laravel Toman:
-
-## Heavily Tested
+## قابل اطمینان
 <a target="_blank" href="https://travis-ci.org/evryn/laravel-toman">
     <img alt="Build Status" src="https://img.shields.io/travis/evryn/laravel-toman/master.svg?style=flat-square">
 </a>
@@ -11,30 +10,31 @@ There are dozens of gateway handlers; Here is why you may choose Laravel Toman:
     <img alt="Code Coverage" src='https://img.shields.io/codecov/c/github/evryn/laravel-toman?label=coverage&style=flat-square'>
 </a>
 
-Payment is critical topic and its handlers must be tested from all aspects. Laravel Toman has an automated test suit with 100% coverage. On every released build, we're enforced to pass all tests so you can add payment to your code with confidence.
+پرداخت موضوع مهمیه و هندلرها باید از جنبه‌هاش مختلف تست شده باشن. 
+Laravel Toman یه تست سوئیت کامل داره. قبل از ریلیز کردن هر نسخه‌ای، مجبوریم که همه تست‌های خودکار رو پاس کنیم تا به دست شما برسه
+و بتونین با خیال راحت تو کدهاتون استفاده کنین.
 
-## Elegant API
+## رابط‌های خوشگل
 
-API and methods are pretty easy to use! Requesting a new payment and verifying it will add <170 characters to your code base! 😎
+رابط‌های این پکیج خیلی ساده‌تر از اونی هست که فکر می‌کنین. ایجاد پرداخت جدید و راستی‌آزماییش فقط 10 خط به کدبیس‌تون اضافه می‌کنه 😎
 
-## Supports Multiple Gateways
+## پشتیبانی از چندین درگاه
 
-Will support indeed. We'll stick to simple-to-use and completely-tested package so adding new gateways may take some times.
+برنامه داریم که درگاه‌های جدید رو هم به تومن اضافه کنیم. قول می‌دیم که سوئیچ کردن رو درگاه‌های مختلف، کمترین تغییرات رو توی کدهاتون داشته باشه.
+فعلاً این درگاه‌ها قابل استفاده هستن:
 
-Currently following gateways are available to use:  
 ✅ [Zarinpal.com](https://zarinpal.com)  
 🔘 [YekPay.com](https://yekpay.com/)  
 🔘 [Pay.ir](https://pay.ir/)  
 🔘 [PayPing.ir](https://www.payping.ir/)  
 🔘 ...
 
-## Easy to Test
+## سادگی در تست کردن
 
-Writing test for your own application and want to see if you're using the package correctly? No problem at all!
-
-See our [Testing Guide](testing.md) to learn about how to mock gateways and assert things!
+دارین برای کدهاتون تست سوئیت خودکار ایجاد می‌کنین و می‌خواین ببینین که از این پکیج هم درست استفاده می‌کنین یا نه؟
+مشکلی نیست! تو صفحه راهنمای درگاه‌ها، می‌تونین ببینین چطور به راحتی می‌شه تست کرد این جنبه از نرم‌افزارتون رو.
 
 <br></br>
-➡ Why don't you see yourself? [Quick Start](quickstart.md)
+➡ [بریم سراغ نصب!](install.md)
 
-➡ Looking for old documents? <a href="v1/index.html">V1 Docs</a>
+➡ دنبال داکیومنت قدیمی هستین؟ <a href="v1/index.html">داکیومنت‌های نسخه 1</a>

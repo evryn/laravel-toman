@@ -12,5 +12,5 @@
 
 * [Contributing](../CONTRIBUTING.md)
 * [Changelog](../CHANGELOG.md)
-* [Support 💜](support.md)
+* [💜 Support](support.md)
 

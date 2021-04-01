@@ -1,2 +1,2 @@
 * [English](/)
-* [فارسی](/fa/)
+* [<span class="fa">فارسی</span>](/fa/)

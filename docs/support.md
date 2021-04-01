@@ -11,14 +11,14 @@ Donations are very welcome. Select your currency:
 
 ### Send Us a Postcard
 
-We appreciate to receive a physical postcard from you or your company. We'll soon display all of them. Just leave me a message and I'll reply soon: `nasiri.amirreza.96@gmail.com` or [@Amirreza_Nasiri](https://twitter.com/amirreza_nasiri). 
+We appreciate to receive a postcard from you or your company. We'll soon display all of them. Just leave me a message and I'll reply soon: `nasiri.amirreza.96@gmail.com` or [@Amirreza_Nasiri](https://twitter.com/amirreza_nasiri). 
 
  
 ### Follow, Star and Fork
 
 By following us, giving a star and forking this repository, you'll make this package more visible to people. It'll take ~11s, just hit these buttons on [the repository](https://github.com/evryn/laravel-toman):
 
-<a class="github-button" href="https://github.com/Evryn" data-size="large" data-show-count="true" aria-label="Follow @Evryn on GitHub">Follow @Evryn</a>
+<a class="github-button" href="https://github.com/AmirrezaNasiri" data-size="large" data-show-count="true" aria-label="Follow me on GitHub">Follow</a>
 <a class="github-button" href="https://github.com/evryn/laravel-toman" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star evryn/laravel-toman on GitHub">Star</a>
 <a class="github-button" href="https://github.com/evryn/laravel-toman/fork" data-icon="octicon-repo-forked" data-size="large" data-show-count="true" aria-label="Fork evryn/laravel-toman on GitHub">Fork</a>
 

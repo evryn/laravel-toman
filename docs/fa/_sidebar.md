@@ -1,18 +1,16 @@
-* [معرفی پکیج](README.md)
+* [معرفی](fa/README.md)
 
-* شروع
+* شروع به کار
 
-  * [نصب](quickstart.md)
-  * [تنظیمات](configuration.md)
-  * [ترجمه‌ها](translations.md)
+  * [نصب](fa/install.md)
+  * [تنظیمات](fa/configuration.md)
+  * [ترجمه‌ها](fa/translations.md)
     
-* درگاه‌ها
+* درگاه‌های پرداخت
 
-  * [زرین‌پال](gateways/zarinpal.md)
-  
-* [تست کردن](testing.md)
+  * [💳 زرین‌پال](fa/gateways/zarinpal.md)
 
-* [مشارکت](contributing.md)
-* [لیست تغییرات](changelog.md)
-* [حمایت 💜](support.md)
+* [مشارکت](../CONTRIBUTING.md)
+* [لیست تغییرات](../CHANGELOG.md)
+* [💜 حمایت از ما](fa/support.md)
 

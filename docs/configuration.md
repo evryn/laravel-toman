@@ -11,21 +11,20 @@ php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProv
 Now, a config file will be available to edit at `config/toman.php`.
 
 ## Package Options
- * `default`: 
+ * `default`
  
 It indicates your default payment gateway among available gateways in `gateways` option. By default, it'll be read from `TOMAN_GATEWAY` variable in your `.env` file.
 
- * `gateways`:  
+ * `gateways`
 
 It contains all configs related to gateways. See `Available Gateways` section to find out what options are available.
  
- * `description` (optional):  
+ * `description` (optional)  
 
 It is the default description of the payment. `:amount` will be replaced by the actual payment amount. 
+You can override it later when requesting payment.
 
-You can override it with `description()` method on `PaymentRequest`.
-
- * `callback_route` (optional):
+ * `callback_route` (optional)
 
 It indicates the default payment callback route name.
 

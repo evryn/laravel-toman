@@ -9,6 +9,7 @@ If you want to contribute but do not know where to start, this list provides som
    * [Pay.ir](https://pay.ir/)  
    * [PayPing.ir](https://www.payping.ir/)  
  * Refactor if you think there are better approach to do things.
+ * Improve documents and comments; Fix grammatical errors, typos, etc.
 
 ## Pull Requests
 

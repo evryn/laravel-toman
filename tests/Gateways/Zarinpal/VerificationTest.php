@@ -6,8 +6,8 @@ use Evryn\LaravelToman\Exceptions\GatewayClientException;
 use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\CheckedPayment;
-use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
@@ -315,6 +315,6 @@ final class VerificationTest extends TestCase
 
     private function gateway($config = []): PendingRequest
     {
-        return (new Factory($this->app))->gateway('zarinpal', $config);
+        return (new Factory($this->app))->newPendingRequest('zarinpal', $config);
     }
 }

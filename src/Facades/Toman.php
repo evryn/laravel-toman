@@ -5,9 +5,9 @@ namespace Evryn\LaravelToman\Facades;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\FakeRequest;
 use Evryn\LaravelToman\FakeVerification;
-use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
 use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
+use Evryn\LaravelToman\PendingRequest;
 use Illuminate\Support\Facades\Facade;
 
 /**

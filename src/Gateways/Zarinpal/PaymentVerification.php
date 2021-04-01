@@ -5,12 +5,13 @@ namespace Evryn\LaravelToman\Gateways\Zarinpal;
 use Evryn\LaravelToman\Exceptions\GatewayClientException;
 use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\FakeVerification;
+use Evryn\LaravelToman\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
 /**
  * Class Requester.
  */
-class VerificationFactory
+class PaymentVerification
 {
     use InteractsWithPendingRequest;
 

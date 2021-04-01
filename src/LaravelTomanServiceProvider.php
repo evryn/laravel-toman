@@ -3,7 +3,7 @@
 namespace Evryn\LaravelToman;
 
 use Evryn\LaravelToman\Interfaces\TomanInterface;
-use Evryn\LaravelToman\Managers\PendingRequestManager;
+use Evryn\LaravelToman\Managers\GatewayManager;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelTomanServiceProvider extends ServiceProvider

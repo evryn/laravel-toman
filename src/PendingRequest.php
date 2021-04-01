@@ -1,11 +1,9 @@
 <?php
 
-namespace Evryn\LaravelToman\Gateways\Zarinpal;
+namespace Evryn\LaravelToman;
 
-use Evryn\LaravelToman\Factory;
-use Evryn\LaravelToman\FakeRequest;
-use Evryn\LaravelToman\FakeVerification;
 use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
+use Evryn\LaravelToman\Interfaces\GatewayInterfaceInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Arr;
 
@@ -28,16 +26,6 @@ class PendingRequest
     /** @var array Payment gateway data holder */
     protected $data = [];
 
-    protected $dataMethodMap = [
-        'merchantid' => 'MerchantID',
-        'amount' => 'Amount',
-        'transactionid' => 'Authority',
-        'callback' => 'CallbackURL',
-        'mobile' => 'Mobile',
-        'email' => 'Email',
-        'description' => 'Description',
-    ];
-
     /**
      * @var null|FakeRequest
      */
@@ -47,25 +35,19 @@ class PendingRequest
      * @var null|FakeVerification
      */
     private $fakeVerification = null;
+    /**
+     * @var GatewayInterfaceInterface
+     */
+    private $gateway;
 
     /**
      * Requester constructor.
      * @param $config
      */
-    public function __construct(Factory $factory, array $config = [])
+    public function __construct(Factory $factory, GatewayInterfaceInterface $gateway)
     {
         $this->factory = $factory;
-        $this->config($config);
-    }
-
-    public function config($key = null)
-    {
-        if (is_array($key)) {
-            $this->config = $key;
-            return $this;
-        }
-
-        return $key ? Arr::get($this->config, $key) : $this->config;
+        $this->gateway = $gateway;
     }
 
     /**
@@ -102,17 +84,17 @@ class PendingRequest
 
     /**
      * Request a new payment from gateway.
-     * @return RequestedPayment
+     * @return RequestedPaymentInterface
      */
     public function request(): RequestedPaymentInterface
     {
         if ($this->fakeRequest) {
-            return tap((new RequestFactory($this))->fakeFrom($this->fakeRequest), function () {
+            return tap($this->gateway->requestPayment($this, $this->fakeRequest), function () {
                 $this->factory->recordPendingRequest($this);
             });
         }
 
-        return (new RequestFactory($this))->request();
+        return $this->gateway->requestPayment($this);
     }
 
     /**
@@ -122,18 +104,28 @@ class PendingRequest
     public function verify(): CheckedPaymentInterface
     {
         if ($this->fakeVerification) {
-            return tap((new VerificationFactory($this))->fakeFrom($this->fakeVerification), function () {
+            return tap(($this->gateway->verifyPayment($this, $this->fakeVerification)), function () {
                 $this->factory->recordPendingRequest($this);
             });
         }
 
-        return (new VerificationFactory($this))->verify();
+        return $this->gateway->verifyPayment($this);
     }
 
     public function stub(FakeRequest $fakeRequest = null, FakeVerification $fakeVerification = null)
     {
         $this->fakeRequest = $fakeRequest;
         $this->fakeVerification = $fakeVerification;
+    }
+
+    /**
+     * Get underlying gateway
+     *
+     * @return GatewayInterfaceInterface
+     */
+    public function getGateway(): GatewayInterfaceInterface
+    {
+        return $this->gateway;
     }
 
     /**
@@ -145,7 +137,7 @@ class PendingRequest
      */
     public function __call(string $method, array $parameters)
     {
-        if ($field = $this->dataMethodMap[strtolower($method)] ?? null) {
+        if ($field = $this->gateway->aliasData($method) ?? null) {
             if (isset($parameters[0])) {
                 return $this->data($field, $parameters[0]);
             }

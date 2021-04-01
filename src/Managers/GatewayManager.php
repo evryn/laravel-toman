@@ -3,21 +3,21 @@
 namespace Evryn\LaravelToman\Managers;
 
 use Evryn\LaravelToman\Factory;
-use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest as ZarinpalPendingRequest;
+use Evryn\LaravelToman\Gateways\Zarinpal\Gateway as ZarinpalGateway;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Manager;
 
-class PendingRequestManager extends Manager
+class GatewayManager extends Manager
 {
     /**
-     * @var Factory
+     * @var array
      */
-    private $factory;
+    private $gatewayConfig;
 
-    public function __construct(Container $container, Factory $factory)
+    public function __construct(Container $container, $gatewayConfig = null)
     {
         parent::__construct($container);
-        $this->factory = $factory;
+        $this->gatewayConfig = $gatewayConfig;
     }
 
     /**
@@ -32,13 +32,12 @@ class PendingRequestManager extends Manager
 
     /**
      * Create Zarinpal gateway driver.
-     * @return ZarinpalPendingRequest
+     * @return ZarinpalGateway
      */
     public function createZarinpalDriver()
     {
-        return new ZarinpalPendingRequest(
-            $this->factory,
-            config('toman.gateways.zarinpal')
+        return new ZarinpalGateway(
+            !is_null($this->gatewayConfig) ? $this->gatewayConfig : config('toman.gateways.zarinpal')
         );
     }
 }

@@ -3,7 +3,8 @@
 namespace Evryn\LaravelToman\Tests\Facades;
 
 use Evryn\LaravelToman\Facades\Toman;
-use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest as ZarinpalPendingRequest;
+use Evryn\LaravelToman\Gateways\Zarinpal\Gateway as ZarinpalGateway;
+use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 
 final class TomanTest extends TestCase
@@ -19,12 +20,13 @@ final class TomanTest extends TestCase
             ]
         ]);
 
-        $gateway = Toman::data('key', 'value');
+        $pendingRequest = Toman::getFacadeRoot()->data('key', 'value');
 
-        self::assertInstanceOf(ZarinpalPendingRequest::class, $gateway);
+        self::assertInstanceOf(PendingRequest::class, $pendingRequest);
+        self::assertInstanceOf(ZarinpalGateway::class, $pendingRequest->getGateway());
         self::assertEquals([
             'sandbox' => true,
             'merchant_id' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-        ], $gateway->config());
+        ], $pendingRequest->getGateway()->getConfig());
     }
 }

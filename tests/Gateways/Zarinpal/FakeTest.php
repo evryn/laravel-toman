@@ -4,7 +4,7 @@ namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Facades\Toman;
-use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
+use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;

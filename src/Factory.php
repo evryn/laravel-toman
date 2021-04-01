@@ -2,8 +2,7 @@
 
 namespace Evryn\LaravelToman;
 
-use Evryn\LaravelToman\Gateways\Zarinpal\PendingRequest;
-use Evryn\LaravelToman\Managers\PendingRequestManager;
+use Evryn\LaravelToman\Managers\GatewayManager;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Traits\Macroable;
 use PHPUnit\Framework\Assert as PHPUnit;
@@ -109,7 +108,7 @@ class Factory
     /**
      * Determine if requested with given truth test
      *
-     * @param  callable  $callback
+     * @param  null|callable  $callback
      * @return bool
      */
     private function isRecorded($callback = null)
@@ -125,17 +124,12 @@ class Factory
         return $callback($this->recordedPendingRequest);
     }
 
-    public function gateway(string $name = null, array $config = [])
+    public function newPendingRequest(string $gateway = null, array $config = null): PendingRequest
     {
-        $pendingRequest = (new PendingRequestManager($this->container, $this))->driver($name);
-
-        if ($config) {
-            $pendingRequest->config($config);
-        }
-
-        $pendingRequest->stub($this->fakeRequest, $this->fakeVerification);
-
-        return $pendingRequest;
+        return new PendingRequest(
+            $this,
+            (new GatewayManager($this->container, $config))->driver($gateway)
+        );
     }
 
     /**
@@ -151,8 +145,8 @@ class Factory
             return $this->macroCall($method, $parameters);
         }
 
-        return tap($this->gateway(), function ($request) {
-            // $request->stub($this->stubCallbacks);
+        return tap($this->newPendingRequest(), function ($pendingRequest) {
+            $pendingRequest->stub($this->fakeRequest, $this->fakeVerification);
         })->{$method}(...$parameters);
     }
 }

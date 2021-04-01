@@ -8,8 +8,6 @@ use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Arr;
 
 /**
- * Class Requester.
- *
  * @method PendingRequest amount(int $amount = null) Get or set amount of payment
  * @method PendingRequest callback(string $callbackUrl = null) Get or set absolute URL for payment verification callback
  * @method PendingRequest mobile(string $mobile = null) Get or set mobile data

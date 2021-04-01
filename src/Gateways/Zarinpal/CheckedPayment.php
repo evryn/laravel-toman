@@ -2,35 +2,15 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
+use Evryn\LaravelToman\CheckedPayment as BaseCheckedPayment;
 use Evryn\LaravelToman\Exceptions\GatewayException;
-use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
-use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
 
-class CheckedPayment implements CheckedPaymentInterface
+class CheckedPayment extends BaseCheckedPayment
 {
     /**
      * @var string
      */
-    private $referenceId;
-    /**
-     * @var GatewayException|null
-     */
-    private $exception;
-    /**
-     * @var array
-     */
-    private $messages;
-    /**
-     * @var string
-     */
-    private $status;
-    /**
-     * @var null
-     */
-    private $transactionId;
+    protected $status;
 
     public function __construct(string $status, GatewayException $exception = null, array $messages = [], $transactionId = null, $referenceId = null)
     {
@@ -41,62 +21,23 @@ class CheckedPayment implements CheckedPaymentInterface
         $this->transactionId = $transactionId;
     }
 
-    public function successful(): bool
-    {
-        return (int) $this->status === Status::OPERATION_SUCCEED;
-    }
-
-    public function alreadyVerified(): bool
-    {
-        return (int) $this->status === Status::ALREADY_VERIFIED;
-    }
-
-    public function failed(): bool
-    {
-        return !!$this->exception;
-    }
-
-    public function throw(): void
-    {
-        if ($this->failed()) {
-            throw $this->exception;
-        }
-    }
-
     public function status()
     {
         return $this->status;
     }
 
-    public function message(): ?string
+    public function successful(): bool
     {
-        return Arr::first($this->messages());
+        return (int)$this->status === Status::OPERATION_SUCCEED;
     }
 
-    public function messages(): array
+    public function alreadyVerified(): bool
     {
-        if ($this->messages) {
-            return $this->messages;
-        }
-
-        if ($this->failed()) {
-            return [$this->exception->getMessage()];
-        }
-
-        return [];
+        return (int)$this->status === Status::ALREADY_VERIFIED;
     }
 
-    public function referenceId(): ?string
+    public function failed(): bool
     {
-        if ($this->failed()) {
-            $this->throw();
-        }
-
-        return $this->referenceId;
-    }
-
-    public function transactionId(): string
-    {
-        return $this->transactionId;
+        return !!$this->exception;
     }
 }

@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 interface GatewayInterface
 {
     public function getConfig(string $key = null);
-    public function aliasData(string $conventional): ?string;
+    public function getAliasDataFields(): array;
 
     /**
      * Make a real payment request or generate result based on a fake one

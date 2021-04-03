@@ -16,8 +16,6 @@ class PaymentVerification extends BaseRequest
 {
     public function fakeFrom(FakeVerification $fakeVerification)
     {
-        $this->prepareRequestData();
-
         $status = null;
 
         if ($fakeVerification->getStatus() === $fakeVerification::FAILED) {
@@ -43,9 +41,15 @@ class PaymentVerification extends BaseRequest
 
     public function verify(): CheckedPayment
     {
-        $this->prepareRequestData();
+        $response = Http::post(
+            $this->getEndpoint('PaymentVerification'),
+            $this->pendingRequest->provideForGateway([
+                'merchantId',
+                'transactionId',
+                'amount',
+            ])->filter()->toArray()
+        );
 
-        $response = Http::post($this->getEndpoint('PaymentVerification'), $this->pendingRequest->data());
         $data = $response->json();
         $status = $data['Status'] ?? null;
 
@@ -80,13 +84,5 @@ class PaymentVerification extends BaseRequest
         }
 
         return new CheckedPayment($status, null, [], $this->pendingRequest->transactionId(), $data['RefID']);
-    }
-
-    /**
-     * Make config-aware verification endpoint required data.
-     */
-    private function prepareRequestData()
-    {
-        $this->pendingRequest->merchantId($this->getMerchantId());
     }
 }

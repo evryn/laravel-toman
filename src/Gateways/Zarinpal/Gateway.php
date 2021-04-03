@@ -32,17 +32,22 @@ class Gateway implements GatewayInterface
         $this->config = $config;
     }
 
-    public function aliasData(string $conventional): ?string
+    public function getAliasDataFields(): array
     {
         return [
-            'merchantid' => 'MerchantID',
+            'merchantId' => 'MerchantID',
             'amount' => 'Amount',
-            'transactionid' => 'Authority',
+            'transactionId' => 'Authority',
             'callback' => 'CallbackURL',
             'mobile' => 'Mobile',
             'email' => 'Email',
             'description' => 'Description',
-        ][strtolower($conventional)] ?? null;
+        ];
+    }
+
+    public function getMerchantIdData()
+    {
+        return Arr::get($this->config, 'merchant_id');
     }
 
     /** @inheritDoc */

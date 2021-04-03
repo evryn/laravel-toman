@@ -32,16 +32,6 @@ abstract class BaseRequest
     }
 
     /**
-     * Get Zarinpal merchant ID from config or overridden one.
-     *
-     * @return string
-     */
-    protected function getMerchantId()
-    {
-        return $this->pendingRequest->merchantId() ?: $this->pendingRequest->getGateway()->getConfig('merchant_id');
-    }
-
-    /**
      * Make environment-aware verification endpoint URL.
      * @param string $method
      * @return string

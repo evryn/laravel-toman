@@ -15,8 +15,6 @@ class PaymentRequest extends BaseRequest
 {
     public function fakeFrom(FakeRequest $fakeRequest)
     {
-        $this->prepareRequestData();
-
         return new RequestedPayment(
             $fakeRequest->getException(),
             [],
@@ -27,9 +25,18 @@ class PaymentRequest extends BaseRequest
 
     public function request(): RequestedPayment
     {
-        $this->prepareRequestData();
+        $response = Http::post(
+            $this->getEndpoint('PaymentRequest'),
+            $this->pendingRequest->provideForGateway([
+                'merchantId',
+                'callback',
+                'description',
+                'amount',
+                'email',
+                'mobile',
+            ])->filter()->toArray()
+        );
 
-        $response = Http::post($this->getEndpoint('PaymentRequest'), $this->pendingRequest->data());
         $data = $response->json();
 
         // In case of connection issued. It indicates a proper time to switch gateway to
@@ -56,37 +63,5 @@ class PaymentRequest extends BaseRequest
         }
 
         return new RequestedPayment(null, [], $data['Authority'], $this->getHost());
-    }
-
-    /**
-     * Make config-aware verification endpoint required data.
-     */
-    private function prepareRequestData()
-    {
-        $this->pendingRequest->merchantId($this->getMerchantId());
-        $this->pendingRequest->callback($this->getCallbackUrl());
-        $this->pendingRequest->description($this->getDescription());
-    }
-
-    private function getCallbackUrl()
-    {
-        if ($callbackUrlData = $this->pendingRequest->callback()) {
-            return $callbackUrlData;
-        }
-
-        if ($defaultRoute = config('toman.callback_route')) {
-            return URL::route($defaultRoute);
-        }
-
-        return null;
-    }
-
-    private function getDescription()
-    {
-        return str_replace(
-            ':amount',
-            $this->pendingRequest->amount(),
-            $this->pendingRequest->description() ?: config('toman.description')
-        );
     }
 }

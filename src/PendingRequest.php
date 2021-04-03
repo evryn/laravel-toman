@@ -6,6 +6,8 @@ use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
 use Evryn\LaravelToman\Interfaces\GatewayInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * @method PendingRequest amount(int $amount = null) Get or set amount of payment
@@ -21,6 +23,9 @@ class PendingRequest
     /** @var array Payment gateway data holder */
     protected $data = [];
 
+    /** @var array */
+    protected $customData = [];
+
     /**
      * @var null|FakeRequest
      */
@@ -34,6 +39,8 @@ class PendingRequest
      * @var GatewayInterface
      */
     private $gateway;
+
+    protected $alwaysCompute = ['description'];
 
     /**
      * Requester constructor.
@@ -61,7 +68,7 @@ class PendingRequest
 
         // Get specific data
         if (func_num_args() === 1 && is_string($key)) {
-            return $key ? Arr::get($this->data, $key) : $this->data;
+            return Arr::get($this->customData, $key) ?? $this->getData($key);
         }
 
         // Replace whole data
@@ -72,9 +79,16 @@ class PendingRequest
         }
 
         // Set specific data
-        $this->data[$key] = $value;
+        $this->customData[$key] = $value;
 
         return $this;
+    }
+
+    public function provideForGateway(array $fields): Collection
+    {
+        return collect($fields)->mapWithKeys(function ($field) {
+            return [$this->getFieldNameForGateway($field) =>  $this->getData($field)];
+        })->merge($this->customData);
     }
 
     /**
@@ -139,16 +153,103 @@ class PendingRequest
      */
     public function __call(string $method, array $parameters)
     {
-        if ($field = $this->gateway->aliasData($method) ?? null) {
+        if ($this->canAccessDataAlias($method)) {
             if (isset($parameters[0])) {
-                return $this->data($field, $parameters[0]);
+                return $this->setData($method, $parameters[0]);
             }
 
-            return $this->data($field);
+            return $this->getData($method);
         }
 
         throw new \BadMethodCallException(sprintf(
             'Method %s::%s does not exist.', static::class, $method
         ));
+    }
+
+    protected function canAccessDataAlias(string $alias): bool
+    {
+        // First, we check to see if there is a computed one
+        if (method_exists($this, $this->getComputerMethodFor($alias))) {
+            return true;
+        }
+
+        // If it's supported by the gateway, we can use it too
+        if ($this->getFieldNameForGateway($alias)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getFieldNameForGateway(string $field)
+    {
+        foreach ($this->gateway->getAliasDataFields() as $key => $value) {
+            if (strtolower($key) === strtolower($field)) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    protected function getCallbackData()
+    {
+        if ($callback = $this->getRawData('callback')) {
+            return $callback;
+        }
+
+        if (config('toman.callback_route')) {
+            return route(config('toman.callback_route'));
+        }
+
+        return null;
+    }
+
+    protected function getDescriptionData()
+    {
+        return str_replace(
+            ':amount',
+            $this->amount(),
+            $this->getRawData('description') ?: config('toman.description')
+        );
+    }
+
+    protected function setData(string $field, $value)
+    {
+        $this->data[strtolower($field)] = $value;
+
+        return $this;
+    }
+
+    protected function getData(string $alias)
+    {
+        if (in_array(strtolower($alias), $this->alwaysCompute)) {
+            return $this->getComputed($alias);
+        }
+
+        if ($value = $this->getRawData($alias)) {
+            return $value;
+        }
+
+        if (method_exists($this->gateway, $method = $this->getComputerMethodFor($alias))) {
+            return $this->gateway->{$method}();
+        }
+
+        return $this->getComputed($alias) ?? null;
+    }
+
+    protected function getRawData(string $alias)
+    {
+        return Arr::get($this->data, strtolower($alias));
+    }
+
+    protected function getComputerMethodFor(string $alias)
+    {
+        return "get{$alias}Data";
+    }
+
+    protected function getComputed(string $alias)
+    {
+        return method_exists($this, $method = $this->getComputerMethodFor($alias)) ? $this->{$method}() : null;
     }
 }

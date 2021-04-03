@@ -30,4 +30,12 @@ interface GatewayInterface
      * @return CheckedPaymentInterface
      */
     public function verifyPayment(PendingRequest $pendingRequest, FakeVerification $fakeVerification = null): CheckedPaymentInterface;
+
+    /**
+     * Inspect callback request by validating it and filling given pending request with
+     * proper values from the callback or the stubbed fake verification.
+     *
+     * @param PendingRequest $pendingRequest
+     */
+    public function inspectCallbackRequest(PendingRequest $pendingRequest, FakeVerification $fakeVerification = null): void;
 }

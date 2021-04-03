@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Http;
 
 /**
  * Class Requester.
+ *
+ * Required data for verification: `merchantId`, `transactionId` and `amount`
  */
 class PaymentVerification extends BaseRequest
 {
@@ -57,7 +59,7 @@ class PaymentVerification extends BaseRequest
                     $response->status()
                 ),
                 [],
-                $this->getTransactionId(),
+                $this->pendingRequest->transactionId(),
                 null
             );
         }
@@ -72,12 +74,12 @@ class PaymentVerification extends BaseRequest
                     $status
                 ),
                 $data['errors'] ?? [],
-                $this->getTransactionId(),
+                $this->pendingRequest->transactionId(),
                 null
             );
         }
 
-        return new CheckedPayment($status, null, [], $this->getTransactionId(), $data['RefID']);
+        return new CheckedPayment($status, null, [], $this->pendingRequest->transactionId(), $data['RefID']);
     }
 
     /**
@@ -86,21 +88,5 @@ class PaymentVerification extends BaseRequest
     private function prepareRequestData()
     {
         $this->pendingRequest->merchantId($this->getMerchantId());
-        $this->pendingRequest->transactionId($this->getTransactionId());
-    }
-
-    private function getTransactionId()
-    {
-        if ($transactionId = $this->pendingRequest->transactionId()) {
-            return $transactionId;
-        }
-
-        if (request()->has('Authority')) {
-            request()->validate(['Authority' => 'required|string']);
-
-            return request('Authority');
-        }
-
-        return null;
     }
 }

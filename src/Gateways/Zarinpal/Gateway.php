@@ -57,6 +57,7 @@ class Gateway implements GatewayInterface
         return $factory->request();
     }
 
+    /** @inheritDoc */
     public function verifyPayment(PendingRequest $pendingRequest, FakeVerification $fakeVerification = null): CheckedPaymentInterface
     {
         $factory = (new PaymentVerification($pendingRequest));
@@ -66,5 +67,19 @@ class Gateway implements GatewayInterface
         }
 
         return $factory->verify();
+    }
+
+    /** @inheritDoc */
+    public function inspectCallbackRequest(PendingRequest $pendingRequest, FakeVerification $fakeVerification = null): void
+    {
+        $request = app(CallbackRequest::class);
+
+        if ($fakeVerification) {
+            $request->setFakeVerification($fakeVerification);
+        }
+
+        $request->validateCallback();
+
+        $pendingRequest->transactionId($request->getTransactionId());
     }
 }

@@ -18,9 +18,6 @@ use Illuminate\Support\Arr;
  */
 class PendingRequest
 {
-    /** @var array Driver config */
-    protected $config;
-
     /** @var array Payment gateway data holder */
     protected $data = [];
 
@@ -114,6 +111,13 @@ class PendingRequest
     {
         $this->fakeRequest = $fakeRequest;
         $this->fakeVerification = $fakeVerification;
+    }
+
+    public function inspectCallbackRequest()
+    {
+        $this->gateway->inspectCallbackRequest($this, $this->fakeVerification);
+
+        return $this;
     }
 
     /**

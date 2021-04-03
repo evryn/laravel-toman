@@ -2,6 +2,7 @@
 
 namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
+use Evryn\LaravelToman\CallbackRequest;
 use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
@@ -9,12 +10,16 @@ use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 use PHPUnit\Framework\AssertionFailedError;
 
 final class FakeTest extends TestCase
 {
     /** @var Factory */
     protected $factory;
+
+    /** @var CallbackRequest */
+    protected $callbackRequest;
 
     protected function setUp(): void
     {
@@ -23,6 +28,8 @@ final class FakeTest extends TestCase
         $this->factory = new Factory(
             new Gateway()
         );
+
+        $this->callbackRequest = new CallbackRequest($this->factory);
     }
 
     /** @test */
@@ -278,5 +285,39 @@ final class FakeTest extends TestCase
             $request->referenceId();
             self::fail('Nothing is thrown.');
         } catch (GatewayException $e) {}
+    }
+
+
+    /** @test */
+    public function can_verify_fake_successful_verification_from_callback_request()
+    {
+        $this->factory->fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
+
+        self::assertEquals('A001234', $this->callbackRequest->validateResolved()->transactionId());
+    }
+
+    /** @test */
+    public function can_verify_fake_already_verified_verification_from_callback_request()
+    {
+        $this->factory->fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->alreadyVerified();
+
+        self::assertEquals('A001234', $this->callbackRequest->validateResolved()->transactionId());
+    }
+
+    /** @test */
+    public function can_verify_fake_failed_verification_from_callback_request()
+    {
+        $this->factory->fakeVerification()->withTransactionId('A001234')->failed();
+
+        self::assertEquals('A001234', $this->callbackRequest->validateResolved()->transactionId());
+    }
+
+    /** @test */
+    public function does_fail_validation_with_wrong_transaction_id()
+    {
+        $this->factory->fakeVerification()->withTransactionId('')->failed();
+
+        $this->expectException(ValidationException::class);
+        $this->callbackRequest->validateResolved();
     }
 }

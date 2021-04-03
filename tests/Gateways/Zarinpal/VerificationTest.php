@@ -105,7 +105,7 @@ final class VerificationTest extends TestCase
             'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
         ]);
 
-        $gateway = $this->factory->amount(1500);
+        $gateway = $this->factory->inspectCallbackRequest()->amount(1500);
 
         tap($gateway->verify(), function (CheckedPayment $request) use ($baseUrl) {
 
@@ -149,7 +149,7 @@ final class VerificationTest extends TestCase
 
         $this->expectException(ValidationException::class);
 
-        $this->factory->verify();
+        $this->factory->inspectCallbackRequest();
     }
 
     /** @test */

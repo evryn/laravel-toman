@@ -9,16 +9,10 @@ use Illuminate\Support\Traits\Macroable;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 /**
- * @method PendingRequest amount(int $amount = null) Get or set amount of payment
- * @method PendingRequest callback(string $callbackUrl = null) Get or set absolute URL for payment verification callback
- * @method PendingRequest mobile(string $mobile = null) Get or set mobile data
- * @method PendingRequest merchantId(string $merchantId = null) Get or set gateway merchant ID
- * @method PendingRequest email(string $email = null) Get or set email data
- * @method PendingRequest description(string $description = null) Get or set description. `:amount` will be replaced by the given amount.
- * @method PendingRequest transactionId(string $transactionId = null) Get or set transaction ID. Can be used for specific transaction verification.
- *
  * @method static RequestedPaymentInterface request() Request a new payment
  * @method static CheckedPaymentInterface verify() Verify a payment
+ *
+ * @mixin PendingRequest
  */
 class Factory
 {

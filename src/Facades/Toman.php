@@ -22,9 +22,12 @@ use Illuminate\Support\Facades\Facade;
  * @method static PendingRequest description(string $description = null) Get or set description. `:amount` will be replaced by the given amount.
  * @method static PendingRequest transactionId(string $transactionId = null) Get or set transaction ID. Can be used for specific transaction verification.
  *
+ * @method static PendingRequest inspectCallbackRequest() Validate callback request and fill default values based on the request or the stubbed fake one.
+ *
  * @method static RequestedPaymentInterface request() Request a new payment
  * @method static CheckedPaymentInterface verify() Verify a payment
  *
+ * @method static PendingRequest gateway(string $name = null, array $config = null) Get a new gateway pending request
  * @method static FakeRequest fakeRequest() Stub a fake payment request
  * @method static void assertRequested(callable $callback)
  * @method static FakeVerification fakeVerification() Stub a fake payment verification

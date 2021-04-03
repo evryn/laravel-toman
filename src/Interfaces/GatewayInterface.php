@@ -8,7 +8,7 @@ use Evryn\LaravelToman\FakeVerification;
 use Evryn\LaravelToman\PendingRequest;
 use Illuminate\Http\RedirectResponse;
 
-interface GatewayInterfaceInterface
+interface GatewayInterface
 {
     public function getConfig(string $key = null);
     public function aliasData(string $conventional): ?string;

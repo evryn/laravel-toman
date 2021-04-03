@@ -10,17 +10,6 @@ use Illuminate\Support\Manager;
 class GatewayManager extends Manager
 {
     /**
-     * @var array
-     */
-    private $gatewayConfig;
-
-    public function __construct(Container $container, $gatewayConfig = null)
-    {
-        parent::__construct($container);
-        $this->gatewayConfig = $gatewayConfig;
-    }
-
-    /**
      * Get the default payment gateway name.
      *
      * @return string
@@ -37,7 +26,7 @@ class GatewayManager extends Manager
     public function createZarinpalDriver()
     {
         return new ZarinpalGateway(
-            !is_null($this->gatewayConfig) ? $this->gatewayConfig : config('toman.gateways.zarinpal')
+            config('toman.gateways.zarinpal')
         );
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Evryn\LaravelToman;
 
-use Evryn\LaravelToman\Interfaces\TomanInterface;
+use Evryn\LaravelToman\Interfaces\GatewayInterface;
 use Evryn\LaravelToman\Managers\GatewayManager;
 use Illuminate\Support\ServiceProvider;
 
@@ -34,8 +34,12 @@ class LaravelTomanServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(self::CONFIG_FILE, 'toman');
 
+        $this->app->bind(GatewayInterface::class, function ($app) {
+            return (new GatewayManager($app))->driver();
+        });
+
         $this->app->singleton(Factory::class, function ($app) {
-            return new Factory($app);
+            return new Factory($app->make(GatewayInterface::class));
         });
     }
 

@@ -5,9 +5,9 @@ namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 use Evryn\LaravelToman\Exceptions\GatewayClientException;
 use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\Factory;
+use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
 use Evryn\LaravelToman\Gateways\Zarinpal\RequestedPayment;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
-use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +16,21 @@ use Illuminate\Support\Facades\URL;
 
 final class RequestTest extends TestCase
 {
+    /** @var Gateway */
+    protected $gateway;
+
+    /** @var Factory */
+    protected $factory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->gateway = new Gateway();
+
+        $this->factory = new Factory($this->gateway);
+    }
+
     public static function endpointProvider()
     {
         return [
@@ -43,10 +58,12 @@ final class RequestTest extends TestCase
             ], 200),
         ]);
 
-        $gateway = $this->gateway([
+        $this->gateway->setConfig([
             'sandbox' => $sandbox,
             'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
-        ])
+        ]);
+
+        $gateway = $this->factory
             ->callback('https://example.com/callback')
             ->amount(1500)
             ->description('An awesome payment gateway!')
@@ -96,7 +113,7 @@ final class RequestTest extends TestCase
             'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response(null, 555),
         ]);
 
-        tap($this->configuredGateway()->request(), function (RequestedPayment $request) {
+        tap($this->factory->request(), function (RequestedPayment $request) {
             self::assertFalse($request->successful());
             self::assertTrue($request->failed());
 
@@ -165,7 +182,7 @@ final class RequestTest extends TestCase
             ], $httpStatus),
         ]);
 
-        tap($this->configuredGateway()->request(), function (RequestedPayment $request) use ($statusCode, $messageKey) {
+        tap($this->factory->request(), function (RequestedPayment $request) use ($statusCode, $messageKey) {
             self::assertFalse($request->successful());
             self::assertTrue($request->failed());
 
@@ -218,7 +235,7 @@ final class RequestTest extends TestCase
             ], $httpStatus),
         ]);
 
-        tap($this->configuredGateway()->request(), function (RequestedPayment $request) use ($statusCode, $messageKey) {
+        tap($this->factory->request(), function (RequestedPayment $request) use ($statusCode, $messageKey) {
             self::assertFalse($request->successful());
             self::assertTrue($request->failed());
 
@@ -261,13 +278,14 @@ final class RequestTest extends TestCase
 
         $this->fakeValidResponse();
 
-        $this->gateway(['merchant_id' => '11111'])->request();
+        $this->gateway->setConfig(['merchant_id' => '11111']);
+        $this->factory->request();
         Http::assertNthRequestFieldEquals('11111', 'MerchantID', 1);
 
-        $this->configuredGateway()->data('MerchantID', '33333')->request();
+        $this->factory->data('MerchantID', '33333')->request();
         Http::assertNthRequestFieldEquals('33333', 'MerchantID', 2);
 
-        $this->configuredGateway()->merchantId('44444')->request();
+        $this->factory->merchantId('44444')->request();
         Http::assertNthRequestFieldEquals('44444', 'MerchantID', 3);
     }
 
@@ -281,13 +299,13 @@ final class RequestTest extends TestCase
 
         $this->app['router']->get('/callback1')->name('payment.callback');
         config(['toman.callback_route' => 'payment.callback']);
-        $this->configuredGateway()->request();
+        $this->factory->request();
         Http::assertNthRequestFieldEquals(URL::route('payment.callback'), 'CallbackURL', 1);
 
-        $this->configuredGateway()->data('CallbackURL', 'https://example.com/callback2')->request();
+        $this->factory->data('CallbackURL', 'https://example.com/callback2')->request();
         Http::assertNthRequestFieldEquals('https://example.com/callback2', 'CallbackURL', 2);
 
-        $this->configuredGateway()->callback('https://example.com/callback3')->request();
+        $this->factory->callback('https://example.com/callback3')->request();
         Http::assertNthRequestFieldEquals('https://example.com/callback3', 'CallbackURL', 3);
     }
 
@@ -298,10 +316,10 @@ final class RequestTest extends TestCase
 
         $this->fakeValidResponse();
 
-        $this->configuredGateway()->data('Amount', '10000')->request();
+        $this->factory->data('Amount', '10000')->request();
         Http::assertNthRequestFieldEquals('10000', 'Amount', 1);
 
-        $this->configuredGateway()->amount(20000)->request();
+        $this->factory->amount(20000)->request();
         Http::assertNthRequestFieldEquals(20000, 'Amount', 2);
     }
 
@@ -314,13 +332,13 @@ final class RequestTest extends TestCase
         $this->fakeValidResponse();
 
         config(['toman.description' => 'Paying :amount for invoice']);
-        $this->configuredGateway()->amount(5000)->request();
+        $this->factory->amount(5000)->request();
         Http::assertNthRequestFieldEquals('Paying 5000 for invoice', 'Description', 1);
 
-        $this->configuredGateway()->amount(5000)->data('Description', 'Paying :amount for invoice')->request();
+        $this->factory->amount(5000)->data('Description', 'Paying :amount for invoice')->request();
         Http::assertNthRequestFieldEquals('Paying 5000 for invoice', 'Description', 2);
 
-        $this->configuredGateway()->amount(5000)->description('Paying :amount for invoice')->request();
+        $this->factory->amount(5000)->description('Paying :amount for invoice')->request();
         Http::assertNthRequestFieldEquals('Paying 5000 for invoice', 'Description', 3);
     }
 
@@ -331,10 +349,10 @@ final class RequestTest extends TestCase
 
         $this->fakeValidResponse();
 
-        $this->configuredGateway()->data('Mobile', '09350000000')->request();
+        $this->factory->data('Mobile', '09350000000')->request();
         Http::assertNthRequestFieldEquals('09350000000', 'Mobile', 1);
 
-        $this->configuredGateway()->mobile('09350000000')->request();
+        $this->factory->mobile('09350000000')->request();
         Http::assertNthRequestFieldEquals('09350000000', 'Mobile', 2);
     }
 
@@ -345,10 +363,10 @@ final class RequestTest extends TestCase
 
         $this->fakeValidResponse();
 
-        $this->configuredGateway()->data('Email', 'amirreza@example.com')->request();
+        $this->factory->data('Email', 'amirreza@example.com')->request();
         Http::assertNthRequestFieldEquals('amirreza@example.com', 'Email', 1);
 
-        $this->configuredGateway()->email('amirreza@example.com')->request();
+        $this->factory->email('amirreza@example.com')->request();
         Http::assertNthRequestFieldEquals('amirreza@example.com', 'Email', 2);
     }
 
@@ -360,17 +378,5 @@ final class RequestTest extends TestCase
                 'Authority' => 'A0000012345',
             ], 200),
         ]);
-    }
-
-    private function configuredGateway(): PendingRequest
-    {
-        return $this->gateway([
-            'merchant_id' => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
-        ]);
-    }
-
-    private function gateway($config = []): PendingRequest
-    {
-        return (new Factory($this->app))->newPendingRequest('zarinpal', $config);
     }
 }

@@ -2,17 +2,30 @@
 
 namespace Evryn\LaravelToman;
 
-use Evryn\LaravelToman\Managers\GatewayManager;
-use Illuminate\Contracts\Container\Container;
+use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
+use Evryn\LaravelToman\Interfaces\GatewayInterface;
+use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Traits\Macroable;
 use PHPUnit\Framework\Assert as PHPUnit;
 
+/**
+ * @method PendingRequest amount(int $amount = null) Get or set amount of payment
+ * @method PendingRequest callback(string $callbackUrl = null) Get or set absolute URL for payment verification callback
+ * @method PendingRequest mobile(string $mobile = null) Get or set mobile data
+ * @method PendingRequest merchantId(string $merchantId = null) Get or set gateway merchant ID
+ * @method PendingRequest email(string $email = null) Get or set email data
+ * @method PendingRequest description(string $description = null) Get or set description. `:amount` will be replaced by the given amount.
+ * @method PendingRequest transactionId(string $transactionId = null) Get or set transaction ID. Can be used for specific transaction verification.
+ *
+ * @method static RequestedPaymentInterface request() Request a new payment
+ * @method static CheckedPaymentInterface verify() Verify a payment
+ */
 class Factory
 {
     /**
-     * @var Container
+     * @var GatewayInterface
      */
-    private $container;
+    private $gateway;
 
     /**
      * @var bool
@@ -38,9 +51,9 @@ class Factory
         __call as macroCall;
     }
 
-    public function __construct(Container $container)
+    public function __construct(GatewayInterface $gateway)
     {
-        $this->container = $container;
+        $this->gateway = $gateway;
     }
 
     public function fakeRequest()
@@ -124,12 +137,9 @@ class Factory
         return $callback($this->recordedPendingRequest);
     }
 
-    public function newPendingRequest(string $gateway = null, array $config = null): PendingRequest
+    public function newPendingRequest(): PendingRequest
     {
-        return new PendingRequest(
-            $this,
-            (new GatewayManager($this->container, $config))->driver($gateway)
-        );
+        return new PendingRequest($this, $this->gateway);
     }
 
     /**

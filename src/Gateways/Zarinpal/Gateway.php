@@ -7,12 +7,12 @@ namespace Evryn\LaravelToman\Gateways\Zarinpal;
 use Evryn\LaravelToman\FakeRequest;
 use Evryn\LaravelToman\FakeVerification;
 use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
-use Evryn\LaravelToman\Interfaces\GatewayInterfaceInterface;
+use Evryn\LaravelToman\Interfaces\GatewayInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Evryn\LaravelToman\PendingRequest;
 use Illuminate\Support\Arr;
 
-class Gateway implements GatewayInterfaceInterface
+class Gateway implements GatewayInterface
 {
     /** @var array */
     private $config;
@@ -25,6 +25,11 @@ class Gateway implements GatewayInterfaceInterface
     public function getConfig(string $key = null)
     {
         return $key ? Arr::get($this->config, $key) : $this->config;
+    }
+
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
     }
 
     public function aliasData(string $conventional): ?string

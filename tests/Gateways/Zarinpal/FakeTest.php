@@ -3,7 +3,8 @@
 namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Exceptions\GatewayException;
-use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Factory;
+use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
 use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
@@ -12,14 +13,26 @@ use PHPUnit\Framework\AssertionFailedError;
 
 final class FakeTest extends TestCase
 {
+    /** @var Factory */
+    protected $factory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->factory = new Factory(
+            new Gateway()
+        );
+    }
+
     /** @test */
     public function assert_request_passes_when_truth_check_is_true()
     {
-        Toman::fakeRequest()->withTransactionId('A001234')->successful();
+        $this->factory->fakeRequest()->withTransactionId('A001234')->successful();
 
-        Toman::request();
+        $this->factory->request();
 
-        Toman::assertRequested(function (PendingRequest $request) {
+        $this->factory->assertRequested(function (PendingRequest $request) {
             return true;
         });
     }
@@ -27,13 +40,13 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_request_fails_when_truth_check_is_false()
     {
-        Toman::fakeRequest()->withTransactionId('A001234')->successful();
+        $this->factory->fakeRequest()->withTransactionId('A001234')->successful();
 
-        Toman::request();
+        $this->factory->request();
 
         $this->expectException(AssertionFailedError::class);
 
-        Toman::assertRequested(function (PendingRequest $request) {
+        $this->factory->assertRequested(function (PendingRequest $request) {
             return false;
         });
     }
@@ -41,15 +54,15 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_sent_request_data()
     {
-        Toman::fakeRequest()->withTransactionId('A001234')->successful();
+        $this->factory->fakeRequest()->withTransactionId('A001234')->successful();
 
-        Toman
-            ::amount(500)
+        $this->factory
+            ->amount(500)
             ->callback('http://example.com/callback')
             ->data('CustomData', 'Example')
             ->request();
 
-        Toman::assertRequested(function (PendingRequest $request) {
+        $this->factory->assertRequested(function (PendingRequest $request) {
             self::assertEquals(500, $request->amount());
             self::assertEquals('http://example.com/callback', $request->callback());
             self::assertEquals('Example', $request->data('CustomData'));
@@ -61,17 +74,21 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_default_request_data_too()
     {
-        Toman::fakeRequest()->withTransactionId('A001234')->successful();
         Route::get('payment/callback', function () {})->name('payment.callback');
         config([
             'toman.callback_route' => 'payment.callback',
             'toman.description' => 'Pay :amount',
-            'toman.gateways.zarinpal.merchant_id' => 'xxxxx-yyyyy-zzzzz',
         ]);
 
-        Toman::amount(500)->request();
+        $this->factory = new Factory(new Gateway([
+            'merchant_id' => 'xxxxx-yyyyy-zzzzz'
+        ]));
 
-        Toman::assertRequested(function (PendingRequest $request) {
+        $this->factory->fakeRequest()->withTransactionId('A001234')->successful();
+
+        $this->factory->amount(500)->request();
+
+        $this->factory->assertRequested(function (PendingRequest $request) {
             self::assertEquals('xxxxx-yyyyy-zzzzz', $request->merchantId());
             self::assertEquals(route('payment.callback'), $request->callback());
             self::assertEquals('Pay 500', $request->description());
@@ -83,9 +100,9 @@ final class FakeTest extends TestCase
     /** @test */
     public function fake_request_with_transaction_id_produces_successful_result()
     {
-        Toman::fakeRequest()->withTransactionId('A001234')->successful();
+        $this->factory->fakeRequest()->withTransactionId('A001234')->successful();
 
-        $request = Toman::request();
+        $request = $this->factory->request();
 
         self::assertTrue($request->successful());
         self::assertEquals('A001234', $request->transactionId());
@@ -97,9 +114,9 @@ final class FakeTest extends TestCase
     /** @test */
     public function fake_request_without_transaction_id_produces_failed_result()
     {
-        Toman::fakeRequest()->failed('Your request has failed.', 500);
+        $this->factory->fakeRequest()->failed('Your request has failed.', 500);
 
-        $request = Toman::request();
+        $request = $this->factory->request();
 
         self::assertTrue($request->failed());
 
@@ -132,11 +149,11 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_verification_passes_when_truth_check_is_true()
     {
-        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
+        $this->factory->fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
 
-        Toman::verify();
+        $this->factory->verify();
 
-        Toman::assertCheckedForVerification(function (PendingRequest $request) {
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
             return true;
         });
     }
@@ -144,13 +161,13 @@ final class FakeTest extends TestCase
     /** @test */
     public function assert_verification_fails_when_truth_check_is_false()
     {
-        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
+        $this->factory->fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
 
-        Toman::verify();
+        $this->factory->verify();
 
         $this->expectException(AssertionFailedError::class);
 
-        Toman::assertCheckedForVerification(function (PendingRequest $request) {
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
             return false;
         });
     }
@@ -158,15 +175,15 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_sent_verification_data()
     {
-        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
+        $this->factory->fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
 
-        Toman
-            ::amount(500)
+        $this->factory
+            ->amount(500)
             ->callback('http://example.com/callback')
             ->data('CustomData', 'Example')
             ->verify();
 
-        Toman::assertCheckedForVerification(function (PendingRequest $request) {
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
             self::assertEquals(500, $request->amount());
             self::assertEquals('http://example.com/callback', $request->callback());
             self::assertEquals('Example', $request->data('CustomData'));
@@ -178,26 +195,31 @@ final class FakeTest extends TestCase
     /** @test */
     public function can_assert_default_verification_data_too()
     {
-        Toman::fakeVerification()->withTransactionId('A001234')->successful();
-        config(['toman.gateways.zarinpal.merchant_id' => 'xxxxx-yyyyy-zzzzz']);
-        request()->merge(['Authority' => 'A0123456']);
+        $this->factory = new Factory(new Gateway([
+            'merchant_id' => 'xxxxx-yyyyy-zzzzz'
+        ]));
 
-        Toman::amount(500)->verify();
+        $this->factory->fakeVerification()->withTransactionId('A001234')->successful();
 
-        Toman::assertCheckedForVerification(function (PendingRequest $request) {
+        $this->factory->verify();
+
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
             self::assertEquals('xxxxx-yyyyy-zzzzz', $request->merchantId());
-            self::assertEquals('A0123456', $request->transactionId());
 
             return true;
         });
     }
 
     /** @test */
-    public function fake_successful_verification_produces_proper_results()
+    public function can_verify_fake_successful_verification_manually()
     {
-        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
+        $this->factory->fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->successful();
 
-        $verification = Toman::verify();
+        $verification = $this->factory->verify();
+
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
+            return $request->data() === [];
+        });
 
         self::assertTrue($verification->successful());
         self::assertFalse($verification->alreadyVerified());
@@ -208,11 +230,15 @@ final class FakeTest extends TestCase
     }
 
     /** @test */
-    public function fake_already_verified_verification_produces_proper_results()
+    public function can_verify_fake_already_verified_verification_manually()
     {
-        Toman::fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->alreadyVerified();
+        $this->factory->fakeVerification()->withTransactionId('A001234')->withReferenceId('R123')->alreadyVerified();
 
-        $verification = Toman::verify();
+        $verification = $this->factory->verify();
+
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
+            return $request->data() === [];
+        });
 
         self::assertTrue($verification->alreadyVerified());
         self::assertFalse($verification->successful());
@@ -223,11 +249,15 @@ final class FakeTest extends TestCase
     }
 
     /** @test */
-    public function fake_failed_verification_produces_proper_results()
+    public function can_verify_fake_failed_verification_manually()
     {
-        Toman::fakeVerification()->withTransactionId('A001234')->failed('Your request has failed.', 500);
+        $this->factory->fakeVerification()->withTransactionId('A001234')->failed('Your request has failed.', 500);
 
-        $request = Toman::verify();
+        $request = $this->factory->verify();
+
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
+            return $request->data() === [];
+        });
 
         self::assertTrue($request->failed());
         self::assertFalse($request->successful());

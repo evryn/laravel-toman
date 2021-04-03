@@ -3,7 +3,7 @@
 namespace Evryn\LaravelToman;
 
 use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
-use Evryn\LaravelToman\Interfaces\GatewayInterfaceInterface;
+use Evryn\LaravelToman\Interfaces\GatewayInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Arr;
 
@@ -34,7 +34,7 @@ class PendingRequest
      */
     private $fakeVerification = null;
     /**
-     * @var GatewayInterfaceInterface
+     * @var GatewayInterface
      */
     private $gateway;
 
@@ -42,7 +42,7 @@ class PendingRequest
      * Requester constructor.
      * @param $config
      */
-    public function __construct(Factory $factory, GatewayInterfaceInterface $gateway)
+    public function __construct(Factory $factory, GatewayInterface $gateway)
     {
         $this->factory = $factory;
         $this->gateway = $gateway;
@@ -119,9 +119,9 @@ class PendingRequest
     /**
      * Get underlying gateway
      *
-     * @return GatewayInterfaceInterface
+     * @return GatewayInterface
      */
-    public function getGateway(): GatewayInterfaceInterface
+    public function getGateway(): GatewayInterface
     {
         return $this->gateway;
     }

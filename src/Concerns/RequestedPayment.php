@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Evryn\LaravelToman;
+namespace Evryn\LaravelToman\Concerns;
 
 
 use Evryn\LaravelToman\Concerns\InteractsWithResponse;

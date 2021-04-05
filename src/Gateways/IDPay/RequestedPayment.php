@@ -3,7 +3,7 @@
 namespace Evryn\LaravelToman\Gateways\IDPay;
 
 use Evryn\LaravelToman\Exceptions\GatewayException;
-use Evryn\LaravelToman\RequestedPayment as BaseRequestedPayment;
+use Evryn\LaravelToman\Concerns\RequestedPayment as BaseRequestedPayment;
 
 class RequestedPayment extends BaseRequestedPayment
 {

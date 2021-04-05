@@ -2,7 +2,7 @@
 
 namespace Evryn\LaravelToman\Gateways\IDPay;
 
-use Evryn\LaravelToman\CheckedPayment as BaseCheckedPayment;
+use Evryn\LaravelToman\Concerns\CheckedPayment as BaseCheckedPayment;
 use Evryn\LaravelToman\Exceptions\GatewayException;
 
 class CheckedPayment extends BaseCheckedPayment

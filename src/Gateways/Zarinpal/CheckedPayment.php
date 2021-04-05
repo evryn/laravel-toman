@@ -2,9 +2,12 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use Evryn\LaravelToman\CheckedPayment as BaseCheckedPayment;
+use Evryn\LaravelToman\Concerns\CheckedPayment as BaseCheckedPayment;
 use Evryn\LaravelToman\Exceptions\GatewayException;
 
+/**
+ * @method string orderId()
+ */
 class CheckedPayment extends BaseCheckedPayment
 {
     /**

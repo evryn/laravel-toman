@@ -3,11 +3,7 @@
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Exceptions\GatewayException;
-use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
-use Evryn\LaravelToman\RequestedPayment as BaseRequestedPayment;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
+use Evryn\LaravelToman\Concerns\RequestedPayment as BaseRequestedPayment;
 
 class RequestedPayment extends BaseRequestedPayment
 {

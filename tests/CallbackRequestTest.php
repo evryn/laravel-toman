@@ -35,24 +35,6 @@ final class CallbackRequestTest extends TestCase
     }
 
     /** @test */
-    public function validates_zarinpal_callback_when_resolved()
-    {
-        config([
-            'toman.default' => 'zarinpal',
-            'toman.gateways.zarinpal' => [
-                'sandbox' => true,
-                'merchant_id' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-            ]
-        ]);
-
-        Toman::fakeVerification()->successful()->withTransactionId('');
-
-        $this->expectException(ValidationException::class);
-
-        app(CallbackRequest::class);
-    }
-
-    /** @test */
     public function resolves_idpay_callback()
     {
         config([

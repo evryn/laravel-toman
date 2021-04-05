@@ -21,26 +21,21 @@ final class VerificationTest extends TestCase
     /** @var Factory */
     protected $factory;
 
+    /** @var CallbackRequest */
+    protected $callbackRequest;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->gateway = new Gateway();
-
         $this->factory = new Factory($this->gateway);
-    }
-
-    public static function endpointProvider()
-    {
-        return [
-            'Sandbox' => [true],
-            'Production' => [false],
-        ];
+        $this->callbackRequest = new CallbackRequest($this->factory);
     }
 
     /**
      * @test
-     * @dataProvider endpointProvider
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::endpointProvider()
      */
     public function can_verify_manually(bool $sandbox)
     {
@@ -90,7 +85,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
-     * @dataProvider endpointProvider
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::endpointProvider()
      */
     public function can_verify_callback_request(bool $sandbox)
     {
@@ -113,7 +108,7 @@ final class VerificationTest extends TestCase
             'api_key' => 'xxxx-xxxx-xxxx-xxxx'
         ]);
 
-        $gateway = (new CallbackRequest($this->factory))->validateResolved();
+        $gateway = $this->callbackRequest->validateResolved();
 
         tap($gateway->verify(), function (CheckedPayment $request) use ($sandbox) {
 
@@ -161,7 +156,7 @@ final class VerificationTest extends TestCase
 
         $this->expectException(ValidationException::class);
 
-        (new CallbackRequest($this->factory))->validateResolved();
+        $this->callbackRequest->validateResolved();
     }
 
     /**
@@ -179,7 +174,7 @@ final class VerificationTest extends TestCase
 
         $this->expectException(ValidationException::class);
 
-        (new CallbackRequest($this->factory))->validateResolved();
+        $this->callbackRequest->validateResolved();
     }
 
     /** @test */
@@ -211,7 +206,7 @@ final class VerificationTest extends TestCase
     }
 
     /** @test */
-    public function fails_with_gateway_exception()
+    public function fails_with_server_error()
     {
         Http::fake([
             'https://api.idpay.ir/v1.1/payment/verify' => Http::response(null, 555),
@@ -246,7 +241,7 @@ final class VerificationTest extends TestCase
      * @test
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::clientErrorProvider()
      */
-    public function fails_with_client_exception_without_message($httpStatus, $statusCode)
+    public function fails_with_client_error($httpStatus, $statusCode)
     {
         Http::fake([
             'https://api.idpay.ir/v1.1/payment/verify' => Http::response([

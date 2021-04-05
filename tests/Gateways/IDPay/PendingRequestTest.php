@@ -26,8 +26,6 @@ final class PendingRequestTest extends TestCase
     /** @test */
     public function can_set_merchant_id_elegantly()
     {
-        // We need to ensure that developer can set merchant id elegantly, with their preferred methods
-
         $this->gateway->setConfig(['api_key' => 'AAA']);
         self::assertEquals('AAA', $this->factory->merchantId());
 

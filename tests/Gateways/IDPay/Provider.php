@@ -8,6 +8,14 @@ use Evryn\LaravelToman\Gateways\IDPay\Status;
 
 class Provider
 {
+    public static function endpointProvider()
+    {
+        return [
+            'Sandbox' => [true],
+            'Production' => [false],
+        ];
+    }
+
     public static function clientErrorProvider()
     {
         return [

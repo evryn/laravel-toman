@@ -7,7 +7,6 @@ use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\IDPay\Gateway;
 use Evryn\LaravelToman\Gateways\IDPay\RequestedPayment;
-use Evryn\LaravelToman\Gateways\IDPay\Status;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
@@ -30,17 +29,9 @@ final class RequestTest extends TestCase
         $this->factory = new Factory($this->gateway);
     }
 
-    public static function endpointProvider()
-    {
-        return [
-            'Sandbox' => [true],
-            'Production' => [false],
-        ];
-    }
-
     /**
      * @test
-     * @dataProvider endpointProvider
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::endpointProvider()
      */
     public function can_request_payment(bool $sandbox)
     {
@@ -105,7 +96,7 @@ final class RequestTest extends TestCase
     }
 
     /** @test */
-    public function fails_with_gateway_exception()
+    public function fails_with_server_error()
     {
         // When requesting a valid payment result in 5xx error, we consider this as an
         // issue in gateway-side (server) and expect an expect API to provide proper results
@@ -148,7 +139,7 @@ final class RequestTest extends TestCase
      * @test
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::clientErrorProvider()
      */
-    public function fails_with_client_exception_with_message($httpStatus, $statusCode)
+    public function fails_with_client_error($httpStatus, $statusCode)
     {
         // When requesting a valid payment result in 4xx error, with given error messages,
         // we consider this as an issue in merchant-side (client) and expect an expect API

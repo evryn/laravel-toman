@@ -4,6 +4,7 @@ namespace Evryn\LaravelToman\Tests;
 
 use Evryn\LaravelToman\CallbackRequest;
 use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Gateways\IDPay\Gateway as IDPayGateway;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway as ZarinpalGateway;
 use Evryn\LaravelToman\PendingRequest;
 use Illuminate\Validation\ValidationException;
@@ -45,6 +46,47 @@ final class CallbackRequestTest extends TestCase
         ]);
 
         Toman::fakeVerification()->successful()->withTransactionId('');
+
+        $this->expectException(ValidationException::class);
+
+        app(CallbackRequest::class);
+    }
+
+    /** @test */
+    public function resolves_idpay_callback()
+    {
+        config([
+            'toman.default' => 'idpay',
+            'toman.gateways.idpay' => [
+                'sandbox' => true,
+                'api_key' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
+            ]
+        ]);
+
+        Toman::fakeVerification()->successful()->withOrderId('order_1')->withTransactionId('A123');
+
+        $pendingRequest = app(CallbackRequest::class)->data('key', 'value');
+
+        self::assertInstanceOf(PendingRequest::class, $pendingRequest);
+        self::assertInstanceOf(IDPayGateway::class, $pendingRequest->getGateway());
+        self::assertEquals([
+            'sandbox' => true,
+            'api_key' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
+        ], $pendingRequest->getGateway()->getConfig());
+    }
+
+    /** @test */
+    public function validates_idpay_callback_when_resolved()
+    {
+        config([
+            'toman.default' => 'idpay',
+            'toman.gateways.idpay' => [
+                'sandbox' => true,
+                'api_key' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
+            ]
+        ]);
+
+        Toman::fakeVerification()->successful()->withOrderId('order_1')->withTransactionId('');
 
         $this->expectException(ValidationException::class);
 

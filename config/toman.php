@@ -27,14 +27,24 @@ return [
     'gateways' => [
 
         'zarinpal' => [
-            // Use sandbox.zarinpal.com instead of zarinpal.com for testing
-            // purpose. Set it to false on production to receive real payments.
+            // Setting to true makes all payments happen in a testing environment to fake transactions.
+            // Set it to false on production to receive real payments.
             'sandbox' => env('ZARINPAL_SANDBOX', false),
 
             // Merchant ID of your gateway provided by Zarinpal for your gateway
             // only. Looks like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
             'merchant_id' => env('ZARINPAL_MERCHANT_ID'),
         ],
+
+        'idpay' => [
+            // Setting to true makes all payments happen in a testing environment to fake transactions.
+            // Set it to false on production to receive real payments.
+            'sandbox' => env('IDPAY_SANDBOX', false),
+
+            // API Key of your gateway provided by IDPay in your dashboard
+            // only. Looks like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+            'api_key' => env('IDPAY_API_KEY'),
+        ]
 
     ],
 

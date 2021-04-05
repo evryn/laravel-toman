@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static PendingRequest email(string $email = null) Get or set email data
  * @method static PendingRequest description(string $description = null) Get or set description. `:amount` will be replaced by the given amount.
  * @method static PendingRequest transactionId(string $transactionId = null) Get or set transaction ID. Can be used for specific transaction verification.
+ * @method static PendingRequest name(string $name = null) Get or set payer name.
+ * @method static PendingRequest orderId(string $id = null) Get or set order ID.
  *
  * @method static PendingRequest inspectCallbackRequest() Validate callback request and fill default values based on the request or the stubbed fake one.
  *

@@ -33,4 +33,11 @@ abstract class CheckedPayment implements CheckedPaymentInterface
     {
         return $this->transactionId;
     }
+
+    public function __call($name, $arguments)
+    {
+        throw new \BadMethodCallException(sprintf(
+            'This gateway does not support `%s` method.', $name
+        ));
+    }
 }

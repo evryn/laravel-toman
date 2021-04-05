@@ -2,9 +2,8 @@
 
 namespace Evryn\LaravelToman\Managers;
 
-use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway as ZarinpalGateway;
-use Illuminate\Contracts\Container\Container;
+use Evryn\LaravelToman\Gateways\IDPay\Gateway as IDPayGateway;
 use Illuminate\Support\Manager;
 
 class GatewayManager extends Manager
@@ -27,6 +26,17 @@ class GatewayManager extends Manager
     {
         return new ZarinpalGateway(
             config('toman.gateways.zarinpal')
+        );
+    }
+
+    /**
+     * Create IDPay gateway driver.
+     * @return IDPayGateway
+     */
+    public function createIDPayDriver()
+    {
+        return new IDPayGateway(
+            config('toman.gateways.idpay')
         );
     }
 }

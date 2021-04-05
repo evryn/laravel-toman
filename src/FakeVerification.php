@@ -11,6 +11,7 @@ class FakeVerification
     const FAILED = 'failed';
 
     private $transactionId;
+    private $orderId;
     private $referenceId;
     private $status;
     private $exception;
@@ -44,6 +45,13 @@ class FakeVerification
         return $this;
     }
 
+    public function withOrderId(string $orderId): self
+    {
+        $this->orderId = $orderId;
+
+        return $this;
+    }
+
     public function withReferenceId(string $referenceId): self
     {
         $this->referenceId = $referenceId;
@@ -54,6 +62,11 @@ class FakeVerification
     public function getTransactionId()
     {
         return $this->transactionId;
+    }
+
+    public function getOrderId()
+    {
+        return $this->orderId;
     }
 
     public function getReferenceId()

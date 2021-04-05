@@ -5,6 +5,10 @@ namespace Evryn\LaravelToman\Interfaces;
 use Evryn\LaravelToman\Exceptions\GatewayException;
 use Illuminate\Http\RedirectResponse;
 
+/**
+ * These are additional methods that are gateway-dependent:
+ * @method string orderId() Get order id that is used for verification
+ */
 interface CheckedPaymentInterface
 {
     /**

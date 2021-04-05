@@ -17,6 +17,8 @@ use Illuminate\Support\Str;
  * @method PendingRequest email(string $email = null) Get or set email data
  * @method PendingRequest description(string $description = null) Get or set description. `:amount` will be replaced by the given amount.
  * @method PendingRequest transactionId(string $transactionId = null) Get or set transaction ID. Can be used for specific transaction verification.
+ * @method PendingRequest name(string $name = null) Get or set payer name.
+ * @method PendingRequest orderId(string $id = null) Get or set order ID.
  */
 class PendingRequest
 {

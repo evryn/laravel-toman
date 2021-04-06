@@ -75,39 +75,51 @@ Using returned `RequestedPayment`:
  
 ## Verify Payment
 
-Verification must be implemented in the callback route.
+Verification must be implemented in the callback route. Consider the following controller method:
 
 ```php
-use Evryn\LaravelToman\Facades\Toman;
+<?php
 
-// ...
+namespace App\Http\Controllers;
 
-$payment = Toman::amount(1000)
-    // ->referenceId('A00001234')
-    ->verify();
+use App\Http\Controllers\Controller;
+use Evryn\LaravelToman\CallbackRequest;
 
-$transactionId = $payment->transactionId();
+class PaymentController extends Controller
+{
+    /**
+    * Handle payment callback
+    */
+    public function callback(CallbackRequest $request)
+    {
+        // Use $request->transactionId() to match the payment record stored
+        // in your persistence database and get expected amount, which is required
+        // for verification.
 
-if ($payment->successful()) {
-    $referenceId = $payment->referenceId();
-    // Store a successful transaction details
-}
+        $payment = $request->amount(1000)->verify();
 
-if ($payment->alreadyVerified()) {
-    // ...
-}
-
-if ($payment->failed()) {
-    // ...
+        if ($payment->successful()) {
+            // Store the successful transaction details
+            $referenceId = $payment->referenceId();
+        }
+        
+        if ($payment->alreadyVerified()) {
+            // ...
+        }
+        
+        if ($payment->failed()) {
+            // ...
+        }
+    }
 }
 ```
 
-For requesting payment using `Toman` facade:
+For requesting payment using `CallbackRequest` or `Toman` facade:
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
 | amount(`$amount`)      	| **(Required)** Set amount that is expected to be paid.                                                                                                             	|
-| transactionId(`$id`)    	| Set transaction ID to verify. If not, it'll extract from incoming callback request automatically.                                  	|
+| transactionId(`$id`)    	| Set transaction ID to verify. `CallbackRequest` sets it automatically.                                  	|
 | verify()     	| Verify payment and return `CheckedPayment` object                                                                              |
 
 
@@ -126,10 +138,37 @@ Using returned `CheckedPayment`:
 
 <hr>
 
-# Testing Zarinpal Gateway
+## More
+
+### Manual Payment Verification
+If you want to verify a payment manually (instead of using intended `CallbackRequest`), you just need to use `Toman` facade:
+```php
+use Evryn\LaravelToman\Facades\Toman;
+
+// ...
+
+$payment = Toman::transactionId('A00001234')
+    ->amount(1000)
+    ->verify();
+
+if ($payment->successful()) {
+    // Store the successful transaction details
+    $referenceId = $payment->referenceId();
+}
+
+if ($payment->alreadyVerified()) {
+    // ...
+}
+
+if ($payment->failed()) {
+    // ...
+}
+```
+
+### 🧪 Testing Zarinpal Gateway
 If you're making automated tests for your application and want to see if you're interacting with Laravel Toman properly, go on.
 
-## 🧪 Test Payment Request 
+#### Test Payment Request 
 
 Use `Toman::fakeRequest()` to stub request result and assert expected request data with `Toman::assertRequested()` method by a truth test.
 
@@ -157,7 +196,7 @@ final class PaymentTest extends TestCase
 }
 ```
 
-## 🧪 Test Payment Verification 
+#### Test Payment Verification 
 
 Use `Toman::fakeVerification()` to stub verification result and assert its expected data with `Toman::assertCheckedForVerification()` method by a truth test.
 

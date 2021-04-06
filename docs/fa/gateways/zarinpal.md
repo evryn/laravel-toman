@@ -75,39 +75,51 @@ if ($request->failed()) {
  
 ## تایید پرداخت
 
-مکانیزم تایید پرداخت باید در مسیر مربوط به Callback ارسال شده پیاده شود.
+مکانیزم تایید پرداخت باید در مسیر مربوط به Callback ارسال شده پیاده شود. این کنترلر رو در نظر بگیرین:
 
 ```php
-use Evryn\LaravelToman\Facades\Toman;
+<?php
 
-// ...
+namespace App\Http\Controllers;
 
-$payment = Toman::amount(1000)
-    // ->referenceId('A00001234')
-    ->verify();
+use App\Http\Controllers\Controller;
+use Evryn\LaravelToman\CallbackRequest;
 
-$transactionId = $payment->transactionId();
+class PaymentController extends Controller
+{
+    /**
+    * Handle payment callback
+    */
+    public function callback(CallbackRequest $request)
+    {
+        // Use $request->transactionId() to match the payment record stored
+        // in your persistence database and get expected amount, which is required
+        // for verification.
 
-if ($payment->successful()) {
-    $referenceId = $payment->referenceId();
-    // Store a successful transaction details
-}
+        $payment = $request->amount(1000)->verify();
 
-if ($payment->alreadyVerified()) {
-    // ...
-}
-
-if ($payment->failed()) {
-    // ...
+        if ($payment->successful()) {
+            // Store the successful transaction details
+            $referenceId = $payment->referenceId();
+        }
+        
+        if ($payment->alreadyVerified()) {
+            // ...
+        }
+        
+        if ($payment->failed()) {
+            // ...
+        }
+    }
 }
 ```
 
-متدهای قابل استفاده برای تایید پرداخت با کلاس نمایه‌ای `Toman`:
+متدهای قابل استفاده برای تایید پرداخت با `CallbackRequest` یا کلاس نمایه‌ای `Toman`:
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
 | amount(`$amount`)      	| **(اجباری)** تنظیم مبلغی که کاربر باید پرداخت کرده باشد. 	|
-| transactionId(`$id`)    	| تنظیم شناسه تراکنش برای بررسی تایید پرداخت. به‌صورت پیش‌فرض، خودکار از درخواست ورودی استخراج می‌شه.|
+| transactionId(`$id`)    	| تنظیم شناسه تراکنش برای بررسی تایید پرداخت. `CallbackRequest` اینو خودش پر می‌کنه.|
 | verify()     	|ارسال درخواست بررسی و تایید پرداخت. یه آبجکت `CheckedPayment` برمی‌گردونه.  |
 
 
@@ -126,10 +138,38 @@ if ($payment->failed()) {
 
 <hr>
 
-# تست کردن درگاه زرین‌پال
+## بیشتر
+
+### تایید پرداخت به صورت دستی
+اگه نیاز داشتین بدون استفاده از `CallbackRequest` تایید یه پرداخت رو بررسی کنین، می‌تونین از `Toman` استفاده کنین:
+
+```php
+use Evryn\LaravelToman\Facades\Toman;
+
+// ...
+
+$payment = Toman::transactionId('A00001234')
+    ->amount(1000)
+    ->verify();
+
+if ($payment->successful()) {
+    // Store the successful transaction details
+    $referenceId = $payment->referenceId();
+}
+
+if ($payment->alreadyVerified()) {
+    // ...
+}
+
+if ($payment->failed()) {
+    // ...
+}
+```
+
+### 🧪 تست کردن درگاه زرین‌پال
 اگه که برای نرم‌افزارتون تست سوئیت خودکار می‌نویسین و می‌خواین ببینین که با پکیج به درستی تعامل داره یا نه، ادامه بدین.
 
-## 🧪 تست درخواست پرداخت
+####  تست درخواست پرداخت
 
 از &lrm;`Toman::fakeRequest()` استفاده کنین تا یه نتیجه درخواست ایجاد پرداخت رو شبیه‌سازی کنین و بعد محتوای درخواست رو با &lrm;`Toman::assertRequested()` مورد بررسی قرار بدین.
 
@@ -157,7 +197,7 @@ final class PaymentTest extends TestCase
 }
 ```
 
-## 🧪 تست بررسی و تایید پرداخت
+####  تست بررسی و تایید پرداخت
 
 از &lrm;`Toman::fakeVerification()` استفاده کنین تا یه نتیجه درخواست بررسی و تایید رو شبیه‌سازی کنین و بعد محتوای درخواست رو با &lrm;`Toman::assertCheckedForVerification()` مورد بررسی قرار بدین.
 

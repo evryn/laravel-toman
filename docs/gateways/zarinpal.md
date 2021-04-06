@@ -9,8 +9,8 @@ Zarinpal gateway requires the following variables in `.env` file to work:
 | Environment Variable 	| Description                                                                                                                                                                                                                                        	|
 |----------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
 | TOMAN_GATEWAY 	    | (**Required**)<br>Must equal `zarinpal` in order to use this gateway provider.                                                                            	|
-| ZARINPAL_MERCHANT_ID 	| (**Required**)<br>Your gateway's merchant ID which can be gotten from your Zarinpal panel.<br>Example: 0bcf346fc-3a79-4b36-b936-5ccbc2be0696                                                                                                             	|
-| ZARINPAL_SANDBOX     	| (Optional. Default: false)<br>Set it to `true` in your development environment to make test calls in a simulated environment provided by Zarinpal without real payments.
+| ZARINPAL_MERCHANT_ID 	| (**Required**)<br>Your gateway's merchant ID which can be gotten from your panel.<br>Example: 0bcf346fc-3a79-4b36-b936-5ccbc2be0696                                                                                                             	|
+| ZARINPAL_SANDBOX     	| (Optional. Default: false)<br>Set it to `true` in your development environment to make test calls in a simulated environment provided by the gateway without real payments.
 
 Example:
 ```dotenv
@@ -50,7 +50,7 @@ For requesting payment using `Toman` facade:
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
-| amount(`$amount`)      	| **(Required)** Set amount for payment.                                                                                                             	|
+| amount(`$amount`)      	| **(Required)** Set amount for payment. This gateway expects Iranian Toman unit.                                                                                                             	|
 | callback(`$url`)    	| Set an absolute callback URL. Overrides `callback_route` config.                                  	|
 | description(`$string`) 	| Set description. Overrides `description` config.                                                                     	|
 | mobile(`$mobile`)      	| Set mobile.                                                                                                             	|
@@ -118,7 +118,7 @@ For requesting payment using `CallbackRequest` or `Toman` facade:
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
-| amount(`$amount`)      	| **(Required)** Set amount that is expected to be paid.                                                                                                             	|
+| amount(`$amount`)      	| **(Required)** Set amount that is expected to be paid. This gateway expects Iranian Toman unit.                                                                                                             	|
 | transactionId(`$id`)    	| Set transaction ID to verify. `CallbackRequest` sets it automatically.                                  	|
 | verify()     	| Verify payment and return `CheckedPayment` object                                                                              |
 

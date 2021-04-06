@@ -25,3 +25,7 @@ Elegant API • Heavily Tested • Multiple Gateways
 
 [GitHub](https://github.com/evryn/laravel-toman)
 [Get Started](#quickstart)
+
+<!-- background color -->
+
+![color](#b3ffe9)

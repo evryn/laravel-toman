@@ -10,7 +10,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
- * @method PendingRequest amount(int $amount = null) Get or set amount of payment
  * @method PendingRequest mobile(string $mobile = null) Get or set mobile data
  * @method PendingRequest merchantId(string $merchantId = null) Get or set gateway merchant ID
  * @method PendingRequest email(string $email = null) Get or set email data
@@ -87,7 +86,13 @@ class PendingRequest
     public function provideForGateway(array $fields): Collection
     {
         return collect($fields)->mapWithKeys(function ($field) {
-            return [$this->getFieldNameForGateway($field) =>  $this->getData($field)];
+            $value = $this->getData($field);
+
+            if (self::normalizeField($field) === 'amount') {
+                $value = $this->provideAmount();
+            }
+
+            return [$this->getFieldNameForGateway($field) =>  $value];
         })->merge($this->customData);
     }
 
@@ -179,7 +184,7 @@ class PendingRequest
     protected function getFieldNameForGateway(string $field)
     {
         foreach ($this->getGateway()->getAliasDataFields() as $key => $value) {
-            if (strtolower($key) === strtolower($field)) {
+            if (self::normalizeField($key) === self::normalizeField($field)) {
                 return $value;
             }
         }
@@ -213,6 +218,39 @@ class PendingRequest
     }
 
     /**
+     * Get or set amount of the payment.
+     *
+     * @param null|int|Money $amount
+     * @return PendingRequest|Money
+     */
+    public function amount($amount = null)
+    {
+        if (is_null($amount)) {
+            return $this->getRawData('amount');
+        }
+
+        if (!$amount instanceof Money) {
+            $amount = new Money(
+                $amount,
+                config('toman.currency') ?? $this->getGateway()->getCurrency()
+            );
+        }
+
+        $this->setData('amount', $amount);
+
+        return $this;
+    }
+
+    protected function provideAmount()
+    {
+        if (!$this->amount()) {
+            return null;
+        }
+
+        return $this->amount()->value($this->getGateway()->getCurrency());
+    }
+
+    /**
      * Get or set description. `:amount` will be replaced by the given amount.
      *
      * @param string|null $description
@@ -228,14 +266,14 @@ class PendingRequest
 
         return str_replace(
             ':amount',
-            $this->amount(),
+            $this->provideAmount(),
             $this->getRawData('description') ?: config('toman.description')
         );
     }
 
     protected function setData(string $field, $value)
     {
-        $this->data[strtolower($field)] = $value;
+        $this->data[self::normalizeField($field)] = $value;
 
         return $this;
     }
@@ -259,6 +297,11 @@ class PendingRequest
 
     public function getRawData(string $alias)
     {
-        return Arr::get($this->data, strtolower($alias));
+        return Arr::get($this->data, self::normalizeField($alias));
+    }
+
+    protected static function normalizeField(string $field): string
+    {
+        return strtolower($field);
     }
 }

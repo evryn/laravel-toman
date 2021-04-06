@@ -8,6 +8,7 @@ use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
 use Evryn\LaravelToman\Gateways\Zarinpal\RequestedPayment;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
@@ -42,6 +43,10 @@ final class RequestTest extends TestCase
         // data and amount.
         // We also need to check that created payment can be redirected to default gateway
         // or the specific one.
+
+        config([
+            'toman.currency' => 'toman'
+        ]);
 
         Http::fake([
             "$baseUrl/pg/rest/WebGate/PaymentRequest.json" => Http::response([
@@ -237,6 +242,30 @@ final class RequestTest extends TestCase
                 $request->pay();
                 $this->fail('GatewayClientException has no thrown.');
             } catch (GatewayClientException $exception) {}
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::tomanBasedAmountProvider()
+     */
+    public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)
+    {
+        config([
+            'toman.currency' => $configCurrency
+        ]);
+
+        Http::fake([
+            "www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json" => Http::response([
+                'Status' => '100',
+                'Authority' => 'A0000012345',
+            ], 200),
+        ]);
+
+        $this->factory->amount($actualAmount)->request();
+
+        Http::assertSent(function (Request $request) use ($expectedAmountValue) {
+            return $request['Amount'] == $expectedAmountValue;
         });
     }
 }

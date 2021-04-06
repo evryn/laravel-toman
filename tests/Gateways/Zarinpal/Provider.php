@@ -5,6 +5,7 @@ namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
 
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Money;
 
 class Provider
 {
@@ -35,6 +36,175 @@ class Provider
             [404, Status::INVALID_EXPIRATION_RANGE, 'invalid_expiration_range'],
             [404, Status::REQUEST_ARCHIVED, 'request_archived'],
             [404, Status::UNEXPECTED, 'unexpected'],
+        ];
+    }
+
+    public static function tomanBasedAmountProvider()
+    {
+        return [
+            // config, actual, expected
+            ['toman', 10000, 10000],
+            ['toman', Money::Toman(10000), 10000],
+            ['toman', Money::Rial(10000), 1000],
+            ['rial', 10000, 1000],
+            ['rial', Money::Toman(10000), 10000],
+            ['rial', Money::Rial(10000), 1000],
+            [null, 10000, 10000],
+            [null, Money::Toman(10000), 10000],
+            [null, Money::Rial(10000), 1000],
+        ];
+    }
+
+    public static function fakeTomanBasedAmountProvider()
+    {
+        return [
+            // config, actual, expected
+            [
+                'toman',
+                10000,
+                Money::Toman(10000)
+            ],
+            [
+                'toman',
+                Money::Toman(10000),
+                Money::Toman(10000)
+            ],
+            [
+                'toman',
+                Money::Rial(10000),
+                Money::Rial(10000)
+            ],
+            [
+                'rial',
+                10000,
+                Money::Rial(10000)
+            ],
+            [
+                'rial',
+                Money::Toman(10000),
+                Money::Toman(10000)
+            ],
+            [
+                'rial',
+                Money::Rial(10000),
+                Money::Rial(10000)
+            ],
+            [
+                null,
+                10000,
+                Money::Toman(10000)
+            ],
+            [
+                null,
+                Money::Toman(10000),
+                Money::Toman(10000)
+            ],
+            [
+                null,
+                Money::Rial(10000),
+                Money::Rial(10000)
+            ],
+        ];
+    }
+
+    public static function badFakeTomanBasedAmountProvider()
+    {
+        return [
+            // config, actual, unexpected
+            // Correct currencies but wrong values
+            [
+                'toman',
+                10000,
+                Money::Toman(99999)
+            ],
+            [
+                'toman',
+                Money::Toman(10000),
+                Money::Toman(99999)
+            ],
+            [
+                'toman',
+                Money::Rial(10000),
+                Money::Rial(99999)
+            ],
+            [
+                'rial',
+                10000,
+                Money::Rial(99999)
+            ],
+            [
+                'rial',
+                Money::Toman(10000),
+                Money::Toman(99999)
+            ],
+            [
+                'rial',
+                Money::Rial(10000),
+                Money::Rial(99999)
+            ],
+            [
+                null,
+                10000,
+                Money::Toman(99999)
+            ],
+            [
+                null,
+                Money::Toman(10000),
+                Money::Toman(99999)
+            ],
+            [
+                null,
+                Money::Rial(10000),
+                Money::Rial(99999)
+            ],
+
+            // config, actual, unexpected
+            // Correct values but wrong currencies
+            [
+                'toman',
+                10000,
+                Money::Rial(10000)
+            ],
+            [
+                'toman',
+                Money::Toman(10000),
+                Money::Rial(10000)
+            ],
+            [
+                'toman',
+                Money::Rial(10000),
+                Money::Toman(10000)
+            ],
+            [
+                'rial',
+                10000,
+                Money::Toman(10000)
+            ],
+            [
+                'rial',
+                Money::Toman(10000),
+                Money::Rial(10000)
+            ],
+            [
+                'rial',
+                Money::Rial(10000),
+                Money::Toman(10000)
+            ],
+            [
+                null,
+                10000,
+                Money::Rial(10000)
+            ],
+            [
+                null,
+                Money::Toman(10000),
+                Money::Rial(10000)
+            ],
+            [
+                null,
+                Money::Rial(10000),
+                Money::Toman(10000)
+            ],
         ];
     }
 }

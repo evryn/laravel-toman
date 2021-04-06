@@ -49,6 +49,21 @@ return [
     ],
 
     /*
+   |--------------------------------------------------------------------------
+   | Default Currency
+   |--------------------------------------------------------------------------
+   |
+     Gateways accept different currencies; So in order to avoid confusion
+   | when switching between gateways, you can specify your intended currency
+   | here, and Toman will convert to proper one automatically.
+   |
+   | Supported currencies: "toman', "rial"
+   |
+   */
+
+    'currency' => 'toman',
+
+    /*
     |--------------------------------------------------------------------------
     | Default Description
     |--------------------------------------------------------------------------

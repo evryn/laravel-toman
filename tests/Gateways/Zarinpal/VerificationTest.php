@@ -240,4 +240,28 @@ final class VerificationTest extends TestCase
             } catch (GatewayClientException $exception) {}
         });
     }
+
+    /**
+     * @test
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::tomanBasedAmountProvider()
+     */
+    public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)
+    {
+        config([
+            'toman.currency' => $configCurrency
+        ]);
+
+        Http::fake([
+            "www.zarinpal.com/pg/rest/WebGate/PaymentVerification.json" => Http::response([
+                'Status' => '100',
+                'RefID' => '1000020000',
+            ], 200),
+        ]);
+
+        $this->factory->amount($actualAmount)->verify();
+
+        Http::assertSent(function (Request $request) use ($expectedAmountValue) {
+            return $request['Amount'] == $expectedAmountValue;
+        });
+    }
 }

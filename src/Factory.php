@@ -9,9 +9,6 @@ use Illuminate\Support\Traits\Macroable;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 /**
- * @method static RequestedPaymentInterface request() Request a new payment
- * @method static CheckedPaymentInterface verify() Verify a payment
- *
  * @mixin PendingRequest
  */
 class Factory

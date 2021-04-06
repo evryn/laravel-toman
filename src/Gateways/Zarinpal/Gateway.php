@@ -9,6 +9,7 @@ use Evryn\LaravelToman\FakeVerification;
 use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
 use Evryn\LaravelToman\Interfaces\GatewayInterface;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
+use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\PendingRequest;
 use Illuminate\Support\Arr;
 
@@ -25,6 +26,11 @@ class Gateway implements GatewayInterface
     public function getConfig(string $key = null)
     {
         return $key ? Arr::get($this->config, $key) : $this->config;
+    }
+
+    public function getCurrency(): string
+    {
+        return Money::TOMAN;
     }
 
     public function setConfig(array $config)

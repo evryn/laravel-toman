@@ -11,6 +11,14 @@ use Illuminate\Http\RedirectResponse;
 interface GatewayInterface
 {
     public function getConfig(string $key = null);
+
+    /**
+     * Get the currency that gateway uses
+     *
+     * @return string
+     */
+    public function getCurrency(): string;
+
     public function getAliasDataFields(): array;
 
     /**

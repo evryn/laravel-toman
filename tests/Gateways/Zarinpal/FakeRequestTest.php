@@ -7,9 +7,12 @@ use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
+use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use PHPUnit\Framework\AssertionFailedError;
@@ -57,7 +60,7 @@ final class FakeRequestTest extends TestCase
             self::assertEquals('xxxx-yyyyy', $request->merchantId());
             self::assertEquals('http://example.com/callback', $request->callback());
             self::assertEquals('09350000000', $request->mobile());
-            self::assertEquals(5000, $request->amount());
+            self::assertTrue($request->amount()->is(Money::Toman(5000)));
             self::assertEquals('Pay 5000', $request->description());
             self::assertEquals('Example', $request->data('CustomData'));
 
@@ -97,7 +100,7 @@ final class FakeRequestTest extends TestCase
             self::assertEquals('xxxx-yyyyy', $request->merchantId());
             self::assertEquals('http://example.com/callback', $request->callback());
             self::assertEquals('09350000000', $request->mobile());
-            self::assertEquals(5000, $request->amount());
+            self::assertTrue($request->amount()->is(Money::Toman(5000)));
             self::assertEquals('Pay 5000', $request->description());
             self::assertEquals('Example', $request->data('CustomData'));
 
@@ -146,6 +149,50 @@ final class FakeRequestTest extends TestCase
 
         $this->factory->assertRequested(function (PendingRequest $request) {
             return false;
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::fakeTomanBasedAmountProvider()
+     */
+    public function can_assert_correct_fake_amount_in_currencies($configCurrency, $actualAmount, Money $expectedAmount)
+    {
+        config([
+            'toman.currency' => $configCurrency
+        ]);
+
+        $this->factory->fakeRequest()
+            ->withTransactionId('tid_100')
+            ->successful();
+
+        $this->factory->amount($actualAmount)->request();
+
+        $this->factory->assertRequested(function (PendingRequest $request) use ($expectedAmount) {
+            return $request->amount()->is($expectedAmount);
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::badFakeTomanBasedAmountProvider()
+     */
+    public function can_not_assert_incorrect_fake_amount_in_currencies($configCurrency, $actualAmount, Money $unexpectedAmount)
+    {
+        config([
+            'toman.currency' => $configCurrency
+        ]);
+
+        $this->factory->fakeRequest()
+            ->withTransactionId('tid_100')
+            ->successful();
+
+        $this->factory->amount($actualAmount)->request();
+
+        $this->expectException(AssertionFailedError::class);
+
+        $this->factory->assertRequested(function (PendingRequest $request) use ($unexpectedAmount) {
+            return $request->amount()->is($unexpectedAmount);
         });
     }
 }

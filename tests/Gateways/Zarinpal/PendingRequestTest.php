@@ -60,15 +60,6 @@ final class PendingRequestTest extends TestCase
     }
 
     /** @test */
-    public function can_set_amount_elegantly()
-    {
-        self::assertEquals(
-            '10000',
-            $this->factory->amount('10000')->amount()
-        );
-    }
-
-    /** @test */
     public function can_set_description_elegantly()
     {
         config(['toman.description' => 'Paying :amount for invoice 1']);

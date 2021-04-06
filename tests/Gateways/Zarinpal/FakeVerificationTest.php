@@ -7,6 +7,7 @@ use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
+use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
@@ -54,7 +55,7 @@ final class FakeVerificationTest extends TestCase
             ->verify();
 
         $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
-            self::assertEquals(5000, $request->amount());
+            self::assertTrue($request->amount()->is(Money::Toman(5000)));
             self::assertEquals('tid_100', $request->transactionId());
             self::assertEquals('xxxxx-yyyyy-zzzzz', $request->merchantId());
             self::assertEquals('http://example.com/callback', $request->callback());
@@ -92,7 +93,7 @@ final class FakeVerificationTest extends TestCase
             ->verify();
 
         $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
-            self::assertEquals(5000, $request->amount());
+            self::assertTrue($request->amount()->is(Money::Toman(5000)));
             self::assertEquals('tid_100', $request->transactionId());
             self::assertEquals('xxxxx-yyyyy-zzzzz', $request->merchantId());
             self::assertEquals('http://example.com/callback', $request->callback());
@@ -129,7 +130,7 @@ final class FakeVerificationTest extends TestCase
             ->verify();
 
         $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
-            self::assertEquals(5000, $request->amount());
+            self::assertTrue($request->amount()->is(Money::Toman(5000)));
             self::assertEquals('tid_100', $request->transactionId());
             self::assertEquals('xxxxx-yyyyy-zzzzz', $request->merchantId());
             self::assertEquals('http://example.com/callback', $request->callback());
@@ -187,6 +188,52 @@ final class FakeVerificationTest extends TestCase
 
         $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
             return false;
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::fakeTomanBasedAmountProvider()
+     */
+    public function can_assert_correct_fake_amount_in_currencies($configCurrency, $actualAmount, Money $expectedAmount)
+    {
+        config([
+            'toman.currency' => $configCurrency
+        ]);
+
+        $this->factory->fakeVerification()
+            ->withTransactionId('tid_100')
+            ->withReferenceId('ref_100')
+            ->successful();
+
+        $this->factory->amount($actualAmount)->verify();
+
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) use ($expectedAmount) {
+            return $request->amount()->is($expectedAmount);
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::badFakeTomanBasedAmountProvider()
+     */
+    public function can_not_assert_incorrect_fake_amount_in_currencies($configCurrency, $actualAmount, Money $unexpectedAmount)
+    {
+        config([
+            'toman.currency' => $configCurrency
+        ]);
+
+        $this->factory->fakeVerification()
+            ->withTransactionId('tid_100')
+            ->withReferenceId('ref_100')
+            ->successful();
+
+        $this->factory->amount($actualAmount)->verify();
+
+        $this->expectException(AssertionFailedError::class);
+
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) use ($unexpectedAmount) {
+            return $request->amount()->is($unexpectedAmount);
         });
     }
 }

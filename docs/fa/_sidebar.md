@@ -9,6 +9,7 @@
 * درگاه‌های پرداخت
 
   * [💳 زرین‌پال](fa/gateways/zarinpal.md)
+  * [💳 آی‌دی پِی](fa/gateways/idpay.md)
 
 * [مشارکت](../CONTRIBUTING.md)
 * [لیست تغییرات](../CHANGELOG.md)

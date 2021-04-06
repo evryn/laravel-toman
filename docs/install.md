@@ -14,4 +14,4 @@ Install package using Composer:
 composer require evryn/laravel-toman
 ```
 
-Next step? See how to use a gateway: [💳 Zarinpal](gateways/zarinpal.md)
+Next step? See how to use a gateway: [💳 Zarinpal](gateways/zarinpal.md), [💳 IDPay](gateways/idpay.md)

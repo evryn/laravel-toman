@@ -1,4 +1,3 @@
-
 ![logo](../_media/logo.png)
 
 # Laravel Toman <small>2.0</small>

@@ -24,6 +24,7 @@ Laravel Toman یه تست سوئیت کامل داره. قبل از ریلیز �
 فعلاً این درگاه‌ها قابل استفاده هستن:
 
 ✅ [Zarinpal.com](https://zarinpal.com)  
+✅ [IDPay.ir](https://idpay.ir)  
 🔘 [YekPay.com](https://yekpay.com/)  
 🔘 [Pay.ir](https://pay.ir/)  
 🔘 [PayPing.ir](https://www.payping.ir/)  

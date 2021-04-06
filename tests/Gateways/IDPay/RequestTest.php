@@ -65,7 +65,6 @@ final class RequestTest extends TestCase
         tap($gateway->request(), function (RequestedPayment $request) use ($sandbox) {
 
             Http::assertSent(function (Request $request) use ($sandbox) {
-                // dd($request->body(), $request->headers(), $request['callback'], $request);
                 return ($sandbox ? $request->header('X-SANDBOX')[0] === '1' : !$request->hasHeader('X-SANDBOX'))
                     && $request->header('X-API-KEY')[0] === 'xxxx-xxxx-xxxx-xxxx'
                     && $request->method() === 'POST'

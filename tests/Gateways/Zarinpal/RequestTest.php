@@ -58,7 +58,7 @@ final class RequestTest extends TestCase
         $gateway = $this->factory
             ->callback('https://example.com/callback')
             ->amount(1500)
-            ->description('An awesome payment gateway!')
+            ->description('Payment for :amount.')
             ->data('Mobile', '09350000000')
             ->email('amirreza@example.com');
 
@@ -70,7 +70,7 @@ final class RequestTest extends TestCase
                     && $request['MerchantID'] === 'xxxx-xxxx-xxxx-xxxx'
                     && $request['Amount'] == 1500
                     && $request['CallbackURL'] === 'https://example.com/callback'
-                    && $request['Description'] === 'An awesome payment gateway!'
+                    && $request['Description'] === 'Payment for 1500.'
                     && $request['Mobile'] === '09350000000'
                     && $request['Email'] === 'amirreza@example.com';
             });

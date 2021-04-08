@@ -2,7 +2,8 @@
 
 Implementation of [Zarinpal.com](https://www.zarinpal.com) gateway is based on version 1.3 of their [official document](https://github.com/ZarinPal-Lab/Documentation-PaymentGateway/).
 
-## Setup
+## Getting Started
+### Setup
 
 Zarinpal gateway requires the following variables in `.env` file to work:
 
@@ -18,6 +19,25 @@ Example:
 
 TOMAN_GATEWAY=zarinpal
 ZARINPAL_MERCHANT_ID=0bcf346fc-3a79-4b36-b936-5ccbc2be0696
+```
+
+### Currency
+
+You can specify your intended currency in a few ways: 
+
+**Using config:**
+ 
+| Method           | Config                     | Means |
+|------------------|----------------------------|--------------|
+| `amount(10000)` | `toman.currency = 'toman'` | 10,000 Toman   |
+| `amount(10000)` | `toman.currency = 'rial'`  | 1,000 Toman    |
+
+**Specifying explicitly:**
+```php
+use Evryn\LaravelToman\Money;
+
+...->amount(Money::Rial(10000));
+...->amount(Money::Toman(1000));
 ```
 
 ## Request New Payment
@@ -50,7 +70,7 @@ For requesting payment using `Toman` facade:
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
-| amount(`$amount`)      	| **(Required)** Set amount for payment. This gateway expects Iranian Toman unit.                                                                                                             	|
+| amount(`$amount`)      	| **(Required)** Set amount for payment.                                                                                                             	|
 | callback(`$url`)    	| Set an absolute callback URL. Overrides `callback_route` config.                                  	|
 | description(`$string`) 	| Set description. Overrides `description` config.                                                                     	|
 | mobile(`$mobile`)      	| Set mobile.                                                                                                             	|
@@ -118,7 +138,7 @@ For requesting payment using `CallbackRequest` or `Toman` facade:
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
-| amount(`$amount`)      	| **(Required)** Set amount that is expected to be paid. This gateway expects Iranian Toman unit.                                                                                                             	|
+| amount(`$amount`)      	| **(Required)** Set amount that is expected to be paid.                                                                                                             	|
 | transactionId(`$id`)    	| Set transaction ID to verify. `CallbackRequest` sets it automatically.                                  	|
 | verify()     	| Verify payment and return `CheckedPayment` object                                                                              |
 
@@ -174,6 +194,7 @@ Use `Toman::fakeRequest()` to stub request result and assert expected request da
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Money;
 
 final class PaymentTest extends TestCase
 {
@@ -190,7 +211,7 @@ final class PaymentTest extends TestCase
         Toman::assertRequested(function ($request) {
             return $request->merchantId() === 'your-merchant-id'
                 && $request->callback() === route('callback-route')
-                && $request->amount() === 50000;
+                && $request->amount()->is(Money::Toman(50000));
         });
     }
 }
@@ -202,6 +223,7 @@ Use `Toman::fakeVerification()` to stub verification result and assert its expec
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Money;
 
 final class PaymentTest extends TestCase
 {
@@ -227,7 +249,7 @@ final class PaymentTest extends TestCase
         Toman::assertCheckedForVerification(function ($request) {
             return $request->merchantId() === 'your-merchant-id'
                 && $request->transactionId() === 'A123'
-                && $request->amount() === 50000;
+                && $request->amount()->is(Money::Toman(50000));
         });
     }
 }

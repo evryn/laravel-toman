@@ -2,7 +2,8 @@
 
 تومن درگاه [IDPay.ir](https://idpay.ir) رو بر اساس نسخه 1.1 [داکیومنت رسمی‌شون](https://idpay.ir/web-service/v1.1/) ساخته.
 
-## تنظیمات
+## شروع به کار
+### تنظیمات
 
 درگاه آی‌دی پِی نیاز به تغییر این مقادیر تو فایل &lrm;`.env` داره:
 
@@ -18,6 +19,24 @@
 
 TOMAN_GATEWAY=idpay
 IDPAY_API_KEY=0bcf346fc-3a79-4b36-b936-5ccbc2be0696
+```
+
+#### واحد پولی
+
+واحد پولی رو می‌تونین به دو صورت معین کنین:
+**استفاده از فایل تنظیمات (کانفیگ):**
+ 
+| متد           | تنظیم                     | یعنی |
+|------------------|----------------------------|--------------|
+| `amount(10000)` | `toman.currency = 'toman'` | 10,000 تومان   |
+| `amount(10000)` | `toman.currency = 'rial'`  | 1,000 تومان    |
+
+**صریحاً مشخص کردن:**
+```php
+use Evryn\LaravelToman\Money;
+
+...->amount(Money::Rial(10000));
+...->amount(Money::Toman(1000));
 ```
 
 ## درخواست پرداخت جدید
@@ -179,6 +198,7 @@ if ($payment->failed()) {
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Money;
 
 final class PaymentTest extends TestCase
 {
@@ -195,7 +215,7 @@ final class PaymentTest extends TestCase
         Toman::assertRequested(function ($request) {
             return $request->merchantId() === 'your-idpay-api-key'
                 && $request->callback() === route('callback-route')
-                && $request->amount() === 50000;
+                && $request->amount()->is(Money::Toman(50000));
         });
     }
 }
@@ -207,6 +227,7 @@ final class PaymentTest extends TestCase
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Money;
 
 final class PaymentTest extends TestCase
 {
@@ -236,7 +257,7 @@ final class PaymentTest extends TestCase
             return $request->merchantId() === 'your-idpay-api-id'
                 && $request->orderId() === 'order_100'
                 && $request->transactionId() === 'tid_123'
-                && $request->amount() === 50000;
+                && $request->amount()->is(Money::Toman(50000));
         });
     }
 }

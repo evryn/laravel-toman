@@ -2,7 +2,8 @@
 
 تومن درگاه [Zarinpal.com](https://www.zarinpal.com) رو بر اساس نسخه 1.3 [داکیومنت رسمی‌شون](https://github.com/ZarinPal-Lab/Documentation-PaymentGateway/) ساخته.
 
-## تنظیمات
+## شروع به کار
+### تنظیمات
 
 درگاه زرین‌پال نیاز به تغییر این مقادیر تو فایل &lrm;`.env` داره:
 
@@ -18,6 +19,24 @@
 
 TOMAN_GATEWAY=zarinpal
 ZARINPAL_MERCHANT_ID=0bcf346fc-3a79-4b36-b936-5ccbc2be0696
+```
+
+#### واحد پولی
+
+واحد پولی رو می‌تونین به دو صورت معین کنین:
+**استفاده از فایل تنظیمات (کانفیگ):**
+ 
+| متد           | تنظیم                     | یعنی |
+|------------------|----------------------------|--------------|
+| `amount(10000)` | `toman.currency = 'toman'` | 10,000 تومان   |
+| `amount(10000)` | `toman.currency = 'rial'`  | 1,000 تومان    |
+
+**صریحاً مشخص کردن:**
+```php
+use Evryn\LaravelToman\Money;
+
+...->amount(Money::Rial(10000));
+...->amount(Money::Toman(1000));
 ```
 
 ## درخواست پرداخت جدید
@@ -50,7 +69,7 @@ if ($request->failed()) {
 
 | متد      	| توضیحات  	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
-| &lrm;amount(`$amount`)      	| **(الزامی)** تنظیم مبلغ قابل پرداخت. این درگاه واحد پولیش تومانه.  	|
+| &lrm;amount(`$amount`)      	| **(الزامی)** تنظیم مبلغ قابل پرداخت.  	|
 | &lrm;callback(`$url`)    	| تنظیم یک آدرس URL کامل به عنوان Callback URL. بر کانفیگ `callback_route` اولویت داره.   	|
 | &lrm;description(`$string`) 	| تنظیم توضیحات پرداخت. بر کانفیگ `description` اولویت داره.    	|
 | &lrm;mobile(`$mobile`)      	| تنظیم شماره موبایل پرداخت‌کننده.  	|
@@ -118,7 +137,7 @@ class PaymentController extends Controller
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
-| amount(`$amount`)      	| **(اجباری)** تنظیم مبلغی که کاربر باید پرداخت کرده باشد. این درگاه واحد پولیش تومانه. 	|
+| amount(`$amount`)      	| **(اجباری)** تنظیم مبلغی که کاربر باید پرداخت کرده باشد. 	|
 | transactionId(`$id`)    	| تنظیم شناسه تراکنش برای بررسی تایید پرداخت. `CallbackRequest` اینو خودش پر می‌کنه.|
 | verify()     	|ارسال درخواست بررسی و تایید پرداخت. یه آبجکت `CheckedPayment` برمی‌گردونه.  |
 
@@ -175,6 +194,7 @@ if ($payment->failed()) {
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Money;
 
 final class PaymentTest extends TestCase
 {
@@ -191,7 +211,7 @@ final class PaymentTest extends TestCase
         Toman::assertRequested(function ($request) {
             return $request->merchantId() === 'your-merchant-id'
                 && $request->callback() === route('callback-route')
-                && $request->amount() === 50000;
+                && $request->amount()->is(Money::Toman(50000));
         });
     }
 }
@@ -203,6 +223,7 @@ final class PaymentTest extends TestCase
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Money;
 
 final class PaymentTest extends TestCase
 {
@@ -228,7 +249,7 @@ final class PaymentTest extends TestCase
         Toman::assertCheckedForVerification(function ($request) {
             return $request->merchantId() === 'your-merchant-id'
                 && $request->transactionId() === 'A123'
-                && $request->amount() === 50000;
+                && $request->amount()->is(Money::Toman(50000));
         });
     }
 }

@@ -56,6 +56,8 @@ return [
      Gateways accept different currencies; So in order to avoid confusion
    | when switching between gateways, you can specify your intended currency
    | here, and Toman will convert to proper one automatically.
+   | You can of course override it and specify another currency during making
+   | requests using Money object too.
    |
    | Supported currencies: "toman', "rial"
    |

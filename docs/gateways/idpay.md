@@ -2,7 +2,8 @@
 
 Implementation of [IDPay.ir](https://idpay.ir) gateway is based on version 1.1 of their [official document](https://idpay.ir/web-service/v1.1/).
 
-## Setup
+## Getting Started
+### Setup
 
 IDPay gateway requires the following variables in `.env` file to work:
 
@@ -18,6 +19,25 @@ Example:
 
 TOMAN_GATEWAY=idpay
 IDPAY_API_KEY=0bcf346fc-3a79-4b36-b936-5ccbc2be0696
+```
+
+### Currency
+
+You can specify your intended currency in a few ways: 
+
+**Using config:**
+ 
+| Method           | Config                     | Means |
+|------------------|----------------------------|--------------|
+| `amount(10000)` | `toman.currency = 'toman'` | 10,000 Toman   |
+| `amount(10000)` | `toman.currency = 'rial'`  | 1,000 Toman    |
+
+**Specifying explicitly:**
+```php
+use Evryn\LaravelToman\Money;
+
+...->amount(Money::Rial(10000));
+...->amount(Money::Toman(1000));
 ```
 
 ## Request New Payment
@@ -52,7 +72,7 @@ For requesting payment using `Toman` facade:
 
 | Method      	| Description                                                                                                                     	|
 |-------------	|---------------------------------------------------------------------------------------------------------------------------------	|
-| amount(`$amount`)      	| **(Required)** Set amount for payment. This gateway expects IRR unit.                                                                                                             	|
+| amount(`$amount`)      	| **(Required)** Set amount for payment.                                                                                                             	|
 | orderId(`$orderId`)      	| **(Required)** Set order ID for payment. Order ID is a unique your-side generated string that will be used for verification.                                                                                                             	|
 | callback(`$url`)    	| Set an absolute callback URL. Overrides `callback_route` config.                                  	|
 | description(`$string`) 	| Set description. Overrides `description` config.                                                                     	|
@@ -178,6 +198,7 @@ Use `Toman::fakeRequest()` to stub request result and assert expected request da
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Money;
 
 final class PaymentTest extends TestCase
 {
@@ -194,7 +215,7 @@ final class PaymentTest extends TestCase
         Toman::assertRequested(function ($request) {
             return $request->merchantId() === 'your-idpay-api-key'
                 && $request->callback() === route('callback-route')
-                && $request->amount() === 50000;
+                && $request->amount()->is(Money::Toman(50000));
         });
     }
 }
@@ -206,6 +227,7 @@ Use `Toman::fakeVerification()` to stub verification result and assert its expec
 
 ```php
 use Evryn\LaravelToman\Facades\Toman;
+use Evryn\LaravelToman\Money;
 
 final class PaymentTest extends TestCase
 {
@@ -235,7 +257,7 @@ final class PaymentTest extends TestCase
             return $request->merchantId() === 'your-idpay-api-id'
                 && $request->orderId() === 'order_100'
                 && $request->transactionId() === 'tid_123'
-                && $request->amount() === 50000;
+                && $request->amount()->is(Money::Toman(50000));
         });
     }
 }

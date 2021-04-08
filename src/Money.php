@@ -59,8 +59,7 @@ class Money
 
     public function is(self $money): bool
     {
-        return $this->sourceAmount === $money->getSourceValue()
-            && $this->sourceCurrency === $money->getSourceCurrency();
+        return $this->value(self::TOMAN) === $money->value(self::TOMAN);
     }
 
     protected function toToman(int $amount, string $currency): int

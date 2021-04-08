@@ -5,6 +5,7 @@ namespace Evryn\LaravelToman\Tests\Gateways\IDPay;
 
 
 use Evryn\LaravelToman\Gateways\IDPay\Status;
+use Evryn\LaravelToman\Money;
 
 class Provider
 {
@@ -42,6 +43,83 @@ class Provider
             [400, Status::NO_RESULT_FOR_VERIFICATION],
             [405, Status::UNABLE_TO_VERIFY],
             [405, Status::PAYMENT_VERIFICATION_DATE_EXPIRED],
+        ];
+    }
+
+    public static function rialBasedAmountProvider()
+    {
+        return [
+            // [
+            //     config value,
+            //     input amount
+            //     expected amount value in Rial
+            // ],
+            'Default currency is Toman (via config)' => [
+                'toman',
+                5,
+                50
+            ],
+            'Default currency is Rial (via config)' => [
+                'rial',
+                50,
+                50
+            ],
+            'Default currency is Rial (via gateway)' => [
+                null,
+                50,
+                50
+            ],
+            'Currency is Rial (overridden)' => [
+                'toman',
+                Money::Rial(50),
+                50
+            ],
+            'Currency is Toman (overridden)' => [
+                'toman',
+                Money::Toman(5),
+                50
+            ],
+        ];
+    }
+
+    public static function fakeRialBasedAmountProvider()
+    {
+        return [
+            'Default currency is Toman (via config)' => [
+                'toman',
+                5,
+                Money::Rial(50)
+            ],
+            'Default currency is Rial (via config)' => [
+                'rial',
+                50,
+                Money::Rial(50)
+            ],
+            'Default currency is Rial (via gateway)' => [
+                null,
+                50,
+                Money::Rial(50)
+            ],
+            'Currency is Rial (overridden) compared with Toman' => [
+                'toman',
+                Money::Rial(50),
+                Money::Toman(5)
+            ],
+            'Currency is Toman (overridden) compared with Toman' => [
+                'toman',
+                Money::Toman(5),
+                Money::Toman(5)
+            ],
+            'Currency is Toman (overridden) compared with Rial' => [
+                'toman',
+                Money::Toman(5),
+                Money::Rial(50)
+            ],
+            'Currency is Rial (overridden) compared with Rial' => [
+                'toman',
+                Money::Rial(50),
+                Money::Rial(50)
+            ],
         ];
     }
 }

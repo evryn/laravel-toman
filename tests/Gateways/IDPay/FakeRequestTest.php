@@ -7,6 +7,7 @@ use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\IDPay\Gateway;
 use Evryn\LaravelToman\Gateways\IDPay\Status;
+use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
@@ -35,6 +36,7 @@ final class FakeRequestTest extends TestCase
     {
         config([
             'toman.description' => 'Pay :amount',
+            'toman.currency' => 'rial'
         ]);
 
         $this->factory->fakeRequest()
@@ -59,7 +61,7 @@ final class FakeRequestTest extends TestCase
             self::assertEquals('http://example.com/callback', $request->callback());
             self::assertEquals('order_1', $request->orderId());
             self::assertEquals('09350000000', $request->mobile());
-            self::assertEquals(5000, $request->amount());
+            self::assertTrue($request->amount()->is(Money::Rial(5000)));
             self::assertEquals('Pay 5000', $request->description());
             self::assertEquals('Example', $request->data('CustomData'));
 
@@ -79,6 +81,7 @@ final class FakeRequestTest extends TestCase
     {
         config([
             'toman.description' => 'Pay :amount',
+            'toman.currency' => 'rial'
         ]);
 
         $this->factory->fakeRequest()->failed('Your request has failed.', Status::API_KEY_NOT_FOUND);
@@ -101,7 +104,7 @@ final class FakeRequestTest extends TestCase
             self::assertEquals('http://example.com/callback', $request->callback());
             self::assertEquals('order_1', $request->orderId());
             self::assertEquals('09350000000', $request->mobile());
-            self::assertEquals(5000, $request->amount());
+            self::assertTrue($request->amount()->is(Money::Rial(5000)));
             self::assertEquals('Pay 5000', $request->description());
             self::assertEquals('Example', $request->data('CustomData'));
 
@@ -150,6 +153,47 @@ final class FakeRequestTest extends TestCase
 
         $this->factory->assertRequested(function (PendingRequest $request) {
             return false;
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::fakeRialBasedAmountProvider()
+     */
+    public function can_assert_correct_fake_amount_in_currencies($configCurrency, $actualAmount, Money $expectedAmount)
+    {
+        config([
+            'toman.currency' => $configCurrency
+        ]);
+
+        $this->factory->fakeRequest()
+            ->withTransactionId('tid_100')
+            ->successful();
+
+        $this->factory->amount($actualAmount)->request();
+
+        $this->factory->assertRequested(function (PendingRequest $request) use ($expectedAmount) {
+            return $request->amount()->is($expectedAmount);
+        });
+    }
+
+    /** @test */
+    public function can_not_assert_incorrect_fake_amount_in_currencies()
+    {
+        config([
+            'toman.currency' => 'rial'
+        ]);
+
+        $this->factory->fakeRequest()
+            ->withTransactionId('tid_100')
+            ->successful();
+
+        $this->factory->amount(10)->request();
+
+        $this->expectException(AssertionFailedError::class);
+
+        $this->factory->assertRequested(function (PendingRequest $request) {
+            return $request->amount()->is(Money::Toman(10));
         });
     }
 }

@@ -38,6 +38,7 @@ final class FakeRequestTest extends TestCase
     {
         config([
             'toman.description' => 'Pay :amount',
+            'toman.currency' => 'toman'
         ]);
 
         $this->factory->fakeRequest()
@@ -80,6 +81,7 @@ final class FakeRequestTest extends TestCase
     {
         config([
             'toman.description' => 'Pay :amount',
+            'toman.currency' => 'toman'
         ]);
 
         $this->factory->fakeRequest()->failed('Your request has failed.', Status::WRONG_IP_OR_MERCHANT_ID);
@@ -173,26 +175,23 @@ final class FakeRequestTest extends TestCase
         });
     }
 
-    /**
-     * @test
-     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::badFakeTomanBasedAmountProvider()
-     */
-    public function can_not_assert_incorrect_fake_amount_in_currencies($configCurrency, $actualAmount, Money $unexpectedAmount)
+    /** @test */
+    public function can_not_assert_incorrect_fake_amount_in_currencies()
     {
         config([
-            'toman.currency' => $configCurrency
+            'toman.currency' => 'toman'
         ]);
 
         $this->factory->fakeRequest()
             ->withTransactionId('tid_100')
             ->successful();
 
-        $this->factory->amount($actualAmount)->request();
+        $this->factory->amount(10)->request();
 
         $this->expectException(AssertionFailedError::class);
 
-        $this->factory->assertRequested(function (PendingRequest $request) use ($unexpectedAmount) {
-            return $request->amount()->is($unexpectedAmount);
+        $this->factory->assertRequested(function (PendingRequest $request) {
+            return $request->amount()->is(Money::Rial(10));
         });
     }
 }

@@ -4,6 +4,7 @@ namespace Evryn\LaravelToman\Tests\Gateways\IDPay;
 
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\IDPay\Gateway;
+use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\Tests\TestCase;
 
 final class PendingRequestTest extends TestCase
@@ -50,26 +51,17 @@ final class PendingRequestTest extends TestCase
     }
 
     /** @test */
-    public function can_set_amount_elegantly()
-    {
-        self::assertEquals(
-            '10000',
-            $this->factory->amount('10000')->amount()
-        );
-    }
-
-    /** @test */
     public function can_set_description_elegantly()
     {
         config(['toman.description' => 'Paying :amount for invoice 1']);
         self::assertEquals(
             'Paying 5000 for invoice 1',
-            $this->factory->amount(5000)->description('Paying :amount for invoice 1')->description()
+            $this->factory->amount(Money::Rial(5000))->description('Paying :amount for invoice 1')->description()
         );
 
         self::assertEquals(
             'Paying 5000 for invoice 2',
-            $this->factory->description('Paying :amount for invoice 2')->amount(5000)->description()
+            $this->factory->description('Paying :amount for invoice 2')->amount(Money::Rial(5000))->description()
         );
     }
 

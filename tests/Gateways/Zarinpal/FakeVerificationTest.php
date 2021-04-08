@@ -38,6 +38,10 @@ final class FakeVerificationTest extends TestCase
     /** @test */
     public function can_fake_successful_verification()
     {
+        config([
+            'toman.currency' => 'toman'
+        ]);
+
         $this->factory->fakeVerification()
             ->withTransactionId('tid_100')
             ->withReferenceId('ref_100')
@@ -76,6 +80,10 @@ final class FakeVerificationTest extends TestCase
     /** @test */
     public function can_fake_already_verified_verification()
     {
+        config([
+            'toman.currency' => 'toman'
+        ]);
+
         $this->factory->fakeVerification()
             ->withTransactionId('tid_100')
             ->withReferenceId('ref_100')
@@ -114,6 +122,10 @@ final class FakeVerificationTest extends TestCase
     /** @test */
     public function can_fake_failed_verification()
     {
+        config([
+            'toman.currency' => 'toman'
+        ]);
+        
         $this->factory->fakeVerification()
             ->withTransactionId('tid_100')
             ->failed('Payment has failed.', Status::FAILED_TRANSACTION);
@@ -213,14 +225,11 @@ final class FakeVerificationTest extends TestCase
         });
     }
 
-    /**
-     * @test
-     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::badFakeTomanBasedAmountProvider()
-     */
-    public function can_not_assert_incorrect_fake_amount_in_currencies($configCurrency, $actualAmount, Money $unexpectedAmount)
+    /** @test */
+    public function can_not_assert_incorrect_fake_amount_in_currencies()
     {
         config([
-            'toman.currency' => $configCurrency
+            'toman.currency' => 'toman'
         ]);
 
         $this->factory->fakeVerification()
@@ -228,12 +237,12 @@ final class FakeVerificationTest extends TestCase
             ->withReferenceId('ref_100')
             ->successful();
 
-        $this->factory->amount($actualAmount)->verify();
+        $this->factory->amount(10)->verify();
 
         $this->expectException(AssertionFailedError::class);
 
-        $this->factory->assertCheckedForVerification(function (PendingRequest $request) use ($unexpectedAmount) {
-            return $request->amount()->is($unexpectedAmount);
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
+            return $request->amount()->is(Money::Rial(10));
         });
     }
 }

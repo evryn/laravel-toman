@@ -7,6 +7,7 @@ use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\IDPay\Gateway;
 use Evryn\LaravelToman\Gateways\IDPay\Status;
+use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\RedirectResponse;
@@ -196,6 +197,51 @@ final class FakeVerificationTest extends TestCase
 
         $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
             return false;
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::fakeRialBasedAmountProvider()
+     */
+    public function can_assert_correct_fake_amount_in_currencies($configCurrency, $actualAmount, Money $expectedAmount)
+    {
+        config([
+            'toman.currency' => $configCurrency
+        ]);
+
+        $this->factory->fakeVerification()
+            ->withOrderId('order_1')
+            ->withTransactionId('tid_100')
+            ->withReferenceId('ref_100')
+            ->successful();
+
+        $this->factory->amount($actualAmount)->verify();
+
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) use ($expectedAmount) {
+            return $request->amount()->is($expectedAmount);
+        });
+    }
+
+    /** @test */
+    public function can_not_assert_incorrect_fake_amount_in_currencies()
+    {
+        config([
+            'toman.currency' => 'rial'
+        ]);
+
+        $this->factory->fakeVerification()
+            ->withOrderId('order_1')
+            ->withTransactionId('tid_100')
+            ->withReferenceId('ref_100')
+            ->successful();
+
+        $this->factory->amount(10)->verify();
+
+        $this->expectException(AssertionFailedError::class);
+
+        $this->factory->assertCheckedForVerification(function (PendingRequest $request) {
+            return $request->amount()->is(Money::Toman(10));
         });
     }
 }

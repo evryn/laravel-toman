@@ -41,6 +41,10 @@ final class RequestTest extends TestCase
         // We also need to check that created payment can be redirected to default gateway
         // or the specific one.
 
+        config([
+            'toman.currency' => 'rial'
+        ]);
+
         Http::fake([
             "https://api.idpay.ir/v1.1/payment" => Http::response([
                 'id' => 'tid1000',
@@ -181,6 +185,30 @@ final class RequestTest extends TestCase
                 $request->pay();
                 $this->fail('GatewayClientException has no thrown.');
             } catch (GatewayClientException $exception) {}
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::rialBasedAmountProvider()
+     */
+    public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)
+    {
+        config([
+            'toman.currency' => $configCurrency
+        ]);
+
+        Http::fake([
+            "https://api.idpay.ir/v1.1/payment" => Http::response([
+                'id' => 'tid1000',
+                'link' => 'https://idpay.ir/p/ws-sandbox/tid1000'
+            ], 201),
+        ]);
+
+        $this->factory->amount($actualAmount)->request();
+
+        Http::assertSent(function (Request $request) use ($expectedAmountValue) {
+            return $request['amount'] == $expectedAmountValue;
         });
     }
 }

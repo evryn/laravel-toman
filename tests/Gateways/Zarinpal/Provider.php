@@ -42,168 +42,76 @@ class Provider
     public static function tomanBasedAmountProvider()
     {
         return [
-            // config, actual, expected
-            ['toman', 10000, 10000],
-            ['toman', Money::Toman(10000), 10000],
-            ['toman', Money::Rial(10000), 1000],
-            ['rial', 10000, 1000],
-            ['rial', Money::Toman(10000), 10000],
-            ['rial', Money::Rial(10000), 1000],
-            [null, 10000, 10000],
-            [null, Money::Toman(10000), 10000],
-            [null, Money::Rial(10000), 1000],
+            // [
+            //     config value,
+            //     input amount
+            //     expected amount value in Toman
+            // ],
+            'Default currency is Toman (via config)' => [
+                'toman',
+                5,
+                5
+            ],
+            'Default currency is Rial (via config)' => [
+                'rial',
+                50,
+                5
+            ],
+            'Default currency is Toman (via gateway)' => [
+                null,
+                5,
+                5
+            ],
+            'Currency is Rial (overridden)' => [
+                'toman',
+                Money::Rial(50),
+                5
+            ],
+            'Currency is Toman (overridden)' => [
+                'toman',
+                Money::Toman(50),
+                50
+            ],
         ];
     }
 
     public static function fakeTomanBasedAmountProvider()
     {
         return [
-            // config, actual, expected
-            [
+            'Default currency is Toman (via config)' => [
                 'toman',
-                10000,
-                Money::Toman(10000)
+                5,
+                Money::Toman(5)
             ],
-            [
+            'Default currency is Rial (via config)' => [
+                'rial',
+                50,
+                Money::Toman(5)
+            ],
+            'Default currency is Toman (via gateway)' => [
+                null,
+                5,
+                Money::Toman(5)
+            ],
+            'Currency is Rial (overridden) compared with Toman' => [
                 'toman',
-                Money::Toman(10000),
-                Money::Toman(10000)
+                Money::Rial(50),
+                Money::Toman(5)
             ],
-            [
+            'Currency is Toman (overridden) compared with Toman' => [
                 'toman',
-                Money::Rial(10000),
-                Money::Rial(10000)
+                Money::Toman(50),
+                Money::Toman(50)
             ],
-            [
-                'rial',
-                10000,
-                Money::Rial(10000)
-            ],
-            [
-                'rial',
-                Money::Toman(10000),
-                Money::Toman(10000)
-            ],
-            [
-                'rial',
-                Money::Rial(10000),
-                Money::Rial(10000)
-            ],
-            [
-                null,
-                10000,
-                Money::Toman(10000)
-            ],
-            [
-                null,
-                Money::Toman(10000),
-                Money::Toman(10000)
-            ],
-            [
-                null,
-                Money::Rial(10000),
-                Money::Rial(10000)
-            ],
-        ];
-    }
-
-    public static function badFakeTomanBasedAmountProvider()
-    {
-        return [
-            // config, actual, unexpected
-            // Correct currencies but wrong values
-            [
+            'Currency is Toman (overridden) compared with Rial' => [
                 'toman',
-                10000,
-                Money::Toman(99999)
+                Money::Toman(5),
+                Money::Rial(50)
             ],
-            [
+            'Currency is Rial (overridden) compared with Rial' => [
                 'toman',
-                Money::Toman(10000),
-                Money::Toman(99999)
-            ],
-            [
-                'toman',
-                Money::Rial(10000),
-                Money::Rial(99999)
-            ],
-            [
-                'rial',
-                10000,
-                Money::Rial(99999)
-            ],
-            [
-                'rial',
-                Money::Toman(10000),
-                Money::Toman(99999)
-            ],
-            [
-                'rial',
-                Money::Rial(10000),
-                Money::Rial(99999)
-            ],
-            [
-                null,
-                10000,
-                Money::Toman(99999)
-            ],
-            [
-                null,
-                Money::Toman(10000),
-                Money::Toman(99999)
-            ],
-            [
-                null,
-                Money::Rial(10000),
-                Money::Rial(99999)
-            ],
-
-            // config, actual, unexpected
-            // Correct values but wrong currencies
-            [
-                'toman',
-                10000,
-                Money::Rial(10000)
-            ],
-            [
-                'toman',
-                Money::Toman(10000),
-                Money::Rial(10000)
-            ],
-            [
-                'toman',
-                Money::Rial(10000),
-                Money::Toman(10000)
-            ],
-            [
-                'rial',
-                10000,
-                Money::Toman(10000)
-            ],
-            [
-                'rial',
-                Money::Toman(10000),
-                Money::Rial(10000)
-            ],
-            [
-                'rial',
-                Money::Rial(10000),
-                Money::Toman(10000)
-            ],
-            [
-                null,
-                10000,
-                Money::Rial(10000)
-            ],
-            [
-                null,
-                Money::Toman(10000),
-                Money::Rial(10000)
-            ],
-            [
-                null,
-                Money::Rial(10000),
-                Money::Toman(10000)
+                Money::Rial(50),
+                Money::Rial(50)
             ],
         ];
     }

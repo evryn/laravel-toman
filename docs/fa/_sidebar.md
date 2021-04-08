@@ -1,10 +1,6 @@
 * [معرفی](fa/README.md)
 
-* شروع به کار
-
-  * [نصب](fa/install.md)
-  * [تنظیمات](fa/configuration.md)
-  * [ترجمه‌ها](fa/translations.md)
+* [شروع به کار](fa/getting-started.md)
     
 * درگاه‌های پرداخت
 

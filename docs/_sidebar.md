@@ -1,10 +1,6 @@
 * [Introduction](README.md)
 
-* Getting started
-
-  * [Installation](install.md)
-  * [Configuration](configuration.md)
-  * [Translations](translations.md)
+* [Getting Started](getting-started.md)
     
 * Payment Gateways
 

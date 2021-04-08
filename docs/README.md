@@ -35,6 +35,6 @@ Writing a test for your application and want to see if you're using the package 
 See our testing instructions in your payment gateway section!
 
 <br></br>
-➡ Why don't you see yourself? [Quick Start](install.md)
+➡ Why don't you see yourself? [Quick Start](getting-started.md)
 
 ➡ Looking for old documents? <a href="v1/index.html">V1 Docs</a>

@@ -34,6 +34,7 @@ Toman is a Laravel package which makes working with popular payment gateways muc
 ## Supported Gateways
 
 ✅ [Zarinpal.com](https://zarinpal.com)  
+✅ [IDPay.ir](https://idpay.ir)  
 🔘 [YekPay.com](https://yekpay.com/)  
 🔘 [Pay.ir](https://pay.ir/)  
 🔘 [PayPing.ir](https://www.payping.ir/)  

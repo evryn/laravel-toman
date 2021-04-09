@@ -32,7 +32,11 @@ trait InteractsWithResponse
 
     public function message(): ?string
     {
-        return Arr::first($this->messages());
+        return Arr::first(
+            Arr::flatten(
+                $this->messages()
+            )
+        );
     }
 
     public function messages(): array

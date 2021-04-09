@@ -203,8 +203,12 @@ final class RequestTest extends TestCase
             'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
                 'Status' => $statusCode,
                 'errors' => [
-                    'Email' => 'The email must be a valid email address.',
-                    'Amount' => 'The amount must be valid.',
+                    'Email' => [
+                        'The email must be a valid email address.'
+                    ],
+                    'Amount' => [
+                        'The amount must be valid.'
+                    ],
                 ]
             ], $httpStatus),
         ]);
@@ -223,8 +227,8 @@ final class RequestTest extends TestCase
                 self::assertEquals(__("toman::zarinpal.status.$messageKey"), $exception->getMessage());
                 self::assertEquals('The email must be a valid email address.', $request->message());
                 self::assertEquals([
-                    'Email' => 'The email must be a valid email address.',
-                    'Amount' => 'The amount must be valid.'
+                    'Email' => ['The email must be a valid email address.'],
+                    'Amount' => ['The amount must be valid.']
                 ], $request->messages());
             }
 

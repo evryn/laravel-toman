@@ -22,10 +22,10 @@
     and start using in <5m
 </p>
 
-<p style="text-align: right; direction: rtl">
-    📚
+<p align="center">
     <a target="_blank" href="https://evryn.github.io/laravel-toman/#/fa/">داکیومنت فارسی</a>
     رو بخونین و تو 5 دقیقه استفاده‌اش کنین
+     📚
 </p>
 
 # About Toman (تومَن)

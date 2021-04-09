@@ -21,6 +21,7 @@ class Provider
     {
         return [
             [200, Status::INCOMPLETE_DATA, 'incomplete_data'], // 404 HTTP code is not guaranteed for errors
+            [200, -10, '-10'], // Yeah! It happens, and is not documented!
             [404, Status::INCOMPLETE_DATA, 'incomplete_data'],
             [404, Status::WRONG_IP_OR_MERCHANT_ID, 'wrong_ip_or_merchant_id'],
             [404, Status::SHAPARAK_LIMITED, 'shaparak_limited'],

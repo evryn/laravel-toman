@@ -61,12 +61,12 @@ jobs:
       - name: Execute tests
         continue-on-error: false
         run: vendor/bin/phpunit --verbose
-        if: !matrix.coverage
+        if: ${{ !matrix.coverage }}
 
       - name: Execute tests with coverage
         continue-on-error: false
         run: vendor/bin/phpunit --verbose --coverage-clover coverage.xml
-        if: matrix.coverage
+        if: ${{ matrix.coverage }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
@@ -75,4 +75,5 @@ jobs:
           files: ./coverage.xml
           path_to_write_report: ./coverage/codecov_report.txt
           verbose: true
-        if: matrix.coverage
+        if: ${{ matrix.coverage }}
+

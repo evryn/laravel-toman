@@ -7,7 +7,7 @@
   * [💳 Zarinpal](gateways/zarinpal.md)
   * [💳 IDPay](gateways/idpay.md)
 
-* [Contributing](../CONTRIBUTING.md)
-* [Changelog](../CHANGELOG.md)
+* [Contributing](CONTRIBUTING.md)
+* [Changelog](CHANGELOG.md)
 * [💜 Support](support.md)
 

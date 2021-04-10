@@ -114,7 +114,7 @@ class PaymentController extends Controller
     {
         // Use $request->transactionId() to match the payment record stored
         // in your persistence database and get expected amount, which is required
-        // for verification.
+        // for verification. Take care of Double Spending.
 
         $payment = $request->amount(1000)->verify();
 
@@ -186,7 +186,7 @@ if ($payment->failed()) {
 }
 ```
 
-### تست کردن درگاه IDPay
+### تست کردن درگاه زرین‌پال
 اگه که برای نرم‌افزارتون تست سوئیت خودکار می‌نویسین و می‌خواین ببینین که با پکیج به درستی تعامل داره یا نه، ادامه بدین.
 
 ####  🧪 تست درخواست پرداخت

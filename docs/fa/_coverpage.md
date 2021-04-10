@@ -23,7 +23,7 @@
 </a>
 
 [گیت‌هاب](https://github.com/evryn/laravel-toman)
-[شروع به کار](#quickstart)
+[شروع به کار](fa/getting-started.md)
 
 <!-- background color -->
 

@@ -1,5 +1,11 @@
 name: Snyk PHP Vulnerability Checker
-on: push
+on:
+  push:
+    branches: [ master, 2.x ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '00 12 * * 5'
 jobs:
   security:
     runs-on: ubuntu-latest
@@ -10,4 +16,4 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-          file: /composer.json
+          file: ../../composer.json

@@ -267,7 +267,7 @@ class PendingRequest
         return str_replace(
             ':amount',
             $this->provideAmount(),
-            $this->getRawData('description') ?: config('toman.description')
+            $this->getRawData('description') ?? config('toman.description')
         );
     }
 

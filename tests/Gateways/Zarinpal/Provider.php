@@ -56,7 +56,7 @@ class Provider
                 50,
                 5,
             ],
-            'Default currency is Toman (via gateway)' => [
+            'Default currency is Toman (when no config is set)' => [
                 null,
                 5,
                 5,
@@ -87,7 +87,7 @@ class Provider
                 50,
                 Money::Toman(5),
             ],
-            'Default currency is Toman (via gateway)' => [
+            'Default currency is Toman (when no config is set)' => [
                 null,
                 5,
                 Money::Toman(5),

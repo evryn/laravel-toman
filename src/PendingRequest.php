@@ -232,7 +232,7 @@ class PendingRequest
         if (! $amount instanceof Money) {
             $amount = new Money(
                 $amount,
-                config('toman.currency') ?? $this->getGateway()->getCurrency()
+                config('toman.currency') ?: 'toman'
             );
         }
 

@@ -62,10 +62,10 @@ class Provider
                 50,
                 50,
             ],
-            'Default currency is Rial (via gateway)' => [
+            'Default currency is Toman (when no config is set)' => [
                 null,
                 50,
-                50,
+                500,
             ],
             'Currency is Rial (overridden)' => [
                 'toman',
@@ -93,10 +93,10 @@ class Provider
                 50,
                 Money::Rial(50),
             ],
-            'Default currency is Rial (via gateway)' => [
+            'Default currency is Toman (when no config is set)' => [
                 null,
                 50,
-                Money::Rial(50),
+                Money::Rial(500),
             ],
             'Currency is Rial (overridden) compared with Toman' => [
                 'toman',

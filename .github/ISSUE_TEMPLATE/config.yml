@@ -1,0 +1,12 @@
+  
+blank_issues_enabled: false
+contact_links:
+  - name: Feature request
+    url: https://github.com/evryn/laravel-toman/discussions/categories/ideas
+    about: "Let's discuss about features and your ideas"
+  - name: Support Questions & Other
+    url: https://github.com/evryn/laravel-toman/discussions/categories/q-a
+    about: "Have a question? Let us help you"
+  - name: Other
+    url: https://github.com/evryn/laravel-toman/discussions/categories/general
+    about: "Let's talk about what does matter to you"

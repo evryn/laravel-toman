@@ -4,7 +4,7 @@ contact_links:
   - name: Feature request
     url: https://github.com/evryn/laravel-toman/discussions/categories/ideas
     about: "Let's discuss about features and your ideas"
-  - name: Support Questions & Other
+  - name: Support Questions
     url: https://github.com/evryn/laravel-toman/discussions/categories/q-a
     about: "Have a question? Let us help you"
   - name: Other

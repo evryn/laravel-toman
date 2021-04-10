@@ -52,7 +52,8 @@ class LaravelTomanServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            'laravel-toman.payment',
+            GatewayInterface::class,
+            Factory::class,
         ];
     }
 

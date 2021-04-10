@@ -278,30 +278,4 @@ final class VerificationTest extends TestCase
             }
         });
     }
-
-    /**
-     * @test
-     * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::tomanBasedAmountProvider()
-     */
-    public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)
-    {
-        config([
-            'toman.currency' => $configCurrency,
-        ]);
-
-        Http::fake([
-            'https://api.idpay.ir/v1.1/payment/verify' => Http::response([
-                'status' => 100,
-                'payment' => [
-                    'track_id' => 'rid_1000',
-                ],
-            ], 200),
-        ]);
-
-        $this->factory->amount($actualAmount)->verify();
-
-        Http::assertSent(function (Request $request) use ($expectedAmountValue) {
-            return $request['amount'] == $expectedAmountValue;
-        });
-    }
 }

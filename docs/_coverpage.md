@@ -12,8 +12,8 @@ Elegant API • Heavily Tested • Multiple Gateways
 <a target="_blank" href="https://packagist.org/packages/evryn/laravel-toman">
     <img alt="Total Downloads" src="https://img.shields.io/packagist/dt/evryn/laravel-toman.svg?style=flat-square">
 </a>
-<a target="_blank" href="https://travis-ci.com/evryn/laravel-toman">
-    <img alt="Build Status" src="https://img.shields.io/travis/com/evryn/laravel-toman/master.svg?style=flat-square">
+<a target="_blank" href="https://github.com/evryn/laravel-toman/actions/workflows/tests.yml?query=branch:master">
+    <img alt="Build Status" src="https://img.shields.io/github/workflow/status/evryn/laravel-toman/tests/master?label=tests&style=flat-square">
 </a>
 <a target="_blank" href="https://codecov.io/gh/evryn/laravel-toman">
     <img alt="Code Coverage" src='https://img.shields.io/codecov/c/github/evryn/laravel-toman?label=coverage&style=flat-square'>

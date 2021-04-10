@@ -4,14 +4,14 @@ Toman is a Laravel package that makes working with popular payment gateways much
 There are dozens of gateway handlers; Here is why you may choose Laravel Toman:
 
 ## Heavily Tested
-<a target="_blank" href="https://travis-ci.com/evryn/laravel-toman">
-    <img alt="Build Status" src="https://img.shields.io/travis/com/evryn/laravel-toman/master.svg?style=flat-square">
+<a target="_blank" href="https://github.com/evryn/laravel-toman/actions/workflows/tests.yml?query=branch:master">
+    <img alt="Build Status" src="https://img.shields.io/github/workflow/status/evryn/laravel-toman/tests/master?label=tests&style=flat-square">
 </a>
 <a target="_blank" href="https://codecov.io/gh/evryn/laravel-toman">
     <img alt="Code Coverage" src='https://img.shields.io/codecov/c/github/evryn/laravel-toman?label=coverage&style=flat-square'>
 </a>
 
-Payment is a critical topic, and its handlers must be tested from all aspects. Laravel Toman has an automated test suit with 100% coverage. On every released build, we're forced to pass all tests so you can add a payment to your code with confidence.
+Payment is a critical topic, and its handlers must be tested from all aspects. Laravel Toman has an automated test suit with high coverage. On every released build, we're forced to pass all tests so you can add a payment to your code with confidence.
 
 ## Elegant API
 

@@ -16,4 +16,5 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-          file: ../../composer.json
+        working-directory: /
+        file: composer.json

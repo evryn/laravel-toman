@@ -20,9 +20,12 @@ jobs:
             testbench: '5.*'
           - laravel: '8.*'
             testbench: '6.*'
-            coverage: true
+          - php: '7.4'
+            laravel: '8.*'
+            testbench: '6.*'
+            coverage: '☂ '
 
-    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }} - Ubuntu 20.04
+    name: ${{ matrix.coverage }}PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }} - Ubuntu 20.04
 
     steps:
       - name: Checkout code

@@ -13,6 +13,8 @@ final class CallbackRequestTest extends TestCase
     /** @test */
     public function resolves_zarinpal_callback()
     {
+        self::assertEquals(1, 2);
+        
         config([
             'toman.default' => 'zarinpal',
             'toman.gateways.zarinpal' => [

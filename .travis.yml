@@ -7,34 +7,37 @@ cache:
 matrix:
   fast_finish: true
   include:
-    - php: 7.2
-      env: LARAVEL='5.8.*' TESTBENCH='3.8.*' COMPOSER_FLAGS='--prefer-lowest'
-    - php: 7.2
-      env: LARAVEL='5.8.*' TESTBENCH='3.8.*' COMPOSER_FLAGS='--prefer-stable'
-    - php: 7.3
-      env: LARAVEL='5.8.*' TESTBENCH='3.8.*' COMPOSER_FLAGS='--prefer-lowest'
-    - php: 7.3
-      env: LARAVEL='5.8.*' TESTBENCH='3.8.*' COMPOSER_FLAGS='--prefer-stable'
-    - php: 7.2
-      env: LARAVEL='6.*' TESTBENCH='4.*' COMPOSER_FLAGS='--prefer-lowest'
-    - php: 7.2
-      env: LARAVEL='6.*' TESTBENCH='4.*' COMPOSER_FLAGS='--prefer-stable'
-    - php: 7.3
-      env: LARAVEL='6.*' TESTBENCH='4.*' COMPOSER_FLAGS='--prefer-lowest'
-    - php: 7.3
-      env: LARAVEL='6.*' TESTBENCH='4.*' COMPOSER_FLAGS='--prefer-stable'
-    - php: 7.2
-      env: LARAVEL='7.*' TESTBENCH='5.*' COMPOSER_FLAGS='--prefer-lowest'
-    - php: 7.2
-      env: LARAVEL='7.*' TESTBENCH='5.*' COMPOSER_FLAGS='--prefer-stable'
+    # Laravel 7
     - php: 7.3
       env: LARAVEL='7.*' TESTBENCH='5.*' COMPOSER_FLAGS='--prefer-lowest'
     - php: 7.3
       env: LARAVEL='7.*' TESTBENCH='5.*' COMPOSER_FLAGS='--prefer-stable'
+
     - php: 7.4
       env: LARAVEL='7.*' TESTBENCH='5.*' COMPOSER_FLAGS='--prefer-lowest'
     - php: 7.4
-      env: LARAVEL='7.*' TESTBENCH='5.*' COMPOSER_FLAGS='--prefer-stable' COVERAGE=true
+      env: LARAVEL='7.*' TESTBENCH='5.*' COMPOSER_FLAGS='--prefer-stable'
+
+    - php: 8.0
+      env: LARAVEL='7.*' TESTBENCH='5.*' COMPOSER_FLAGS='--prefer-lowest'
+    - php: 8.0
+      env: LARAVEL='7.*' TESTBENCH='5.*' COMPOSER_FLAGS='--prefer-stable'
+
+    # Laravel 8
+    - php: 7.3
+      env: LARAVEL='8.*' TESTBENCH='6.*' COMPOSER_FLAGS='--prefer-lowest'
+    - php: 7.3
+      env: LARAVEL='8.*' TESTBENCH='6.*' COMPOSER_FLAGS='--prefer-stable'
+
+    - php: 7.4
+      env: LARAVEL='8.*' TESTBENCH='6.*' COMPOSER_FLAGS='--prefer-lowest'
+    - php: 7.4
+      env: LARAVEL='8.*' TESTBENCH='6.*' COMPOSER_FLAGS='--prefer-stable' COVERAGE=true
+
+    - php: 8.0
+      env: LARAVEL='8.*' TESTBENCH='6.*' COMPOSER_FLAGS='--prefer-lowest'
+    - php: 8.0
+      env: LARAVEL='8.*' TESTBENCH='6.*' COMPOSER_FLAGS='--prefer-stable'
 
 before_install:
   - travis_retry composer self-update

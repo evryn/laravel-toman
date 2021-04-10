@@ -7,22 +7,82 @@
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/vue.css">
+  <link rel="stylesheet" href="//cdn.font-store.ir/yekan.css">
   <link rel="icon" href="_media/icon.png">
+  <style>
+    html[lang=fa] body {
+      font-family: 'yekan',serif;
+      text-align: right;
+      direction: rtl;
+    }
+    html[lang=fa] .sidebar ul {
+      margin: 0 15px 0 0;
+    }
+    html[lang=fa] section.cover .cover-main>p:last-child a {
+      padding: .5em 2rem .7em;
+      letter-spacing: unset;
+    }
+    .fa {
+      font-family: 'yekan',serif;
+    }
+    aside > h1 > a > small {
+      top: 6px;
+      font-size: 70%;
+      position: relative;
+    }
+    .green {
+      color: #28B463;
+    }
+    .red {
+      color: #CB4335;
+    }
+    .ltr {
+      text-align: left;
+      direction: ltr;
+    }
+    code {
+      unicode-bidi: bidi-override;
+      text-align: left;
+      direction: ltr;
+    }
+  </style>
 </head>
-<body>
+<body class="rtl">
   <div id="app">Opening wallet ...</div>
   <script>
     window.$docsify = {
       loadSidebar: true,
-      coverpage: true,
-      name: 'Laravel Toman',
+      loadNavbar: true,
+      fallbackLanguages: ['fa'],
+      coverpage: ['/', '/fa/'],
+      name: 'Laravel Toman<small>2.0</small>',
       repo: 'https://github.com/evryn/laravel-toman/',
-      homepage: 'introduction.md',
+      alias: {
+        '/changelog': 'https://raw.githubusercontent.com/evryn/laravel-toman/master/CHANGELOG.md',
+        '/contributing': 'https://raw.githubusercontent.com/evryn/laravel-toman/master/CONTRIBUTING.md',
+        '/fa/(.*)': './fa/$1',
+      },
+      toc: {
+        tocMaxLevel: 5,
+        target: 'h2, h3, h4, h5, h6'
+      },
+      plugins: [
+        function(hook) {
+          hook.afterEach(function(html) {
+            var lang = location.hash.match(/#\/(fa)\//);
+            lang = lang ? lang[1] : 'en'
+            document.documentElement.setAttribute('lang', lang);
+
+            return html;
+          });
+        }
+      ]
     }
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-bash.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-php.min.js"></script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script src="//unpkg.com/docsify-plugin-toc"></script>
 </body>
 </html>

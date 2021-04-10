@@ -1,18 +1,13 @@
-* [Introduction](introduction.md)
+* [Introduction](README.md)
 
-* Getting started
-
-  * [Quick Start](quickstart.md)
-  * [Configuration](configuration.md)
-  * [Translations](translations.md)
+* [Getting Started](getting-started.md)
     
-* Available Gateways
+* Payment Gateways
 
-  * [Zarinpal](gateways/zarinpal.md)
-  
-* [Testing](testing.md)
+  * [💳 Zarinpal](gateways/zarinpal.md)
+  * [💳 IDPay](gateways/idpay.md)
 
-* [Contributing](contributing.md)
-* [Changelog](changelog.md)
-* [Support 💜](support.md)
+* [Contributing](../CONTRIBUTING.md)
+* [Changelog](../CHANGELOG.md)
+* [💜 Support](support.md)
 

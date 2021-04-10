@@ -2,12 +2,8 @@
 
 namespace Evryn\LaravelToman;
 
-use Evryn\LaravelToman\Clients\GuzzleClient;
-use Evryn\LaravelToman\Contracts\PaymentRequester;
-use Evryn\LaravelToman\Contracts\PaymentVerifier;
-use Evryn\LaravelToman\Managers\PaymentRequestManager;
-use Evryn\LaravelToman\Managers\PaymentVerificationManager;
-use GuzzleHttp\Client;
+use Evryn\LaravelToman\Interfaces\GatewayInterface;
+use Evryn\LaravelToman\Managers\GatewayManager;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelTomanServiceProvider extends ServiceProvider
@@ -22,7 +18,6 @@ class LaravelTomanServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
@@ -39,17 +34,12 @@ class LaravelTomanServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(self::CONFIG_FILE, 'toman');
 
-        $this->app->singleton(PaymentRequester::class, function ($app) {
-            return new PaymentRequestManager($app);
+        $this->app->bind(GatewayInterface::class, function ($app) {
+            return (new GatewayManager($app))->driver();
         });
 
-        $this->app->singleton(PaymentVerifier::class, function ($app) {
-            return new PaymentVerificationManager($app);
-        });
-
-        // Register the Guzzle HTTP client used by drivers to send requests
-        $this->app->singleton(GuzzleClient::class, function () {
-            return new Client;
+        $this->app->singleton(Factory::class, function ($app) {
+            return new Factory($app->make(GatewayInterface::class));
         });
     }
 
@@ -62,8 +52,8 @@ class LaravelTomanServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            'laravel-toman.payment',
-            GuzzleClient::class,
+            GatewayInterface::class,
+            Factory::class,
         ];
     }
 
@@ -74,7 +64,8 @@ class LaravelTomanServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        // Publishing the configuration file.
+        // Make config and translation files publishable via artisan command
+
         $this->publishes([
             self::CONFIG_FILE => config_path('toman.php'),
         ], 'config');

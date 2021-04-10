@@ -31,7 +31,7 @@ class Status
 
     public static function toMessage($status)
     {
-        $translationKey = strtolower(self::getConstantName($status));
+        $translationKey = strtolower(self::getConstantName($status)) ?: $status;
 
         return __("toman::zarinpal.status.$translationKey");
     }

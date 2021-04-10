@@ -59,7 +59,7 @@ return [
    | You can of course override it and specify another currency during making
    | requests using Money object too.
    |
-   | Supported currencies: "toman', "rial"
+   | Supported currencies: "toman", "rial"
    |
    */
 

@@ -4,8 +4,8 @@ Toman is a Laravel package which makes working with popular payment gateways muc
 There are dozens of gateway handlers; Here is why you may choose Laravel Toman:
 
 ## Heavily Tested
-<a target="_blank" href="https://travis-ci.org/evryn/laravel-toman">
-    <img alt="Build Status" src="https://img.shields.io/travis/evryn/laravel-toman/master.svg?style=flat-square">
+<a target="_blank" href="https://travis-ci.com/evryn/laravel-toman">
+    <img alt="Build Status" src="https://img.shields.io/travis/com/evryn/laravel-toman/master.svg?style=flat-square">
 </a>
 <a target="_blank" href="https://codecov.io/gh/evryn/laravel-toman">
     <img alt="Code Coverage" src='https://img.shields.io/codecov/c/github/evryn/laravel-toman?label=coverage&style=flat-square'>

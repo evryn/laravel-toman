@@ -23,6 +23,7 @@ jobs:
           - php: '7.4'
             laravel: '8.*'
             testbench: '6.*'
+            stability: 'prefer-stable'
             coverage: '☂ '
 
     name: ${{ matrix.coverage }}PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }} - Ubuntu 20.04
@@ -37,7 +38,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl
           tools: composer:v2
-          coverage: none
+          coverage: xdebug
           
       - name: Set Laravel and Testbench versions
         uses: nick-invision/retry@v1

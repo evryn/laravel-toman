@@ -42,19 +42,19 @@ final class RequestTest extends TestCase
         // or the specific one.
 
         config([
-            'toman.currency' => 'rial'
+            'toman.currency' => 'rial',
         ]);
 
         Http::fake([
-            "https://api.idpay.ir/v1.1/payment" => Http::response([
+            'https://api.idpay.ir/v1.1/payment' => Http::response([
                 'id' => 'tid1000',
-                'link' => 'https://idpay.ir/p/ws-sandbox/tid1000'
+                'link' => 'https://idpay.ir/p/ws-sandbox/tid1000',
             ], 201),
         ]);
 
         $this->gateway->setConfig([
             'sandbox' => $sandbox,
-            'api_key' => 'xxxx-xxxx-xxxx-xxxx'
+            'api_key' => 'xxxx-xxxx-xxxx-xxxx',
         ]);
 
         $gateway = $this->factory
@@ -67,13 +67,12 @@ final class RequestTest extends TestCase
             ->email('amirreza@example.com');
 
         tap($gateway->request(), function (RequestedPayment $request) use ($sandbox) {
-
             Http::assertSent(function (Request $request) use ($sandbox) {
-                return ($sandbox ? $request->header('X-SANDBOX')[0] === '1' : !$request->hasHeader('X-SANDBOX'))
+                return ($sandbox ? $request->header('X-SANDBOX')[0] === '1' : ! $request->hasHeader('X-SANDBOX'))
                     && $request->header('X-API-KEY')[0] === 'xxxx-xxxx-xxxx-xxxx'
                     && $request->method() === 'POST'
                     && $request->isJson()
-                    && $request->url() === "https://api.idpay.ir/v1.1/payment"
+                    && $request->url() === 'https://api.idpay.ir/v1.1/payment'
                     && $request['callback'] === 'https://example.com/callback'
                     && $request['order_id'] === 'order1000'
                     && $request['amount'] == 1500
@@ -124,17 +123,20 @@ final class RequestTest extends TestCase
             try {
                 $request->transactionId();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayServerException $exception) {}
+            } catch (GatewayServerException $exception) {
+            }
 
             try {
                 $request->paymentUrl();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayServerException $exception) {}
+            } catch (GatewayServerException $exception) {
+            }
 
             try {
                 $request->pay();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayServerException $exception) {}
+            } catch (GatewayServerException $exception) {
+            }
         });
     }
 
@@ -151,7 +153,7 @@ final class RequestTest extends TestCase
         Http::fake([
             'https://api.idpay.ir/v1.1/payment' => Http::response([
                 'error_code' => $statusCode,
-                'error_message' => 'Something failed ...'
+                'error_message' => 'Something failed ...',
             ], $httpStatus),
         ]);
 
@@ -174,17 +176,20 @@ final class RequestTest extends TestCase
             try {
                 $request->transactionId();
                 $this->fail('GatewayClientException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
 
             try {
                 $request->paymentUrl();
                 $this->fail('GatewayClientException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
 
             try {
                 $request->pay();
                 $this->fail('GatewayClientException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
         });
     }
 
@@ -195,13 +200,13 @@ final class RequestTest extends TestCase
     public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)
     {
         config([
-            'toman.currency' => $configCurrency
+            'toman.currency' => $configCurrency,
         ]);
 
         Http::fake([
-            "https://api.idpay.ir/v1.1/payment" => Http::response([
+            'https://api.idpay.ir/v1.1/payment' => Http::response([
                 'id' => 'tid1000',
-                'link' => 'https://idpay.ir/p/ws-sandbox/tid1000'
+                'link' => 'https://idpay.ir/p/ws-sandbox/tid1000',
             ], 201),
         ]);
 

@@ -84,7 +84,7 @@ class Money
 
     protected function validateCurrency(string $currency)
     {
-        if (!in_array($currency, [self::TOMAN, self::RIAL])) {
+        if (! in_array($currency, [self::TOMAN, self::RIAL])) {
             throw new \InvalidArgumentException("`{$currency}` is not supported as currency.");
         }
     }

@@ -7,7 +7,6 @@ use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\CheckedPayment;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
-use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
@@ -45,7 +44,7 @@ final class VerificationTest extends TestCase
 
         $this->gateway->setConfig([
             'sandbox' => $sandbox,
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
+            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx',
         ]);
 
         tap(
@@ -89,18 +88,17 @@ final class VerificationTest extends TestCase
         ]);
 
         request()->merge([
-            'Authority' => 'A0000012345'
+            'Authority' => 'A0000012345',
         ]);
 
         $this->gateway->setConfig([
             'sandbox' => $sandbox,
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
+            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx',
         ]);
 
         $gateway = $this->factory->inspectCallbackRequest()->amount(1500);
 
         tap($gateway->verify(), function (CheckedPayment $request) use ($baseUrl) {
-
             Http::assertSent(function (Request $request) use ($baseUrl) {
                 return $request->method() === 'POST'
                     && $request->url() === "https://$baseUrl/pg/rest/WebGate/PaymentVerification.json"
@@ -136,7 +134,7 @@ final class VerificationTest extends TestCase
         Http::fake();
 
         request()->merge([
-            'Authority' => $value
+            'Authority' => $value,
         ]);
 
         $this->expectException(ValidationException::class);
@@ -197,7 +195,8 @@ final class VerificationTest extends TestCase
             try {
                 $verification->referenceId();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayServerException $exception) {}
+            } catch (GatewayServerException $exception) {
+            }
         });
     }
 
@@ -237,7 +236,8 @@ final class VerificationTest extends TestCase
             try {
                 $verification->referenceId();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
         });
     }
 
@@ -248,11 +248,11 @@ final class VerificationTest extends TestCase
     public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)
     {
         config([
-            'toman.currency' => $configCurrency
+            'toman.currency' => $configCurrency,
         ]);
 
         Http::fake([
-            "www.zarinpal.com/pg/rest/WebGate/PaymentVerification.json" => Http::response([
+            'www.zarinpal.com/pg/rest/WebGate/PaymentVerification.json' => Http::response([
                 'Status' => '100',
                 'RefID' => '1000020000',
             ], 200),

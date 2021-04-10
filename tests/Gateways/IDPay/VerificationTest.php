@@ -40,17 +40,17 @@ final class VerificationTest extends TestCase
     public function can_verify_manually(bool $sandbox)
     {
         Http::fake([
-            "https://api.idpay.ir/v1.1/payment/verify" => Http::response([
+            'https://api.idpay.ir/v1.1/payment/verify' => Http::response([
                 'status' => 100,
                 'payment' => [
-                    'track_id' => 'rid_1000'
+                    'track_id' => 'rid_1000',
                 ],
             ], 200),
         ]);
 
         $this->gateway->setConfig([
             'sandbox' => $sandbox,
-            'api_key' => 'xxxx-xxxx-xxxx-xxxx'
+            'api_key' => 'xxxx-xxxx-xxxx-xxxx',
         ]);
 
         tap(
@@ -60,11 +60,11 @@ final class VerificationTest extends TestCase
                 ->verify(),
             function (CheckedPayment $request) use ($sandbox) {
                 Http::assertSent(function (Request $request) use ($sandbox) {
-                    return ($sandbox ? $request->header('X-SANDBOX')[0] === '1' : !$request->hasHeader('X-SANDBOX'))
+                    return ($sandbox ? $request->header('X-SANDBOX')[0] === '1' : ! $request->hasHeader('X-SANDBOX'))
                         && $request->header('X-API-KEY')[0] === 'xxxx-xxxx-xxxx-xxxx'
                         && $request->method() === 'POST'
                         && $request->isJson()
-                        && $request->url() === "https://api.idpay.ir/v1.1/payment/verify"
+                        && $request->url() === 'https://api.idpay.ir/v1.1/payment/verify'
                         && $request['order_id'] === 'order_1'
                         && $request['id'] == 'tid_1';
                 });
@@ -90,34 +90,33 @@ final class VerificationTest extends TestCase
     public function can_verify_callback_request(bool $sandbox)
     {
         Http::fake([
-            "https://api.idpay.ir/v1.1/payment/verify" => Http::response([
+            'https://api.idpay.ir/v1.1/payment/verify' => Http::response([
                 'status' => 100,
                 'payment' => [
-                    'track_id' => 'rid_1000'
+                    'track_id' => 'rid_1000',
                 ],
             ], 200),
         ]);
 
         request()->merge([
             'id' => 'tid_1',
-            'order_id' => 'order_1'
+            'order_id' => 'order_1',
         ]);
 
         $this->gateway->setConfig([
             'sandbox' => $sandbox,
-            'api_key' => 'xxxx-xxxx-xxxx-xxxx'
+            'api_key' => 'xxxx-xxxx-xxxx-xxxx',
         ]);
 
         $gateway = $this->callbackRequest->validateResolved();
 
         tap($gateway->verify(), function (CheckedPayment $request) use ($sandbox) {
-
             Http::assertSent(function (Request $request) use ($sandbox) {
-                return ($sandbox ? $request->header('X-SANDBOX')[0] === '1' : !$request->hasHeader('X-SANDBOX'))
+                return ($sandbox ? $request->header('X-SANDBOX')[0] === '1' : ! $request->hasHeader('X-SANDBOX'))
                     && $request->header('X-API-KEY')[0] === 'xxxx-xxxx-xxxx-xxxx'
                     && $request->method() === 'POST'
                     && $request->isJson()
-                    && $request->url() === "https://api.idpay.ir/v1.1/payment/verify"
+                    && $request->url() === 'https://api.idpay.ir/v1.1/payment/verify'
                     && $request['order_id'] === 'order_1'
                     && $request['id'] == 'tid_1';
             });
@@ -151,7 +150,7 @@ final class VerificationTest extends TestCase
 
         request()->merge([
             'id' => $value,
-            'order_id' => 'order_1'
+            'order_id' => 'order_1',
         ]);
 
         $this->expectException(ValidationException::class);
@@ -169,7 +168,7 @@ final class VerificationTest extends TestCase
 
         request()->merge([
             'id' => 'tid_1000',
-            'order_id' => $value
+            'order_id' => $value,
         ]);
 
         $this->expectException(ValidationException::class);
@@ -184,7 +183,7 @@ final class VerificationTest extends TestCase
             'https://api.idpay.ir/v1.1/payment/verify' => Http::response([
                 'status' => 101,
                 'payment' => [
-                    'track_id' => 'rid_1000'
+                    'track_id' => 'rid_1000',
                 ],
             ], 200),
         ]);
@@ -233,7 +232,8 @@ final class VerificationTest extends TestCase
             try {
                 $verification->referenceId();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayServerException $exception) {}
+            } catch (GatewayServerException $exception) {
+            }
         });
     }
 
@@ -246,7 +246,7 @@ final class VerificationTest extends TestCase
         Http::fake([
             'https://api.idpay.ir/v1.1/payment/verify' => Http::response([
                 'error_code' => $statusCode,
-                'error_message' => 'Something failed ...'
+                'error_message' => 'Something failed ...',
             ], $httpStatus),
         ]);
 
@@ -274,7 +274,8 @@ final class VerificationTest extends TestCase
             try {
                 $verification->referenceId();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
         });
     }
 
@@ -285,14 +286,14 @@ final class VerificationTest extends TestCase
     public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)
     {
         config([
-            'toman.currency' => $configCurrency
+            'toman.currency' => $configCurrency,
         ]);
 
         Http::fake([
-            "https://api.idpay.ir/v1.1/payment/verify" => Http::response([
+            'https://api.idpay.ir/v1.1/payment/verify' => Http::response([
                 'status' => 100,
                 'payment' => [
-                    'track_id' => 'rid_1000'
+                    'track_id' => 'rid_1000',
                 ],
             ], 200),
         ]);

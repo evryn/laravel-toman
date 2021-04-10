@@ -15,7 +15,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function getPackageAliases($app)
     {
         return [
-            'Payment' => 'Evryn\LaravelToman\Facades\PaymentRequest'
+            'Payment' => 'Evryn\LaravelToman\Facades\PaymentRequest',
         ];
     }
 
@@ -29,9 +29,9 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     public static function setupHttpMacros()
     {
         Http::macro('assertNthRequestFieldEquals', function ($expected, $field, $nth) {
-            PHPUnit::assertNotEmpty($this->recorded[$nth-1], "{$nth}th request has not been sent.");
+            PHPUnit::assertNotEmpty($this->recorded[$nth - 1], "{$nth}th request has not been sent.");
 
-            $request = $this->recorded[$nth-1][0];
+            $request = $this->recorded[$nth - 1][0];
 
             PHPUnit::assertEquals(
                 $expected,

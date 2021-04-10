@@ -43,7 +43,7 @@ class PaymentVerification extends BaseRequest
 
     public function verify(): CheckedPayment
     {
-        $response =  Http::asJson()->withHeaders($this->makeHeaders())->post(
+        $response = Http::asJson()->withHeaders($this->makeHeaders())->post(
             $this->getEndpoint('payment/verify'),
             $this->pendingRequest->provideForGateway([
                 'transactionId',
@@ -71,7 +71,7 @@ class PaymentVerification extends BaseRequest
             return new CheckedPayment(
                 $data['error_code'],
                 new GatewayClientException(
-                    $data['error_message'] ,
+                    $data['error_message'],
                     $data['error_code']
                 ),
                 [],

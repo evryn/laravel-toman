@@ -2,9 +2,7 @@
 
 namespace Evryn\LaravelToman;
 
-use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
 use Evryn\LaravelToman\Interfaces\GatewayInterface;
-use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Support\Traits\Macroable;
 use PHPUnit\Framework\Assert as PHPUnit;
 
@@ -69,7 +67,7 @@ class Factory
      */
     public function assertRequested($callback)
     {
-        if (!$this->recordedPendingRequest || !$this->fakeRequest) {
+        if (! $this->recordedPendingRequest || ! $this->fakeRequest) {
             PHPUnit::fail('No payment request is recorded.');
         }
 
@@ -87,7 +85,7 @@ class Factory
      */
     public function assertCheckedForVerification($callback)
     {
-        if (!$this->recordedPendingRequest || !$this->fakeVerification) {
+        if (! $this->recordedPendingRequest || ! $this->fakeVerification) {
             PHPUnit::fail('No payment verification is recorded.');
         }
 
@@ -110,7 +108,7 @@ class Factory
     }
 
     /**
-     * Determine if requested with given truth test
+     * Determine if requested with given truth test.
      *
      * @param  null|callable  $callback
      * @return bool

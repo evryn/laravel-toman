@@ -7,13 +7,10 @@ use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
 use Evryn\LaravelToman\Gateways\Zarinpal\RequestedPayment;
-use Evryn\LaravelToman\Gateways\Zarinpal\Status;
-use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\Tests\TestCase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\URL;
 
 final class RequestTest extends TestCase
 {
@@ -45,7 +42,7 @@ final class RequestTest extends TestCase
         // or the specific one.
 
         config([
-            'toman.currency' => 'toman'
+            'toman.currency' => 'toman',
         ]);
 
         Http::fake([
@@ -57,7 +54,7 @@ final class RequestTest extends TestCase
 
         $this->gateway->setConfig([
             'sandbox' => $sandbox,
-            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx'
+            'merchant_id' => 'xxxx-xxxx-xxxx-xxxx',
         ]);
 
         $gateway = $this->factory
@@ -68,7 +65,6 @@ final class RequestTest extends TestCase
             ->email('amirreza@example.com');
 
         tap($gateway->request(), function (RequestedPayment $request) use ($baseUrl) {
-
             Http::assertSent(function (Request $request) use ($baseUrl) {
                 return $request->method() === 'POST'
                     && $request->url() === "https://$baseUrl/pg/rest/WebGate/PaymentRequest.json"
@@ -126,17 +122,20 @@ final class RequestTest extends TestCase
             try {
                 $request->transactionId();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayServerException $exception) {}
+            } catch (GatewayServerException $exception) {
+            }
 
             try {
                 $request->paymentUrl();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayServerException $exception) {}
+            } catch (GatewayServerException $exception) {
+            }
 
             try {
                 $request->pay();
                 $this->fail('GatewayServerException has no thrown.');
-            } catch (GatewayServerException $exception) {}
+            } catch (GatewayServerException $exception) {
+            }
         });
     }
 
@@ -175,17 +174,20 @@ final class RequestTest extends TestCase
             try {
                 $request->transactionId();
                 $this->fail('GatewayClientException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
 
             try {
                 $request->paymentUrl();
                 $this->fail('GatewayClientException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
 
             try {
                 $request->pay();
                 $this->fail('GatewayClientException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
         });
     }
 
@@ -204,12 +206,12 @@ final class RequestTest extends TestCase
                 'Status' => $statusCode,
                 'errors' => [
                     'Email' => [
-                        'The email must be a valid email address.'
+                        'The email must be a valid email address.',
                     ],
                     'Amount' => [
-                        'The amount must be valid.'
+                        'The amount must be valid.',
                     ],
-                ]
+                ],
             ], $httpStatus),
         ]);
 
@@ -228,24 +230,27 @@ final class RequestTest extends TestCase
                 self::assertEquals('The email must be a valid email address.', $request->message());
                 self::assertEquals([
                     'Email' => ['The email must be a valid email address.'],
-                    'Amount' => ['The amount must be valid.']
+                    'Amount' => ['The amount must be valid.'],
                 ], $request->messages());
             }
 
             try {
                 $request->transactionId();
                 $this->fail('GatewayClientException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
 
             try {
                 $request->paymentUrl();
                 $this->fail('GatewayClientException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
 
             try {
                 $request->pay();
                 $this->fail('GatewayClientException has no thrown.');
-            } catch (GatewayClientException $exception) {}
+            } catch (GatewayClientException $exception) {
+            }
         });
     }
 
@@ -256,11 +261,11 @@ final class RequestTest extends TestCase
     public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)
     {
         config([
-            'toman.currency' => $configCurrency
+            'toman.currency' => $configCurrency,
         ]);
 
         Http::fake([
-            "www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json" => Http::response([
+            'www.zarinpal.com/pg/rest/WebGate/PaymentRequest.json' => Http::response([
                 'Status' => '100',
                 'Authority' => 'A0000012345',
             ], 200),

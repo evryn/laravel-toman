@@ -1,14 +1,9 @@
 <?php
 
-
 namespace Evryn\LaravelToman\Concerns;
 
-
-use Evryn\LaravelToman\Concerns\InteractsWithResponse;
-use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Interfaces\RequestedPaymentInterface;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
 
 abstract class RequestedPayment implements RequestedPaymentInterface
 {

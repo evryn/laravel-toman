@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Evryn\LaravelToman\Tests\Gateways\IDPay;
-
 
 use Evryn\LaravelToman\Gateways\IDPay\Status;
 use Evryn\LaravelToman\Money;
@@ -57,27 +55,27 @@ class Provider
             'Default currency is Toman (via config)' => [
                 'toman',
                 5,
-                50
+                50,
             ],
             'Default currency is Rial (via config)' => [
                 'rial',
                 50,
-                50
+                50,
             ],
             'Default currency is Rial (via gateway)' => [
                 null,
                 50,
-                50
+                50,
             ],
             'Currency is Rial (overridden)' => [
                 'toman',
                 Money::Rial(50),
-                50
+                50,
             ],
             'Currency is Toman (overridden)' => [
                 'toman',
                 Money::Toman(5),
-                50
+                50,
             ],
         ];
     }
@@ -88,37 +86,37 @@ class Provider
             'Default currency is Toman (via config)' => [
                 'toman',
                 5,
-                Money::Rial(50)
+                Money::Rial(50),
             ],
             'Default currency is Rial (via config)' => [
                 'rial',
                 50,
-                Money::Rial(50)
+                Money::Rial(50),
             ],
             'Default currency is Rial (via gateway)' => [
                 null,
                 50,
-                Money::Rial(50)
+                Money::Rial(50),
             ],
             'Currency is Rial (overridden) compared with Toman' => [
                 'toman',
                 Money::Rial(50),
-                Money::Toman(5)
+                Money::Toman(5),
             ],
             'Currency is Toman (overridden) compared with Toman' => [
                 'toman',
                 Money::Toman(5),
-                Money::Toman(5)
+                Money::Toman(5),
             ],
             'Currency is Toman (overridden) compared with Rial' => [
                 'toman',
                 Money::Toman(5),
-                Money::Rial(50)
+                Money::Rial(50),
             ],
             'Currency is Rial (overridden) compared with Rial' => [
                 'toman',
                 Money::Rial(50),
-                Money::Rial(50)
+                Money::Rial(50),
             ],
         ];
     }

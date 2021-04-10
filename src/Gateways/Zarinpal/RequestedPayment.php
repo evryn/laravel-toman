@@ -2,8 +2,8 @@
 
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
 
-use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Concerns\RequestedPayment as BaseRequestedPayment;
+use Evryn\LaravelToman\Exceptions\GatewayException;
 
 class RequestedPayment extends BaseRequestedPayment
 {
@@ -22,12 +22,12 @@ class RequestedPayment extends BaseRequestedPayment
 
     public function successful(): bool
     {
-        return !$this->exception;
+        return ! $this->exception;
     }
 
     public function failed(): bool
     {
-        return !$this->successful();
+        return ! $this->successful();
     }
 
     /**

@@ -2,18 +2,16 @@
 
 namespace Evryn\LaravelToman\Interfaces;
 
-use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\FakeRequest;
 use Evryn\LaravelToman\FakeVerification;
 use Evryn\LaravelToman\PendingRequest;
-use Illuminate\Http\RedirectResponse;
 
 interface GatewayInterface
 {
     public function getConfig(string $key = null);
 
     /**
-     * Get the currency that gateway uses
+     * Get the currency that gateway uses.
      *
      * @return string
      */
@@ -22,7 +20,7 @@ interface GatewayInterface
     public function getAliasDataFields(): array;
 
     /**
-     * Make a real payment request or generate result based on a fake one
+     * Make a real payment request or generate result based on a fake one.
      *
      * @param PendingRequest $pendingRequest
      * @param FakeRequest|null $fakeRequest
@@ -31,7 +29,7 @@ interface GatewayInterface
     public function requestPayment(PendingRequest $pendingRequest, FakeRequest $fakeRequest = null): RequestedPaymentInterface;
 
     /**
-     * Make a real payment verification request or generate result based on a fake one
+     * Make a real payment verification request or generate result based on a fake one.
      *
      * @param PendingRequest $pendingRequest
      * @param FakeVerification|null $fakeVerification

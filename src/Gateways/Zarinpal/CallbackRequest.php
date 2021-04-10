@@ -13,7 +13,7 @@ class CallbackRequest extends BaseCallbackRequest
     {
         if ($this->fakeVerification) {
             $this->merge([
-                'Authority' => $this->fakeVerification->getTransactionId()
+                'Authority' => $this->fakeVerification->getTransactionId(),
             ]);
         }
     }
@@ -21,14 +21,14 @@ class CallbackRequest extends BaseCallbackRequest
     public function rules()
     {
         return [
-            'Authority' => 'required|string'
+            'Authority' => 'required|string',
         ];
     }
 
     public function messages()
     {
         return [
-            'Authority' => 'ZarinPal transaction id (Authority)'
+            'Authority' => 'ZarinPal transaction id (Authority)',
         ];
     }
 

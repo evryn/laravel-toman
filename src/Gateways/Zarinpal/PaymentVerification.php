@@ -70,11 +70,11 @@ class PaymentVerification extends BaseRequest
 
         // Client errors (4xx) are not guaranteed to be come with error messages. We need to
         // check requested payment status too.
-        if ($response->clientError() || !in_array($status, [Status::OPERATION_SUCCEED, Status::ALREADY_VERIFIED])) {
+        if ($response->clientError() || ! in_array($status, [Status::OPERATION_SUCCEED, Status::ALREADY_VERIFIED])) {
             return new CheckedPayment(
                 $status,
                 new GatewayClientException(
-                    Status::toMessage($status) ,
+                    Status::toMessage($status),
                     $status
                 ),
                 $data['errors'] ?? [],

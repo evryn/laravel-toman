@@ -7,7 +7,6 @@ use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\FakeRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\URL;
 
 /**
  * Class Requester.

@@ -2,7 +2,6 @@
 
 namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
-use Evryn\LaravelToman\CallbackRequest;
 use Evryn\LaravelToman\Exceptions\GatewayException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
@@ -10,11 +9,7 @@ use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
-use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
 use PHPUnit\Framework\AssertionFailedError;
 
 final class FakeRequestTest extends TestCase
@@ -38,7 +33,7 @@ final class FakeRequestTest extends TestCase
     {
         config([
             'toman.description' => 'Pay :amount',
-            'toman.currency' => 'toman'
+            'toman.currency' => 'toman',
         ]);
 
         $this->factory->fakeRequest()
@@ -47,7 +42,7 @@ final class FakeRequestTest extends TestCase
 
         $this->gateway->setConfig([
             'sandbox' => false,
-            'merchant_id' => 'xxxx-yyyyy'
+            'merchant_id' => 'xxxx-yyyyy',
         ]);
 
         $request = $this->factory
@@ -81,14 +76,14 @@ final class FakeRequestTest extends TestCase
     {
         config([
             'toman.description' => 'Pay :amount',
-            'toman.currency' => 'toman'
+            'toman.currency' => 'toman',
         ]);
 
         $this->factory->fakeRequest()->failed('Your request has failed.', Status::WRONG_IP_OR_MERCHANT_ID);
 
         $this->gateway->setConfig([
             'sandbox' => false,
-            'merchant_id' => 'xxxx-yyyyy'
+            'merchant_id' => 'xxxx-yyyyy',
         ]);
 
         $request = $this->factory
@@ -125,17 +120,20 @@ final class FakeRequestTest extends TestCase
         try {
             $request->transactionId();
             self::fail();
-        } catch (GatewayException $e) {}
+        } catch (GatewayException $e) {
+        }
 
         try {
             $request->pay();
             self::fail('Nothing is thrown.');
-        } catch (GatewayException $e) {}
+        } catch (GatewayException $e) {
+        }
 
         try {
             $request->paymentUrl();
             self::fail('Nothing is thrown.');
-        } catch (GatewayException $e) {}
+        } catch (GatewayException $e) {
+        }
     }
 
     /** @test */
@@ -161,7 +159,7 @@ final class FakeRequestTest extends TestCase
     public function can_assert_correct_fake_amount_in_currencies($configCurrency, $actualAmount, Money $expectedAmount)
     {
         config([
-            'toman.currency' => $configCurrency
+            'toman.currency' => $configCurrency,
         ]);
 
         $this->factory->fakeRequest()
@@ -179,7 +177,7 @@ final class FakeRequestTest extends TestCase
     public function can_not_assert_incorrect_fake_amount_in_currencies()
     {
         config([
-            'toman.currency' => 'toman'
+            'toman.currency' => 'toman',
         ]);
 
         $this->factory->fakeRequest()

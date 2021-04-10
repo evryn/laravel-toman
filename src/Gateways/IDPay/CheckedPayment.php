@@ -48,6 +48,6 @@ class CheckedPayment extends BaseCheckedPayment
 
     public function failed(): bool
     {
-        return !!$this->exception;
+        return (bool) $this->exception;
     }
 }

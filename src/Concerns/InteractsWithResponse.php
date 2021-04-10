@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Evryn\LaravelToman\Concerns;
-
 
 use Evryn\LaravelToman\Exceptions\GatewayException;
 use Illuminate\Support\Arr;

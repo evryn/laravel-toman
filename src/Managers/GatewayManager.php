@@ -2,8 +2,8 @@
 
 namespace Evryn\LaravelToman\Managers;
 
-use Evryn\LaravelToman\Gateways\Zarinpal\Gateway as ZarinpalGateway;
 use Evryn\LaravelToman\Gateways\IDPay\Gateway as IDPayGateway;
+use Evryn\LaravelToman\Gateways\Zarinpal\Gateway as ZarinpalGateway;
 use Illuminate\Support\Manager;
 
 class GatewayManager extends Manager

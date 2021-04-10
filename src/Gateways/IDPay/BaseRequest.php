@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Evryn\LaravelToman\Gateways\IDPay;
-
 
 use Evryn\LaravelToman\PendingRequest;
 
@@ -22,14 +20,14 @@ abstract class BaseRequest
     }
 
     /**
-     * Make request headers
+     * Make request headers.
      *
      * @return array
      */
     protected function makeHeaders(): array
     {
         $headers = [
-            'X-API-KEY' => $this->pendingRequest->merchantId()
+            'X-API-KEY' => $this->pendingRequest->merchantId(),
         ];
 
         if ($this->pendingRequest->getGateway()->getConfig('sandbox') === true) {

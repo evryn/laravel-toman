@@ -5,8 +5,7 @@ namespace Evryn\LaravelToman;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
 /**
- * Class CallbackRequest
- * @package Evryn\LaravelToman
+ * Class CallbackRequest.
  * @mixin PendingRequest
  */
 class CallbackRequest implements ValidatesWhenResolved

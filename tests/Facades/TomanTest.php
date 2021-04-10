@@ -18,7 +18,7 @@ final class TomanTest extends TestCase
             'toman.gateways.zarinpal' => [
                 'sandbox' => true,
                 'merchant_id' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-            ]
+            ],
         ]);
 
         $pendingRequest = Toman::getFacadeRoot()->data('key', 'value');
@@ -39,7 +39,7 @@ final class TomanTest extends TestCase
             'toman.gateways.idpay' => [
                 'sandbox' => true,
                 'api_key' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-            ]
+            ],
         ]);
 
         $pendingRequest = Toman::getFacadeRoot()->data('key', 'value');

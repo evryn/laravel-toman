@@ -3,7 +3,6 @@
 namespace Evryn\LaravelToman;
 
 use Evryn\LaravelToman\Exceptions\GatewayException;
-use Illuminate\Support\Facades\Http;
 
 class FakeRequest
 {

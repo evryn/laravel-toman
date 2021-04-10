@@ -11,8 +11,7 @@ use Evryn\LaravelToman\PendingRequest;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * Class Toman
- * @package Evryn\LaravelToman\Facades
+ * Class Toman.
  *
  * @method static PendingRequest amount(int $amount = null) Get or set amount of payment
  * @method static PendingRequest callback(string $callbackUrl = null) Get or set absolute URL for payment verification callback

@@ -2,17 +2,9 @@
 
 namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
-use Evryn\LaravelToman\Exceptions\GatewayClientException;
-use Evryn\LaravelToman\Exceptions\GatewayServerException;
 use Evryn\LaravelToman\Factory;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway;
-use Evryn\LaravelToman\Gateways\Zarinpal\RequestedPayment;
-use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Tests\TestCase;
-use Illuminate\Http\Client\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\URL;
 
 final class PendingRequestTest extends TestCase
 {

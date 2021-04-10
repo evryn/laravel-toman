@@ -44,7 +44,7 @@ return [
             // API Key of your gateway provided by IDPay in your dashboard
             // only. Looks like this: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
             'api_key' => env('IDPAY_API_KEY'),
-        ]
+        ],
 
     ],
 

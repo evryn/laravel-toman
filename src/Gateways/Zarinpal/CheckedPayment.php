@@ -31,16 +31,16 @@ class CheckedPayment extends BaseCheckedPayment
 
     public function successful(): bool
     {
-        return (int)$this->status === Status::OPERATION_SUCCEED;
+        return (int) $this->status === Status::OPERATION_SUCCEED;
     }
 
     public function alreadyVerified(): bool
     {
-        return (int)$this->status === Status::ALREADY_VERIFIED;
+        return (int) $this->status === Status::ALREADY_VERIFIED;
     }
 
     public function failed(): bool
     {
-        return !!$this->exception;
+        return (bool) $this->exception;
     }
 }

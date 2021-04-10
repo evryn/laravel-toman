@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Evryn\LaravelToman\Concerns;
-
 
 use Evryn\LaravelToman\FakeVerification;
 use Illuminate\Foundation\Http\FormRequest as BaseFormRequest;
@@ -18,9 +16,12 @@ abstract class CallbackRequest extends BaseFormRequest
         $this->fakeVerification = $fakeVerification;
     }
 
-    final public function validateResolved() {}
+    final public function validateResolved()
+    {
+    }
 
-    public function validateCallback() {
+    public function validateCallback()
+    {
         parent::validateResolved();
     }
 }

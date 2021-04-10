@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Evryn\LaravelToman\Gateways\Zarinpal;
-
 
 use Evryn\LaravelToman\FakeRequest;
 use Evryn\LaravelToman\FakeVerification;

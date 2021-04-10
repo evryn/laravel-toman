@@ -10,9 +10,6 @@ use Evryn\LaravelToman\Gateways\IDPay\Status;
 use Evryn\LaravelToman\Money;
 use Evryn\LaravelToman\PendingRequest;
 use Evryn\LaravelToman\Tests\TestCase;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
 use PHPUnit\Framework\AssertionFailedError;
 
 final class FakeVerificationTest extends TestCase
@@ -45,7 +42,7 @@ final class FakeVerificationTest extends TestCase
             ->successful();
 
         $this->gateway->setConfig([
-            'api_key' => 'xxxxx-yyyyy-zzzzz'
+            'api_key' => 'xxxxx-yyyyy-zzzzz',
         ]);
 
         $verification = $this->factory
@@ -85,7 +82,7 @@ final class FakeVerificationTest extends TestCase
             ->alreadyVerified();
 
         $this->gateway->setConfig([
-            'api_key' => 'xxxxx-yyyyy-zzzzz'
+            'api_key' => 'xxxxx-yyyyy-zzzzz',
         ]);
 
         $verification = $this->factory
@@ -124,7 +121,7 @@ final class FakeVerificationTest extends TestCase
             ->failed('Payment has failed.', Status::UNSUCCESSFUL_PAYMENT);
 
         $this->gateway->setConfig([
-            'api_key' => 'xxxxx-yyyyy-zzzzz'
+            'api_key' => 'xxxxx-yyyyy-zzzzz',
         ]);
 
         $verification = $this->factory
@@ -164,7 +161,8 @@ final class FakeVerificationTest extends TestCase
         try {
             $verification->referenceId();
             self::fail('Nothing is thrown.');
-        } catch (GatewayException $e) {}
+        } catch (GatewayException $e) {
+        }
     }
 
     /** @test */
@@ -207,7 +205,7 @@ final class FakeVerificationTest extends TestCase
     public function can_assert_correct_fake_amount_in_currencies($configCurrency, $actualAmount, Money $expectedAmount)
     {
         config([
-            'toman.currency' => $configCurrency
+            'toman.currency' => $configCurrency,
         ]);
 
         $this->factory->fakeVerification()
@@ -227,7 +225,7 @@ final class FakeVerificationTest extends TestCase
     public function can_not_assert_incorrect_fake_amount_in_currencies()
     {
         config([
-            'toman.currency' => 'rial'
+            'toman.currency' => 'rial',
         ]);
 
         $this->factory->fakeVerification()

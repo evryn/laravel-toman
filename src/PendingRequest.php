@@ -52,7 +52,7 @@ class PendingRequest
     }
 
     /**
-     * Get or set data
+     * Get or set data.
      *
      * @param string|null $key
      * @param null $value
@@ -112,7 +112,7 @@ class PendingRequest
     }
 
     /**
-     * Check a transaction for verification
+     * Check a transaction for verification.
      * @return CheckedPaymentInterface
      */
     public function verify(): CheckedPaymentInterface
@@ -140,7 +140,7 @@ class PendingRequest
     }
 
     /**
-     * Get underlying gateway
+     * Get underlying gateway.
      *
      * @return GatewayInterface
      */
@@ -150,7 +150,7 @@ class PendingRequest
     }
 
     /**
-     * Dynamically call the setters
+     * Dynamically call the setters.
      *
      * @param  string  $method
      * @param  array  $parameters
@@ -193,14 +193,14 @@ class PendingRequest
     }
 
     /**
-     * Get or set absolute URL for payment verification callback
+     * Get or set absolute URL for payment verification callback.
      *
      * @param string|null $callback
      * @return $this|string|null
      */
     public function callback(string $callback = null)
     {
-        if (!is_null($callback)) {
+        if (! is_null($callback)) {
             $this->setData('callback', $callback);
 
             return $this;
@@ -229,7 +229,7 @@ class PendingRequest
             return $this->getRawData('amount');
         }
 
-        if (!$amount instanceof Money) {
+        if (! $amount instanceof Money) {
             $amount = new Money(
                 $amount,
                 config('toman.currency') ?? $this->getGateway()->getCurrency()
@@ -243,7 +243,7 @@ class PendingRequest
 
     protected function provideAmount()
     {
-        if (!$this->amount()) {
+        if (! $this->amount()) {
             return null;
         }
 
@@ -258,7 +258,7 @@ class PendingRequest
      */
     public function description(string $description = null)
     {
-        if (!is_null($description)) {
+        if (! is_null($description)) {
             $this->setData('description', $description);
 
             return $this;

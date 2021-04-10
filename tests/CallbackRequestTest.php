@@ -7,7 +7,6 @@ use Evryn\LaravelToman\Facades\Toman;
 use Evryn\LaravelToman\Gateways\IDPay\Gateway as IDPayGateway;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway as ZarinpalGateway;
 use Evryn\LaravelToman\PendingRequest;
-use Illuminate\Validation\ValidationException;
 
 final class CallbackRequestTest extends TestCase
 {
@@ -19,7 +18,7 @@ final class CallbackRequestTest extends TestCase
             'toman.gateways.zarinpal' => [
                 'sandbox' => true,
                 'merchant_id' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-            ]
+            ],
         ]);
 
         Toman::fakeVerification()->successful()->withTransactionId('A123');
@@ -42,7 +41,7 @@ final class CallbackRequestTest extends TestCase
             'toman.gateways.idpay' => [
                 'sandbox' => true,
                 'api_key' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-            ]
+            ],
         ]);
 
         Toman::fakeVerification()->successful()->withOrderId('order_1')->withTransactionId('A123');

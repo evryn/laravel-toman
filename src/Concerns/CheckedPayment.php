@@ -1,10 +1,7 @@
 <?php
 
-
 namespace Evryn\LaravelToman\Concerns;
 
-
-use Evryn\LaravelToman\Concerns\InteractsWithResponse;
 use Evryn\LaravelToman\Interfaces\CheckedPaymentInterface;
 
 abstract class CheckedPayment implements CheckedPaymentInterface

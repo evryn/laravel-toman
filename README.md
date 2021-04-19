@@ -58,3 +58,6 @@ And simply verify its callback:
 
 ## How to start?
 📚 [Read documents](https://evryn.github.io/laravel-toman/) and get started now!
+
+## How to contribute?
+Start with the [contributing guidelines](.github/CONTRIBUTING.md) and [code of conduct](.github/CODE_OF_CONDUCT.md). Got any question? Create a [new discussion](https://github.com/evryn/laravel-toman/discussions/categories/general) and I'll be right there :)

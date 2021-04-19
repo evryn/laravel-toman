@@ -4,12 +4,13 @@ Contributions are welcome and will be fully credited. They are accepted via Pull
 
 # Things you can do
 If you want to contribute but do not know where to start, this list provides some starting points.
- * Add a new Payment Gateway:
-   * [YekPay.com](https://yekpay.com/)  
+ * Add a new payment gateway, for example:
    * [Pay.ir](https://pay.ir/)  
    * [PayPing.ir](https://www.payping.ir/)  
  * Refactor if you think there are better approach to do things.
  * Improve documents and comments; Fix grammatical errors, typos, etc.
+
+💡 You can also check the [Todo section](https://github.com/evryn/laravel-toman/projects/1#column-13805265) to find what you can work on or discuss [new features](https://github.com/evryn/laravel-toman/discussions/categories/ideas) that you may find useful to have.
 
 ## Pull Requests
 

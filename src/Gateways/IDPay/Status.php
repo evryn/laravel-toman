@@ -53,7 +53,7 @@ class Status
     {
         $translationKey = strtolower(self::getConstantName($status));
 
-        return __("toman::zarinpal.status.$translationKey");
+        return __("toman::idpay.status.$translationKey");
     }
 
     protected static function getConstantName($value)

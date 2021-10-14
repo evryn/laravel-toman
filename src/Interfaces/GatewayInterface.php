@@ -22,8 +22,8 @@ interface GatewayInterface
     /**
      * Make a real payment request or generate result based on a fake one.
      *
-     * @param PendingRequest $pendingRequest
-     * @param FakeRequest|null $fakeRequest
+     * @param  PendingRequest  $pendingRequest
+     * @param  FakeRequest|null  $fakeRequest
      * @return RequestedPaymentInterface
      */
     public function requestPayment(PendingRequest $pendingRequest, FakeRequest $fakeRequest = null): RequestedPaymentInterface;
@@ -31,8 +31,8 @@ interface GatewayInterface
     /**
      * Make a real payment verification request or generate result based on a fake one.
      *
-     * @param PendingRequest $pendingRequest
-     * @param FakeVerification|null $fakeVerification
+     * @param  PendingRequest  $pendingRequest
+     * @param  FakeVerification|null  $fakeVerification
      * @return CheckedPaymentInterface
      */
     public function verifyPayment(PendingRequest $pendingRequest, FakeVerification $fakeVerification = null): CheckedPaymentInterface;
@@ -41,7 +41,7 @@ interface GatewayInterface
      * Inspect callback request by validating it and filling given pending request with
      * proper values from the callback or the stubbed fake verification.
      *
-     * @param PendingRequest $pendingRequest
+     * @param  PendingRequest  $pendingRequest
      */
     public function inspectCallbackRequest(PendingRequest $pendingRequest, FakeVerification $fakeVerification = null): void;
 }

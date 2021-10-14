@@ -20,6 +20,7 @@ class GatewayManager extends Manager
 
     /**
      * Create Zarinpal gateway driver.
+     *
      * @return ZarinpalGateway
      */
     public function createZarinpalDriver()
@@ -31,6 +32,7 @@ class GatewayManager extends Manager
 
     /**
      * Create IDPay gateway driver.
+     *
      * @return IDPayGateway
      */
     public function createIDPayDriver()

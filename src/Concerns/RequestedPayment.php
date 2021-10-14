@@ -23,7 +23,8 @@ abstract class RequestedPayment implements RequestedPaymentInterface
 
     /**
      * Redirect user to payment gateway to complete it.
-     * @param array $options
+     *
+     * @param  array  $options
      * @return RedirectResponse
      */
     public function pay(array $options = []): RedirectResponse

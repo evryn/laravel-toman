@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 
 /**
  * Class CallbackRequest.
+ *
  * @mixin PendingRequest
  */
 class CallbackRequest implements ValidatesWhenResolved

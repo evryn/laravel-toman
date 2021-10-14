@@ -43,6 +43,7 @@ class PendingRequest
 
     /**
      * Requester constructor.
+     *
      * @param $config
      */
     public function __construct(Factory $factory, GatewayInterface $gateway)
@@ -54,8 +55,8 @@ class PendingRequest
     /**
      * Get or set data.
      *
-     * @param string|null $key
-     * @param null $value
+     * @param  string|null  $key
+     * @param  null  $value
      * @return $this|array
      */
     public function data(string $key = null, $value = null)
@@ -98,6 +99,7 @@ class PendingRequest
 
     /**
      * Request a new payment from gateway.
+     *
      * @return RequestedPaymentInterface
      */
     public function request(): RequestedPaymentInterface
@@ -113,6 +115,7 @@ class PendingRequest
 
     /**
      * Check a transaction for verification.
+     *
      * @return CheckedPaymentInterface
      */
     public function verify(): CheckedPaymentInterface
@@ -195,7 +198,7 @@ class PendingRequest
     /**
      * Get or set absolute URL for payment verification callback.
      *
-     * @param string|null $callback
+     * @param  string|null  $callback
      * @return $this|string|null
      */
     public function callback(string $callback = null)
@@ -220,7 +223,7 @@ class PendingRequest
     /**
      * Get or set amount of the payment.
      *
-     * @param null|int|Money $amount
+     * @param  null|int|Money  $amount
      * @return PendingRequest|Money
      */
     public function amount($amount = null)
@@ -253,7 +256,7 @@ class PendingRequest
     /**
      * Get or set description. `:amount` will be replaced by the given amount.
      *
-     * @param string|null $description
+     * @param  string|null  $description
      * @return $this|string|null
      */
     public function description(string $description = null)

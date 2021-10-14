@@ -34,7 +34,7 @@ class RequestedPayment extends BaseRequestedPayment
      * Get the payment URL specified to this payment request. User must be redirected
      * there to complete the payment.
      *
-     * @param array $options No option is available for this gateway
+     * @param  array  $options  No option is available for this gateway
      * @return string
      */
     public function paymentUrl(array $options = []): ?string

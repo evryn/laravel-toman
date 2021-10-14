@@ -34,7 +34,7 @@ class RequestedPayment extends BaseRequestedPayment
      * Get the payment URL specified to this payment request. User must be redirected
      * there to complete the payment.
      *
-     * @param array $options ZarinPal accepts `gateway` option to target a specific bank gateway. Contact with their support for more info.
+     * @param  array  $options  ZarinPal accepts `gateway` option to target a specific bank gateway. Contact with their support for more info.
      * @return string
      */
     public function paymentUrl(array $options = []): ?string

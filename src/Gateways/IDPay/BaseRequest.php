@@ -39,7 +39,8 @@ abstract class BaseRequest
 
     /**
      * Make environment-aware verification endpoint URL.
-     * @param string $method
+     *
+     * @param  string  $method
      * @return string
      */
     protected function getEndpoint(string $method): string

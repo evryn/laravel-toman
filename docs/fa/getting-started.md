@@ -19,7 +19,7 @@ composer require evryn/laravel-toman
 
 با دستور زیر، فایل کانفیگ پکیج رو منتشر کنین:
 ```bash
-php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProvider --tag=config
+php artisan vendor:publish --provider="Evryn\LaravelToman\LaravelTomanServiceProvider" --tag=config
 ```
 
 حالا می‌تونین تو فایل `config/toman.php` این تنظیمات رو انجام بدین.
@@ -29,7 +29,7 @@ php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProv
 
 با دستور زیر، فایل مربوط به متن‌ها رو منتشر کنین:
 ```bash
-php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProvider --tag=lang
+php artisan vendor:publish --provider="Evryn\LaravelToman\LaravelTomanServiceProvider" --tag=lang
 ```
 
 فایل‌ها تو مسیر &lrm;`/resource/lang/vendor/toman` قابل ویرایش هستن.

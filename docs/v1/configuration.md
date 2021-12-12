@@ -5,7 +5,7 @@ There are few configurable options to make you code more cleaner.
 ## Publish Config
 Use following command to publish package config:
 ```bash
-php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProvider --tag=config
+php artisan vendor:publish --provider="Evryn\LaravelToman\LaravelTomanServiceProvider" --tag=config
 ```
 
 Now config file will be available at `config/toman.php`.

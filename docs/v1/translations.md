@@ -24,7 +24,7 @@ That's all!
 
 Use following command to publish package translation files:
 ```bash
-php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProvider --tag=lang
+php artisan vendor:publish --provider="Evryn\LaravelToman\LaravelTomanServiceProvider" --tag=lang
 ```
 
 Now translation files are ready to be modified at:

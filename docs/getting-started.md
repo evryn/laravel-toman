@@ -20,7 +20,7 @@ There are few configurable options to make your code cleaner.
 
 Use the following command to publish package config:
 ```bash
-php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProvider --tag=config
+php artisan vendor:publish --provider="Evryn\LaravelToman\LaravelTomanServiceProvider" --tag=config
 ```
 
 Now, a config file will be available to edit at `config/toman.php`. See available options there.
@@ -31,7 +31,7 @@ Gateways requests might result in different states, and each of them is meaningf
 
 Use the following command to publish package translation files:
 ```bash
-php artisan vendor:publish --provider=Evryn\LaravelToman\LaravelTomanServiceProvider --tag=lang
+php artisan vendor:publish --provider="Evryn\LaravelToman\LaravelTomanServiceProvider" --tag=lang
 ```
 
 Now, translation files are ready to be modified in `/resource/lang/vendor/toman`.

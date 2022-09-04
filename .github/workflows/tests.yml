@@ -15,6 +15,11 @@ jobs:
         php: ['7.3', '7.4', '8.0']
         laravel: ['7.*', '8.*', '9.*']
         stability: [prefer-lowest, prefer-stable]
+        exclude:
+          - laravel: '9.*'
+            php: '7.3'
+          - laravel: '9.*'
+            php: '7.4'
         include:
           - laravel: '7.*'
             testbench: '5.*'

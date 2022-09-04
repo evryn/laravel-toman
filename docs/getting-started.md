@@ -4,7 +4,7 @@
 
 | Package | Laravel Framework | PHP  | Status |
 | ------------- |:-------------:|:-----:| ---:|
-| 2.x      | 8.x, 7.x | >= 7.3 | Active 🚀 |
+| 2.x      | 9.x, 8.x, 7.x | >=8, >=7.3 | Active 🚀 |
 | 1.x      | 6.x, 5.8.x       |   >= 7.2 |  |
 
 ## Installation

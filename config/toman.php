@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('PAYMENT_GATEWAY', 'zarinpal'),
+    'default' => env('TOMAN_GATEWAY', 'zarinpal'),
 
     /*
     |--------------------------------------------------------------------------

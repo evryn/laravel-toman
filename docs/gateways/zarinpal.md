@@ -9,7 +9,7 @@ Zarinpal gateway requires the following variables in `.env` file to work:
 
 | Environment Variable 	| Description                                                                                                                                                                                                                                        	|
 |----------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-| `TOMAN_GATEWAY` 	    | (**Required**)<br>Must equal `zarinpal` in order to use this gateway provider.                                                                            	|
+| `PAYMENT_GATEWAY` 	    | (**Required**)<br>Must equal `zarinpal` in order to use this gateway provider.                                                                            	|
 | `ZARINPAL_MERCHANT_ID` 	| (**Required**)<br>Your gateway's merchant ID which can be gotten from your panel.<br>Example: `0bcf346fc-3a79-4b36-b936-5ccbc2be0696`                                                                                                             	|
 | `ZARINPAL_SANDBOX`     	| (Optional. Default: `false`)<br>Set it to `true` in your development environment to make test calls in a simulated environment provided by the gateway without real payments.
 
@@ -17,7 +17,7 @@ Example:
 ```dotenv
 ...
 
-TOMAN_GATEWAY=zarinpal
+PAYMENT_GATEWAY=zarinpal
 ZARINPAL_MERCHANT_ID=0bcf346fc-3a79-4b36-b936-5ccbc2be0696
 ```
 

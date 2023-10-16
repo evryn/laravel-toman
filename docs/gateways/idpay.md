@@ -9,7 +9,7 @@ IDPay gateway requires the following variables in `.env` file to work:
 
 | Environment Variable 	| Description                                                                                                                                                                                                                                        	|
 |----------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-| `TOMAN_GATEWAY` 	    | (**Required**)<br>Must equal `idpay` in order to use this gateway provider.                                                                            	|
+| `PAYMENT_GATEWAY` 	    | (**Required**)<br>Must equal `idpay` in order to use this gateway provider.                                                                            	|
 | `IDPAY_API_KEY` 	| (**Required**)<br>Your gateway's API Key which can be gotten from your panel.<br>Example: `0bcf346fc-3a79-4b36-b936-5ccbc2be0696`                                                                                                             	|
 | `IDPAY_SANDBOX`     	| (Optional. Default: `false`)<br>Set it to `true` in your development environment to make test calls in a simulated environment provided by the gateway without real payments.
 
@@ -17,7 +17,7 @@ Example:
 ```dotenv
 ...
 
-TOMAN_GATEWAY=idpay
+PAYMENT_GATEWAY=idpay
 IDPAY_API_KEY=0bcf346fc-3a79-4b36-b936-5ccbc2be0696
 ```
 

@@ -16,10 +16,6 @@
         "laravel", "laraveltoman", "laravel-toman",
         "toman", "payment", "gateway", "درگاه", "پرداخت"
     ],
-    "require": {
-        "php": "^7.3|^8.0",
-        "illuminate/support": "^7.0|^8.0|^9.0|^10.0"
-    },
     "require-dev": {
         "phpunit/phpunit": "^8.0|^9.0",
         "mockery/mockery": "^1.3.3",

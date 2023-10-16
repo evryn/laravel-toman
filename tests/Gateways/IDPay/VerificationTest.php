@@ -35,6 +35,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::endpointProvider()
      */
     public function can_verify_manually(bool $sandbox)
@@ -85,6 +86,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::endpointProvider()
      */
     public function can_verify_callback_request(bool $sandbox)
@@ -142,6 +144,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider badId
      */
     public function validates_callback_transaction_id($value)
@@ -160,6 +163,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider badId
      */
     public function validates_callback_order_id($value)
@@ -239,6 +243,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::clientErrorProvider()
      */
     public function fails_with_client_error($httpStatus, $statusCode)

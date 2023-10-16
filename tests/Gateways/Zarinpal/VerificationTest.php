@@ -31,6 +31,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::endpointProvider()
      */
     public function can_verify_manually(bool $sandbox, string $baseUrl)
@@ -76,6 +77,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::endpointProvider()
      */
     public function can_verify_callback_request(bool $sandbox, string $baseUrl)
@@ -127,6 +129,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider badTransactionId
      */
     public function validates_callback_transaction_id($value)
@@ -202,6 +205,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::clientErrorProvider()
      */
     public function fails_with_client_error($httpStatus, $statusCode, $messageKey)
@@ -243,6 +247,7 @@ final class VerificationTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::tomanBasedAmountProvider()
      */
     public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)

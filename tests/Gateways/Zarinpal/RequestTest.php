@@ -31,6 +31,7 @@ final class RequestTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::endpointProvider()
      */
     public function can_request_payment(bool $sandbox, string $baseUrl)
@@ -141,6 +142,7 @@ final class RequestTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::clientErrorProvider()
      */
     public function fails_with_client_error_without_message($httpStatus, $statusCode, $messageKey)
@@ -193,6 +195,7 @@ final class RequestTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::clientErrorProvider()
      */
     public function fails_with_client_error_with_message($httpStatus, $statusCode, $messageKey)
@@ -256,6 +259,7 @@ final class RequestTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::tomanBasedAmountProvider()
      */
     public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)

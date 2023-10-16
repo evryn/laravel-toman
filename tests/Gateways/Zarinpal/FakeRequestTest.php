@@ -154,6 +154,7 @@ final class FakeRequestTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\Zarinpal\Provider::fakeTomanBasedAmountProvider()
      */
     public function can_assert_correct_fake_amount_in_currencies($configCurrency, $actualAmount, Money $expectedAmount)

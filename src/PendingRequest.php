@@ -44,7 +44,7 @@ class PendingRequest
     /**
      * Requester constructor.
      *
-     * @param $config
+     * @param  $config
      */
     public function __construct(Factory $factory, GatewayInterface $gateway)
     {
@@ -121,7 +121,7 @@ class PendingRequest
     public function verify(): CheckedPaymentInterface
     {
         if ($this->fakeVerification) {
-            return tap(($this->getGateway()->verifyPayment($this, $this->fakeVerification)), function () {
+            return tap($this->getGateway()->verifyPayment($this, $this->fakeVerification), function () {
                 $this->factory->recordPendingRequest($this);
             });
         }

@@ -31,6 +31,7 @@ final class RequestTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::endpointProvider()
      */
     public function can_request_payment(bool $sandbox)
@@ -142,6 +143,7 @@ final class RequestTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::clientErrorProvider()
      */
     public function fails_with_client_error($httpStatus, $statusCode)
@@ -195,6 +197,7 @@ final class RequestTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider \Evryn\LaravelToman\Tests\Gateways\IDPay\Provider::rialBasedAmountProvider()
      */
     public function can_set_amount_in_different_currencies($configCurrency, $actualAmount, $expectedAmountValue)

@@ -1,6 +1,6 @@
 ![logo](../_media/logo.png)
 
-# Laravel Toman <small>2.0</small>
+# لاراول تومَن <small>3.0</small>
 
 > درگاه پرداخت - مثل آب خوردن!
 

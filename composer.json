@@ -1,5 +1,5 @@
 {
-    "name": "evryn/laravel-toman",
+    "name": "abbasudo/laravel-toman",
     "description": "A simple stable Laravel package to handle popular payment gateways in Iran including ZarinPal and IDPay.",
     "license": "MIT",
     "authors": [

@@ -9,25 +9,32 @@ on:
 jobs:
   linux_tests:
     runs-on: ubuntu-20.04
+
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.0', '8.1']
-        laravel: ['9.*', '10.*']
+        php: ['8.0', '8.1', '8.2']
+        laravel: ['9.*', '10.*', '11.*']
         stability: [prefer-lowest, prefer-stable]
         exclude:
-          - laravel: '10.*'
+          - laravel: 10.*
             php: '8.0'
+          - laravel: 11.*
+            php: '8.0'
+          - laravel: 11.*
+            php: '8.1'
         include:
-          - laravel: '9.*'
-            testbench: '7.*'
-          - laravel: '10.*'
-            testbench: '8.*'
+          - laravel: 9.*
+            testbench: 7.*
+          - laravel: 10.*
+            testbench: 8.*
           - php: '8.1'
-            laravel: '10.*'
-            testbench: '8.*'
-            stability: 'prefer-stable'
-            coverage: '☂ '
+            laravel: 10.*
+            testbench: 8.*
+            stability: prefer-stable
+            coverage: ☂ 
+          - laravel: 11.*
+            testbench: 9.*
 
     name: ${{ matrix.coverage }}PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }} - Ubuntu 20.04
 
@@ -42,7 +49,7 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl
           tools: composer:v2
           coverage: xdebug
-          
+
       - name: Set Laravel and Testbench versions
         uses: nick-invision/retry@v1
         with:
@@ -60,12 +67,12 @@ jobs:
       - name: Execute tests
         continue-on-error: false
         run: vendor/bin/phpunit --verbose
-        if: ${{ !matrix.coverage }}
+        if: '${{ !matrix.coverage }}'
 
       - name: Execute tests with coverage
         continue-on-error: false
         run: vendor/bin/phpunit --verbose --coverage-clover coverage.xml
-        if: ${{ matrix.coverage }}
+        if: '${{ matrix.coverage }}'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
@@ -74,5 +81,4 @@ jobs:
           files: ./coverage.xml
           path_to_write_report: ./coverage/codecov_report.txt
           verbose: true
-        if: ${{ matrix.coverage }}
-
+        if: '${{ matrix.coverage }}'

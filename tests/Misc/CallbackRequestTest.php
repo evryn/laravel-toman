@@ -1,6 +1,6 @@
 <?php
 
-namespace Evryn\LaravelToman\Tests;
+namespace Evryn\LaravelToman\Tests\Misc;
 
 use Evryn\LaravelToman\CallbackRequest;
 use Evryn\LaravelToman\Facades\Toman;

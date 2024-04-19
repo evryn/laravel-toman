@@ -12,7 +12,7 @@ final class LaravelTomanServiceProviderTest extends TestCase
     {
         // We need to ensure that artisan can publish `toman.php` config file properly
 
-        $source = __DIR__.'/../config/toman.php';
+        $source = __DIR__.'/../../config/toman.php';
         $dest = config_path('toman.php');
 
         File::delete($dest);
@@ -33,8 +33,8 @@ final class LaravelTomanServiceProviderTest extends TestCase
         // We need to ensure that artisan can publish default translations files properly
 
         $map = [
-            __DIR__.'/../resources/lang/en/zarinpal.php' => resource_path('lang/vendor/toman/en/zarinpal.php'),
-            __DIR__.'/../resources/lang/fa/zarinpal.php' => resource_path('lang/vendor/toman/fa/zarinpal.php'),
+            __DIR__.'/../../resources/lang/en/zarinpal.php' => resource_path('lang/vendor/toman/en/zarinpal.php'),
+            __DIR__.'/../../resources/lang/fa/zarinpal.php' => resource_path('lang/vendor/toman/fa/zarinpal.php'),
         ];
 
         foreach (array_values($map) as $dest) {

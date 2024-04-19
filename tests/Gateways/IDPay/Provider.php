@@ -4,8 +4,9 @@ namespace Evryn\LaravelToman\Tests\Gateways\IDPay;
 
 use Evryn\LaravelToman\Gateways\IDPay\Status;
 use Evryn\LaravelToman\Money;
+use Evryn\LaravelToman\Tests\TestCase;
 
-class Provider
+final class Provider extends TestCase
 {
     public static function endpointProvider()
     {

@@ -52,6 +52,14 @@ jobs:
 
       - name: Execute tests
         continue-on-error: false
+        run: |
+          cat phpunit.xml.dist
+          vendor/bin/phpunit --migrate-configuration
+          cat phpunit.xml.dist
+        if: '${{ !matrix.coverage }}'
+
+      - name: Execute tests
+        continue-on-error: false
         run: vendor/bin/phpunit
         if: '${{ !matrix.coverage }}'
 

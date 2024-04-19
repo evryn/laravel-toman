@@ -15,7 +15,7 @@ class Provider
         ];
     }
 
-    public function clientErrorProvider()
+    public static function clientErrorProvider()
     {
         return [
             [200, Status::INCOMPLETE_DATA, 'incomplete_data'], // 404 HTTP code is not guaranteed for errors

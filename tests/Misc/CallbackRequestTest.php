@@ -7,6 +7,7 @@ use Evryn\LaravelToman\Facades\Toman;
 use Evryn\LaravelToman\Gateways\IDPay\Gateway as IDPayGateway;
 use Evryn\LaravelToman\Gateways\Zarinpal\Gateway as ZarinpalGateway;
 use Evryn\LaravelToman\PendingRequest;
+use Evryn\LaravelToman\Tests\TestCase;
 
 final class CallbackRequestTest extends TestCase
 {

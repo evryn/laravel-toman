@@ -93,7 +93,7 @@ class PendingRequest
                 $value = $this->provideAmount();
             }
 
-            return [$this->getFieldNameForGateway($field) =>  $value];
+            return [$this->getFieldNameForGateway($field) => $value];
         })->merge($this->customData);
     }
 

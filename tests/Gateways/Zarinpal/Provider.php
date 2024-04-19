@@ -4,8 +4,9 @@ namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Money;
+use Evryn\LaravelToman\Tests\TestCase;
 
-class Provider
+final class Provider extends TestCase
 {
     public static function endpointProvider()
     {
@@ -15,7 +16,7 @@ class Provider
         ];
     }
 
-    public function clientErrorProvider()
+    public static function clientErrorProvider()
     {
         return [
             [200, Status::INCOMPLETE_DATA, 'incomplete_data'], // 404 HTTP code is not guaranteed for errors

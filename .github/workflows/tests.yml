@@ -13,27 +13,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.0', '8.1', '8.2']
-        laravel: ['9.*', '10.*', '11.*']
+        php: ['8.2']
+        laravel: ['11.*']
         stability: [prefer-lowest, prefer-stable]
-        exclude:
-          - laravel: 10.*
-            php: '8.0'
-          - laravel: 11.*
-            php: '8.0'
-          - laravel: 11.*
-            php: '8.1'
         include:
-          - laravel: 9.*
-            testbench: 7.*
-          - laravel: 10.*
-            testbench: 8.*
-          - php: '8.1'
-            laravel: 10.*
-            testbench: 8.*
-          - php: '8.2'
-            laravel: 11.*
-            testbench: 9.*
+          - laravel: 11.*
             stability: prefer-stable
             coverage: ☂ 
 
@@ -67,12 +51,12 @@ jobs:
 
       - name: Execute tests
         continue-on-error: false
-        run: vendor/bin/phpunit --verbose
+        run: vendor/bin/phpunit
         if: '${{ !matrix.coverage }}'
 
       - name: Execute tests with coverage
         continue-on-error: false
-        run: vendor/bin/phpunit --verbose --coverage-clover coverage.xml
+        run: vendor/bin/phpunit --coverage-clover coverage.xml
         if: '${{ matrix.coverage }}'
 
       - name: Upload coverage to Codecov

@@ -2,8 +2,8 @@
 
 namespace Evryn\LaravelToman\Tests\Misc;
 
-use Illuminate\Support\Facades\File;
 use Evryn\LaravelToman\Tests\TestCase;
+use Illuminate\Support\Facades\File;
 
 final class LaravelTomanServiceProviderTest extends TestCase
 {

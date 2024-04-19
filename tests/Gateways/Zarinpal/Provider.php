@@ -5,7 +5,7 @@ namespace Evryn\LaravelToman\Tests\Gateways\Zarinpal;
 use Evryn\LaravelToman\Gateways\Zarinpal\Status;
 use Evryn\LaravelToman\Money;
 
-class Provider
+final class Provider extends TestCase
 {
     public static function endpointProvider()
     {

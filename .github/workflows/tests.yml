@@ -14,13 +14,13 @@ jobs:
       fail-fast: true
       matrix:
         php: ['8.2']
-        laravel: ['11.*']
-        testbench: ['9.*']
+        laravel: ['11.*', '12.*']
+        testbench: ['9.*', '10.*']
         stability: [prefer-lowest, prefer-stable]
         include:
           - laravel: 11.*
             stability: prefer-stable
-            coverage: ☂ 
+            coverage: ☂
 
     name: ${{ matrix.coverage }}PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }} - Ubuntu 20.04
 

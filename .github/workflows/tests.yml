@@ -14,16 +14,10 @@ jobs:
       fail-fast: true
       matrix:
         php: ['8.2']
-        laravel: ['12.*']
+        laravel: ['11.*', '12.*']
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: '11.*'
-            testbench: '9.*'
           - laravel: 12.*
-            testbench: '10.*'
-            stability: prefer-lowest
-          - laravel: 12.*
-            testbench: '10.*'
             stability: prefer-stable
             coverage: ☂ 
 
@@ -41,12 +35,27 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
+      - name: Determine Testbench Version
+        id: vars
+        run: |
+          if [[ "${{ matrix.laravel }}" == 11.* ]]; then
+            echo "testbench=9.*" >> $GITHUB_OUTPUT
+          elif [[ "${{ matrix.laravel }}" == 12.* ]]; then
+            echo "testbench=10.*" >> $GITHUB_OUTPUT
+          else
+            echo "Unsupported Laravel version"
+            exit 1
+          fi
+
       - name: Set Laravel and Testbench versions
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer require --no-update --no-interaction "illuminate/support:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}"
+          command: |
+            composer require --no-update --no-interaction \
+              "illuminate/support:${{ matrix.laravel }}" \
+              "orchestra/testbench:${{ steps.vars.outputs.testbench }}"
 
       - name: Install dependencies
         uses: nick-invision/retry@v1

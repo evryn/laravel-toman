@@ -59,7 +59,7 @@ class PendingRequest
      * @param  null  $value
      * @return $this|array
      */
-    public function data(string $key = null, $value = null)
+    public function data(?string $key = null, $value = null)
     {
         // Get all data
         if (func_num_args() === 0) {
@@ -129,7 +129,7 @@ class PendingRequest
         return $this->getGateway()->verifyPayment($this);
     }
 
-    public function stub(FakeRequest $fakeRequest = null, FakeVerification $fakeVerification = null)
+    public function stub(?FakeRequest $fakeRequest = null, ?FakeVerification $fakeVerification = null)
     {
         $this->fakeRequest = $fakeRequest;
         $this->fakeVerification = $fakeVerification;
@@ -201,7 +201,7 @@ class PendingRequest
      * @param  string|null  $callback
      * @return $this|string|null
      */
-    public function callback(string $callback = null)
+    public function callback(?string $callback = null)
     {
         if (! is_null($callback)) {
             $this->setData('callback', $callback);
@@ -259,7 +259,7 @@ class PendingRequest
      * @param  string|null  $description
      * @return $this|string|null
      */
-    public function description(string $description = null)
+    public function description(?string $description = null)
     {
         if (! is_null($description)) {
             $this->setData('description', $description);

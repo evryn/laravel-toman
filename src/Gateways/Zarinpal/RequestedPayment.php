@@ -12,7 +12,7 @@ class RequestedPayment extends BaseRequestedPayment
      */
     protected $baseUrl;
 
-    public function __construct(GatewayException $exception = null, array $messages = [], $transactionId = null, string $baseUrl = null)
+    public function __construct(?GatewayException $exception = null, array $messages = [], $transactionId = null, ?string $baseUrl = null)
     {
         $this->transactionId = $transactionId;
         $this->baseUrl = $baseUrl;

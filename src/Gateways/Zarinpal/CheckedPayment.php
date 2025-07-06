@@ -15,7 +15,7 @@ class CheckedPayment extends BaseCheckedPayment
      */
     protected $status;
 
-    public function __construct(string $status, GatewayException $exception = null, array $messages = [], $transactionId = null, $referenceId = null)
+    public function __construct(string $status, ?GatewayException $exception = null, array $messages = [], $transactionId = null, $referenceId = null)
     {
         $this->referenceId = $referenceId;
         $this->exception = $exception;

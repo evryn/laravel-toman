@@ -21,7 +21,7 @@ class Gateway implements GatewayInterface
         $this->config = $config;
     }
 
-    public function getConfig(string $key = null)
+    public function getConfig(?string $key = null)
     {
         return $key ? Arr::get($this->config, $key) : $this->config;
     }
@@ -55,7 +55,7 @@ class Gateway implements GatewayInterface
     }
 
     /** @inheritDoc */
-    public function requestPayment(PendingRequest $pendingRequest, FakeRequest $fakeRequest = null): RequestedPaymentInterface
+    public function requestPayment(PendingRequest $pendingRequest, ?FakeRequest $fakeRequest = null): RequestedPaymentInterface
     {
         $factory = (new PaymentRequest($pendingRequest));
 
@@ -67,7 +67,7 @@ class Gateway implements GatewayInterface
     }
 
     /** @inheritDoc */
-    public function verifyPayment(PendingRequest $pendingRequest, FakeVerification $fakeVerification = null): CheckedPaymentInterface
+    public function verifyPayment(PendingRequest $pendingRequest, ?FakeVerification $fakeVerification = null): CheckedPaymentInterface
     {
         $factory = (new PaymentVerification($pendingRequest));
 
@@ -79,7 +79,7 @@ class Gateway implements GatewayInterface
     }
 
     /** @inheritDoc */
-    public function inspectCallbackRequest(PendingRequest $pendingRequest, FakeVerification $fakeVerification = null): void
+    public function inspectCallbackRequest(PendingRequest $pendingRequest, ?FakeVerification $fakeVerification = null): void
     {
         $request = app(CallbackRequest::class);
 

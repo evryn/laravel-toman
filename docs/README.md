@@ -22,9 +22,7 @@ APIs are pretty much easy to use! Requesting a new payment and verifying it will
 We are planning to add new gateway providers. They'll require minimum possible changes in your code.
 Currently, following gateways are available to use:  
 ✅ [Zarinpal.com](https://zarinpal.com)  
-✅ [IDPay.ir](https://idpay.ir)  
 🔘 [YekPay.com](https://yekpay.com/)  
-🔘 [Pay.ir](https://pay.ir/)  
 🔘 [PayPing.ir](https://www.payping.ir/)  
 🔘 ...
 

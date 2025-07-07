@@ -34,26 +34,4 @@ final class CallbackRequestTest extends TestCase
         ], $pendingRequest->getGateway()->getConfig());
     }
 
-    /** @test */
-    public function resolves_idpay_callback()
-    {
-        config([
-            'toman.default' => 'idpay',
-            'toman.gateways.idpay' => [
-                'sandbox' => true,
-                'api_key' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-            ],
-        ]);
-
-        Toman::fakeVerification()->successful()->withOrderId('order_1')->withTransactionId('A123');
-
-        $pendingRequest = app(CallbackRequest::class)->data('key', 'value');
-
-        self::assertInstanceOf(PendingRequest::class, $pendingRequest);
-        self::assertInstanceOf(IDPayGateway::class, $pendingRequest->getGateway());
-        self::assertEquals([
-            'sandbox' => true,
-            'api_key' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-        ], $pendingRequest->getGateway()->getConfig());
-    }
 }

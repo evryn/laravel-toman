@@ -23,8 +23,7 @@ Will support indeed. We'll stick to simple-to-use and completely-tested package 
 
 Currently following gateways are available to use:  
 ✅ [Zarinpal.com](https://zarinpal.com)  
-🔘 [YekPay.com](https://yekpay.com/)  
-🔘 [Pay.ir](https://pay.ir/)  
+🔘 [YekPay.com](https://yekpay.com/)   
 🔘 [PayPing.ir](https://www.payping.ir/)  
 🔘 ...
 

@@ -40,6 +40,5 @@ php artisan vendor:publish --provider="Evryn\LaravelToman\LaravelTomanServicePro
 ## قدم بعدی
 یکی از درگاه‌ها رو راه بندازین:
  * [💳 زرین‌پال](fa/gateways/zarinpal.md)
- * [💳 آی‌دی پِی](fa/gateways/idpay.md)
 
 

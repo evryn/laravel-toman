@@ -41,4 +41,3 @@ Now, translation files are ready to be modified in `/resource/lang/vendor/toman`
 ## Next Step
 See how to use a gateway:
  * [💳 Zarinpal](gateways/zarinpal.md)
- * [💳 IDPay](gateways/idpay.md)

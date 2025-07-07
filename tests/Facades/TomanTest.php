@@ -30,25 +30,4 @@ final class TomanTest extends TestCase
             'merchant_id' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
         ], $pendingRequest->getGateway()->getConfig());
     }
-
-    /** @test */
-    public function resolves_to_configured_idpay_gateway()
-    {
-        config([
-            'toman.default' => 'idpay',
-            'toman.gateways.idpay' => [
-                'sandbox' => true,
-                'api_key' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-            ],
-        ]);
-
-        $pendingRequest = Toman::getFacadeRoot()->data('key', 'value');
-
-        self::assertInstanceOf(PendingRequest::class, $pendingRequest);
-        self::assertInstanceOf(IDPayGateway::class, $pendingRequest->getGateway());
-        self::assertEquals([
-            'sandbox' => true,
-            'api_key' => 'xxxxxxxx-yyyy-zzzz-wwww-xxxxxxxxxxxx',
-        ], $pendingRequest->getGateway()->getConfig());
-    }
 }

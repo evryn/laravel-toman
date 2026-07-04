@@ -13,13 +13,16 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.2']
-        laravel: ['11.*', '12.*']
+        php: ['8.2', '8.3', '8.4', '8.5']
+        laravel: ['11.*', '12.*', '13.*']
         stability: [prefer-lowest, prefer-stable]
         include:
           - laravel: 12.*
             stability: prefer-stable
-            coverage: ☂ 
+            coverage: ☂
+        exclude:
+          - laravel: 13.*
+            php: '8.2'
 
     name: ${{ matrix.coverage }}PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.stability }} - Ubuntu 20.04
 
@@ -67,12 +70,12 @@ jobs:
       - name: Execute tests
         continue-on-error: false
         run: vendor/bin/phpunit
-        if: '${{ !matrix.coverage }}'
+        if: ${{ !matrix.coverage }}
 
       - name: Execute tests with coverage
         continue-on-error: false
         run: vendor/bin/phpunit --coverage-clover coverage.xml
-        if: '${{ matrix.coverage }}'
+        if: ${{ matrix.coverage }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
@@ -81,4 +84,4 @@ jobs:
           files: ./coverage.xml
           path_to_write_report: ./coverage/codecov_report.txt
           verbose: true
-        if: '${{ matrix.coverage }}'
+        if: ${{ matrix.coverage }}

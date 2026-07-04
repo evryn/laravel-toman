@@ -45,6 +45,8 @@ jobs:
             echo "testbench=9.*" >> $GITHUB_OUTPUT
           elif [[ "${{ matrix.laravel }}" == 12.* ]]; then
             echo "testbench=10.*" >> $GITHUB_OUTPUT
+          elif [[ "${{ matrix.laravel }}" == 13.* ]]; then
+            echo "testbench=11.*" >> $GITHUB_OUTPUT
           else
             echo "Unsupported Laravel version"
             exit 1
